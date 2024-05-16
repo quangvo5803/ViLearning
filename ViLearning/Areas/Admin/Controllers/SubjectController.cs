@@ -4,8 +4,9 @@ using ViLearning.Models;
 using ViLearning.Services.Repository.IRepository;
 using ViLearning.Services.Repository;
 
-namespace ViLearning.Controllers
+namespace ViLearning.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class SubjectController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -26,9 +27,9 @@ namespace ViLearning.Controllers
         [HttpPost]
         public IActionResult Create(Subject obj)
         {
-            foreach(Subject subject in _unitOfWork.Subject.GetAll().ToList())
+            foreach (Subject subject in _unitOfWork.Subject.GetAll().ToList())
             {
-                if(subject.Name == obj.Name)
+                if (subject.Name == obj.Name)
                 {
                     ModelState.AddModelError("name", "Đã có môn học này");
                 }
@@ -49,7 +50,7 @@ namespace ViLearning.Controllers
             var subject = _unitOfWork.Subject.Get(x => x.Id == id);
             if (subject == null)
             {
-                return Json(new {success= false,message = "Có lỗi khi xóa"});
+                return Json(new { success = false, message = "Có lỗi khi xóa" });
             }
             _unitOfWork.Subject.Remove(subject);
             _unitOfWork.Save();

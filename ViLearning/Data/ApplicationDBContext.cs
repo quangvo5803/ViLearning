@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using ViLearning.Models;
 
 namespace ViLearning.Data
 {
-    public class ApplicationDBContext :DbContext
+    public class ApplicationDBContext :IdentityDbContext
     {
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options):base(options){
         }
@@ -12,6 +13,8 @@ namespace ViLearning.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Subject>().HasData(
                 new Subject { Id = 1, Name = "Toán" },
                 new Subject { Id = 2, Name = "Ngữ Văn" }
