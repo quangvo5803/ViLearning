@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using ViLearning.Models;
+using ViLearning.Services.Repository.IRepository;
 
 namespace ViLearning.Areas.Student.Controllers
 {
@@ -8,7 +9,6 @@ namespace ViLearning.Areas.Student.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;

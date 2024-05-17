@@ -3,6 +3,8 @@ using System.ComponentModel;
 using ViLearning.Models;
 using ViLearning.Services.Repository.IRepository;
 using ViLearning.Services.Repository;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 namespace ViLearning.Areas.Admin.Controllers
 {
