@@ -5,10 +5,12 @@ using ViLearning.Services.Repository.IRepository;
 using ViLearning.Services.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using ViLearning.Utility;
 
 namespace ViLearning.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = SD.Role_Admin)]
     public class SubjectController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

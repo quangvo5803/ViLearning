@@ -3,6 +3,7 @@
     public interface IUnitOfWork
     {
         ISubjectRepository Subject { get; }
+        IApplicationUserRepository ApplicationUser{ get; }
         void Save();
     }
 }

@@ -1,0 +1,27 @@
+﻿@model List<ApplicationUser>
+
+<div class="card shadow border-0 mt-4">
+    <div class="card-header bg-secondary bg-gradient ml-0 py-0">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">Product List</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-4">
+        <table id="tblData" class="table table-bordered table-striped" width="100%">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Họ và tên</th>
+                    <th>Ngày sinh</th>
+                    <th>Vai trò</th>
+                    <th>Trạng thái tính chỉ</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/js/user.js"></script>
+}
