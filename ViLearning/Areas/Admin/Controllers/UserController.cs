@@ -26,6 +26,61 @@ namespace ViLearning.Areas.Admin.Controllers
             return View(objCategoryList);
         }
 
+        public IActionResult Submit(string id)
+        {
+            var user = _unitOfWork.ApplicationUser.Get(u => u.Id == id);
+            return View(user);
+        }
+
+        public async Task<IActionResult> Accept(string id)
+        {
+            var user = _unitOfWork.ApplicationUser.Get(u => u.Id == id);
+
+            if (user != null)
+            {
+                user.TeacherCertificate = true;
+                var removeFromRoleResult = await _userManager.RemoveFromRoleAsync(user, SD.Role_User_Student);
+
+                if (removeFromRoleResult.Succeeded)
+                {
+                    var addToRoleResult = await _userManager.AddToRoleAsync(user, SD.Role_User_Teacher);
+
+                    if (addToRoleResult.Succeeded)
+                    {
+                        _unitOfWork.Save();
+                        TempData["success"] = "Duyệt giáo viên thành công";
+                        return RedirectToAction("Index", "User");
+                    }
+                    else
+                    {
+                        // Log or handle the error if adding role fails
+                        TempData["error"] = "Không thể thêm vai trò giáo viên cho người dùng";
+                    }
+                }
+                else
+                {
+                    // Log or handle the error if removing role fails
+                    TempData["error"] = "Không thể xóa vai trò học sinh của người dùng";
+                }
+            }
+            else
+            {
+                // Log or handle the error if user is not found
+                TempData["error"] = "Người dùng không tồn tại";
+            }
+
+            return RedirectToAction("Index", "User");
+        }
+
+        public IActionResult Reject(string id)
+        {
+            var user = _unitOfWork.ApplicationUser.Get(u => u.Id == id);
+            user.TeacherCertificateImgUrl = null;
+            _unitOfWork.Save();
+            TempData["success"] = "Đã từ chối đơn xét duyệt";
+            return RedirectToAction("Index", "User");
+        }
+
         #region API CALLS
         [HttpGet]
         public IActionResult GetAll()

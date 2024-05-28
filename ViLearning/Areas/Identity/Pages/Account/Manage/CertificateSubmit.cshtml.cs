@@ -104,7 +104,7 @@ namespace ViLearning.Areas.Identity.Pages.Account.Manage
                     await file.CopyToAsync(fileStream);
                 }
                 //Thay đổi cập nhật lại database
-                user.TeacherCertificateImgUrl = Path.Combine("images", "CertificateTeacher", fileName).Replace("\\", "/");
+                user.TeacherCertificateImgUrl = "/" + Path.Combine("images", "CertificateTeacher", fileName).Replace("\\", "/");
                 var updateResult = await _userManager.UpdateAsync(user);
                 if (!updateResult.Succeeded)
                 {

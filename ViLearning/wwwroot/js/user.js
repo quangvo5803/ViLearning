@@ -5,9 +5,9 @@ $(document).ready(function () {
 
 function loadDataTable() {
     dataTable = $('#tblData').DataTable({
-        "ajax": { url: '/admin/user/getall' },
+        "ajax": { url: '/admin/user/getall', type:'GET', dataSrc: 'data' },
         "columns": [
-            { "data": 'userName', "width": "20%" },
+            { "data": 'userName', "width": "15%" },
             {
                 "data": 'fullName',
                 "width": "20%",
@@ -17,19 +17,36 @@ function loadDataTable() {
             },
             {
                 "data": 'dob',
-                "width": "20%",
+                "width": "15%",
                 "render": function (data, type, row) {
-                    return data ? moment(data).format('DD/MM/YYYY') : "Chưa điền thông tin";
+                    return data ? moment(data).format('MM/DD/YYYY') : "Chưa điền thông tin";
                 }
             },
-            { "data": 'role', "width": "20%" },
+            { "data": 'role', "width": "10%" },
             {
                 "data": 'teacherCertificateImgUrl',
-                "width": "20%",
+                "data1": 'teacherCerfiticate',
+                "width": "15%",
                 "render": function (data, type, row) {
-                    return data ? "Đang chờ xét duyệt" : "Không";
+                    if (!row.teacherCerfiticateUrl) {
+                        return "Không";
+                    } else if (row.teacherCerfiticateUrl && row.teacherCerfiticate) {
+                        return "Đã duyệt";
+                    } else {
+                        return "Đang xét duyệt";
+                    }
                 }
             },
+            {
+                "data": 'id',
+                "render": function (data, type, row) {
+                    var btnDisable = row.teacherCertificateImgUrl ? "" : "disabled";
+                    return `<div class="w-100 btn-group" role="group"> 
+                            <a href="user/submit?id=${data}" class="btn btn-primary mx-2"" ${btnDisable}>Duyệt</a>
+                            </div >`
+                }
+                , "width": "15%"
+            }
         ]
     });
 }

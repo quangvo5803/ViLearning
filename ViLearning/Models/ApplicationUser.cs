@@ -21,6 +21,8 @@ namespace ViLearning.Models
         public string? TeacherCertificateImgUrl { get; set; }
         [NotMapped]
         public string Role { get; set; }
+        [NotMapped]
+        public string RoleID { get; set; }
 
 
     }

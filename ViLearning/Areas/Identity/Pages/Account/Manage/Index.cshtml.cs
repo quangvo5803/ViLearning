@@ -59,16 +59,16 @@ namespace ViLearning.Areas.Identity.Pages.Account.Manage
             /// </summary>
             [Phone]
             [Display(Name = "Phone number")]
-            public string PhoneNumber { get; set; }
+            public string? PhoneNumber { get; set; }
             [DisplayName("Họ và tên: ")]
             public string? FullName { get; set; }
 
             [DisplayName("Tuổi")]
             [Range(6, 100)]
             public int? Age { get; set; }
-            [DisplayName("Ngày sinh: ")]
+            [DisplayName("Ngày sinh(MM/dd/yyyy): ")]
             [DataType(DataType.Date)]
-            [DisplayFormat(DataFormatString = "{0:dd/mm/yyyy}", ApplyFormatInEditMode = true)]
+            [DisplayFormat(DataFormatString = "{0:MM-dd-yyyy}", ApplyFormatInEditMode = true)]
             public DateTime? DOB { get; set; }
             [DisplayName("Giới  tính: ")]
             public Gender? Gender { get; set; }

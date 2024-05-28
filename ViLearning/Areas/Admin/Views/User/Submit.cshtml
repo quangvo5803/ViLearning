@@ -1,0 +1,9 @@
+﻿@model ApplicationUser
+<div class="container text-center mt-5">
+    <img src="@Model.TeacherCertificateImgUrl" alt="Giấy Chứng Nhận" class="certificate-img">
+    <div class="row justify-content-between mt-4" role="group" aria-label="Basic example">
+        <a class="col-md-3 btn btn-success" asp-controller="User" asp-action="Accept" asp-route-id="@Model.Id">Chấp nhận</a>
+        <a class="col-md-3 btn btn-danger" asp-controller="User" asp-action="Reject" asp-route-id="@Model.Id">Từ chối</a>
+        <a class="col-md-3 btn btn-secondary" asp-controller="User" asp-action="Index"><i class="bi bi-arrow-return-left pr-1"></i> Trở về danh sách người dùng</a>
+    </div>
+</div>
