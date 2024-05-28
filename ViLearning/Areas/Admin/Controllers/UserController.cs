@@ -81,7 +81,7 @@ namespace ViLearning.Areas.Admin.Controllers
             {
                 return Json(new { success = false, message = "Error while delete" });
             }
-            var cerfiticateUrl = Path.Combine(_webHostEnvironment.WebRootPath, user.TeacherCertificateImgUrl.TrimStart('\\'));
+            var cerfiticateUrl = Path.Combine(_webHostEnvironment.WebRootPath, user.TeacherCertificateImgUrl.TrimStart('/'));
             if (System.IO.File.Exists(cerfiticateUrl))
             {
                 System.IO.File.Delete(cerfiticateUrl);
