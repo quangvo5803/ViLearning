@@ -5,9 +5,16 @@ $(document).ready(function () {
 
 function loadDataTable() {
     dataTable = $('#tblData').DataTable({
-        "ajax": { url: '/admin/user/getall', type:'GET', dataSrc: 'data' },
+        "ajax": {
+            url: '/admin/user/getall',
+            type: 'GET',
+            dataSrc: 'data'
+        },
         "columns": [
-            { "data": 'userName', "width": "15%" },
+            {
+                "data": 'userName',
+                "width": "15%"
+            },
             {
                 "data": 'fullName',
                 "width": "20%",
@@ -19,33 +26,29 @@ function loadDataTable() {
                 "data": 'dob',
                 "width": "15%",
                 "render": function (data, type, row) {
-                    return data ? moment(data).format('MM/DD/YYYY') : "Chưa điền thông tin";
+                    return data ? moment(data).format('DD/MM/YYYY') : "Chưa điền thông tin";
                 }
             },
-            { "data": 'role', "width": "10%" },
+            {
+                "data": 'role',
+                "width": "10%"
+            },
             {
                 "data": 'teacherCertificateImgUrl',
-                "data1": 'teacherCerfiticate',
                 "width": "15%",
                 "render": function (data, type, row) {
-                    if (!row.teacherCerfiticateUrl) {
-                        return "Không";
-                    } else if (row.teacherCerfiticateUrl && row.teacherCerfiticate) {
-                        return "Đã duyệt";
-                    } else {
-                        return "Đang xét duyệt";
-                    }
+                    return data ? "Đang chờ xét duyệt" : "Không";  
                 }
             },
             {
                 "data": 'id',
                 "render": function (data, type, row) {
-                    var btnDisable = row.teacherCertificateImgUrl ? "" : "disabled";
+                    var btnDisabled = row.teacherCertificateImgUrl ? "" : "return false;"; 
                     return `<div class="w-100 btn-group" role="group"> 
-                            <a href="user/submit?id=${data}" class="btn btn-primary mx-2"" ${btnDisable}>Duyệt</a>
-                            </div >`
-                }
-                , "width": "15%"
+                            <a href="user/submit?id=${data}" class="btn btn-primary mx-2" onclick="${btnDisabled}">Duyệt</a>
+                            </div>`;
+                },
+                "width": "15%"
             }
         ]
     });

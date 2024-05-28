@@ -13,11 +13,13 @@ namespace ViLearning.Areas.Admin.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public UserController(IUnitOfWork unitOfWork,UserManager<ApplicationUser> userManager)
+        public UserController(IUnitOfWork unitOfWork,UserManager<ApplicationUser> userManager,IWebHostEnvironment webHostEnvironment)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
+            _webHostEnvironment = webHostEnvironment;
         }
         public IActionResult Index()
         {
@@ -75,6 +77,15 @@ namespace ViLearning.Areas.Admin.Controllers
         public IActionResult Reject(string id)
         {
             var user = _unitOfWork.ApplicationUser.Get(u => u.Id == id);
+            if (user == null)
+            {
+                return Json(new { success = false, message = "Error while delete" });
+            }
+            var cerfiticateUrl = Path.Combine(_webHostEnvironment.WebRootPath, user.TeacherCertificateImgUrl.TrimStart('\\'));
+            if (System.IO.File.Exists(cerfiticateUrl))
+            {
+                System.IO.File.Delete(cerfiticateUrl);
+            }
             user.TeacherCertificateImgUrl = null;
             _unitOfWork.Save();
             TempData["success"] = "Đã từ chối đơn xét duyệt";
