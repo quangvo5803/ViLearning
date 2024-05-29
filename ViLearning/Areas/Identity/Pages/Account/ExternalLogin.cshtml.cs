@@ -119,6 +119,17 @@ namespace ViLearning.Areas.Identity.Pages.Account
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
             if (result.Succeeded)
             {
+                var user = await _userManager.FindByEmailAsync(info.Principal.FindFirstValue(ClaimTypes.Email));
+                if (await _userManager.IsInRoleAsync(user, "Admin"))
+                {
+                    _logger.LogInformation("Admin user logged in.");
+                    return LocalRedirect(Url.Content("~/Admin/Home/Index"));
+                }
+                if (await _userManager.IsInRoleAsync(user, "Teacher"))
+                {
+                    _logger.LogInformation("Teacher user logged in.");
+                    return LocalRedirect(Url.Content("~/Teacher/Home/Index"));
+                }
                 _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
                 return LocalRedirect(returnUrl);
             }
