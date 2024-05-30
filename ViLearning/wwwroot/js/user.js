@@ -37,13 +37,25 @@ function loadDataTable() {
                 "data": 'teacherCertificateImgUrl',
                 "width": "15%",
                 "render": function (data, type, row) {
-                    return data ? "Đang chờ xét duyệt" : "Không";  
+                    if (data != null && row.teacherCertificate == true)
+                    {
+                        return "Đã xét duyệt";
+                    }
+                    else if (data != null && row.teacherCertificate != true)
+                    {
+                        return "Đang chờ xét duyệt";
+                    } else {
+                        return "Không";
+                    }
                 }
             },
             {
                 "data": 'id',
                 "render": function (data, type, row) {
-                    var btnDisabled = row.teacherCertificateImgUrl ? "" : "return false;"; 
+                    var btnDisabled = row.teacherCertificateImgUrl ? "" : "return false;";
+                    if (row.teacherCertificate == true) {
+                        btnDisabled = "return false";
+                    }
                     return `<div class="w-100 btn-group" role="group"> 
                             <a href="user/submit?id=${data}" class="btn btn-primary mx-2" onclick="${btnDisabled}">Duyệt</a>
                             </div>`;
