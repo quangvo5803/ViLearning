@@ -4,23 +4,26 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ViLearning.Models
 {
-    public class Lesson
+    public class Feedback
     {
         [Key]
-        public int LessonId { get; set; }
-        [Required]
-        public string LessonName { get; set; }
-        public bool statusBoolean { get; set; }
-
-        public int NumberOfQuestion { get; set; }
-
+        public int FeedBackId { get; set; }
+        [Range(1,5)]
+        public int FeedBackStar {  get; set; }
+        [Display(Name = "Đánh giá: ")]
+        public string? FeedBackContent { get; set; }
         //Foreign key
+        public string UserId { get; set; }
         public int CourseId { get; set; }
 
+
         //Relation
+        [ForeignKey("UserId")]
+        [ValidateNever]
+        public ApplicationUser ApplicationUser { get; set; }
         [ForeignKey("CourseId")]
         [ValidateNever]
         public Course Course { get; set; }
-        
+
     }
 }

@@ -7,34 +7,32 @@ namespace ViLearning.Models
     public class Course
     {
         [Key]
-        public int CourseID { get; set; }
+        public int CourseId { get; set; }
 
         [Required]
-        [Display(Name = "Tên khóa học")]
+        [Display(Name = "Tên khóa học: ")]
         public string CourseName { get; set; }
-        [Display(Name = "Giá khóa học")]
-        public double Price { get; set; }
-        [Display(Name = "Mô tả khóa học")]
-        public string Description { get; set; }
-        [Display(Name = "Ảnh bìa khóa học")]
-        [ValidateNever]
+        [Display(Name = "Giá khóa học: ")]
+        public double? Price { get; set; }
+        [Display(Name = "Mô tả khóa học: ")]
+        [Column(TypeName = "ntext")]
+        public string? Description { get; set; }
+        [Display(Name = "Ảnh bìa khóa học: ")]
         public string CoverImgUrl { get; set; }
 
 
         //Foreign key
-        public string SubjectId { get; set; }
-        public string TeacherID { get; set; }
+        public int SubjectId { get; set; }
+        public string UserId { get; set; }
 
 
         //Relation
         [ForeignKey("SubjectId")]
         [ValidateNever]
         public Subject Subject { get; set; }      
-        [ForeignKey("TeacherId")]
+        [ForeignKey("UserId")]
         [ValidateNever]     
-        public ApplicationUser Teacher { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
         
-        
-        //Hiện tại còn thiếu Lesson,Certificate,Feedback
     }
 }
