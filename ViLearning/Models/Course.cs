@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -33,6 +34,10 @@ namespace ViLearning.Models
         [ForeignKey("UserId")]
         [ValidateNever]     
         public ApplicationUser ApplicationUser { get; set; }
+
+        //Navigation property
+        public virtual ICollection<Lesson>? Lesson { get; set; }
+        public virtual ICollection<Feedback>? Feedbacks { get; set; }
         
     }
 }

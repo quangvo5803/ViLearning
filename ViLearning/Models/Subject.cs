@@ -11,5 +11,8 @@ namespace ViLearning.Models
         [MaxLength(30)]
         [DisplayName("Nhập tên môn học")]
         public string Name { get; set; }
+
+        //Navigation property
+        public virtual ICollection<Course>? Courses { get; set; }
     }
 }

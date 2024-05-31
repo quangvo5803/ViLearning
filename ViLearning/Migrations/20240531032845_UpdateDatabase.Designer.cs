@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ViLearning.Data;
 
@@ -11,9 +12,11 @@ using ViLearning.Data;
 namespace ViLearning.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240531032845_UpdateDatabase")]
+    partial class UpdateDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -262,7 +265,7 @@ namespace ViLearning.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Comments", (string)null);
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("ViLearning.Models.Content", b =>
@@ -288,7 +291,7 @@ namespace ViLearning.Migrations
 
                     b.HasIndex("LessonId");
 
-                    b.ToTable("Contents", (string)null);
+                    b.ToTable("Contents");
                 });
 
             modelBuilder.Entity("ViLearning.Models.Course", b =>
@@ -326,7 +329,7 @@ namespace ViLearning.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Courses", (string)null);
+                    b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("ViLearning.Models.CourseCertificate", b =>
@@ -348,7 +351,7 @@ namespace ViLearning.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("CourseCertificates", (string)null);
+                    b.ToTable("CourseCertificates");
                 });
 
             modelBuilder.Entity("ViLearning.Models.Feedback", b =>
@@ -388,7 +391,7 @@ namespace ViLearning.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Feedbacks", (string)null);
+                    b.ToTable("Feedbacks");
                 });
 
             modelBuilder.Entity("ViLearning.Models.Lesson", b =>
@@ -416,7 +419,7 @@ namespace ViLearning.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("Lessons", (string)null);
+                    b.ToTable("Lessons");
                 });
 
             modelBuilder.Entity("ViLearning.Models.Question", b =>
@@ -454,7 +457,7 @@ namespace ViLearning.Migrations
 
                     b.HasIndex("LessonId");
 
-                    b.ToTable("Questions", (string)null);
+                    b.ToTable("Questions");
                 });
 
             modelBuilder.Entity("ViLearning.Models.StudentCertificate", b =>
@@ -474,7 +477,7 @@ namespace ViLearning.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("StudentCertificates", (string)null);
+                    b.ToTable("StudentCertificates");
                 });
 
             modelBuilder.Entity("ViLearning.Models.Subject", b =>
@@ -492,7 +495,7 @@ namespace ViLearning.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Subjects", (string)null);
+                    b.ToTable("Subjects");
 
                     b.HasData(
                         new
@@ -534,7 +537,7 @@ namespace ViLearning.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("TestDetails", (string)null);
+                    b.ToTable("TestDetails");
                 });
 
             modelBuilder.Entity("ViLearning.Models.ApplicationUser", b =>

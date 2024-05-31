@@ -24,8 +24,15 @@ namespace ViLearning.Models
         [NotMapped]
         public string RoleID { get; set; }
 
-
+        //Navigation property
+        public virtual ICollection<Course>? Courses { get; set; } 
+        public virtual ICollection<Feedback>? Feedbacks { get; set; }
+        public virtual ICollection<Comment>? Comments {  get; set; } 
+        public virtual ICollection<TestDetail>? TestDetail { get; set; }
+        public virtual ICollection<StudentCertificate>? StudentCertificates { get; set; }
     }
+
+    
     public enum Gender
     {
         Male,

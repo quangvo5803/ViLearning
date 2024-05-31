@@ -21,6 +21,9 @@ namespace ViLearning.Models
         [ForeignKey("CourseId")]
         [ValidateNever]
         public Course Course { get; set; }
-        
+
+        //Navigation property
+        public virtual ICollection<Comment> Comments { get;}
+        public virtual ICollection<Question>? Questions { get;}
     }
 }
