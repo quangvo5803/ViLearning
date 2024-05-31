@@ -7,7 +7,7 @@ namespace ViLearning.Services.Repository
     public class CommentRepository : Repository<Comment>, ICommentRepository
     {
         private ApplicationDBContext _db;
-        public CommnetRepository(ApplicationDBContext db) : base(db)
+        public CommentRepository(ApplicationDBContext db) : base(db)
         {
             _db = db;
         }

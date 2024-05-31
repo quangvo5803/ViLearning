@@ -1,4 +1,5 @@
-﻿@{
+﻿@model LandingPageVM
+@{
     ViewData["Title"] = "Home Page";
 }
 <div class="container">
@@ -29,8 +30,19 @@
     </div>
 </div>
 
-<div class="row mt-5">
-
+<div style="display: flex; justify-content: space-around; padding: 20px; background-color: #f8f9fa;">
+    <div style="text-align: center;">
+        <h1 style="color: #28a745; font-size:48px; font-weight:bold">@Model.UserList.Count()</h1>
+        <p>Người dùng</p>
+    </div>
+    <div style="text-align: center;">
+        <h1 style="color: #28a745; font-size:48px; font-weight:bold">@Model.Courses.Count()</h1>
+        <p>Khóa học</p>
+    </div>
+    <div style="text-align: center;">
+        <h1 style="color: #28a745; font-size:48px; font-weight:bold">@Model.TeacherList.Count()</h1>
+        <p>Giáo viên</p>
+    </div>
 </div>
 @section Styles{
     <link rel="stylesheet" href="~/css/Student/LandingPage.css">
