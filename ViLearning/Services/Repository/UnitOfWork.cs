@@ -9,6 +9,7 @@ namespace ViLearning.Services.Repository
         public IApplicationUserRepository ApplicationUser{ get; private set; }
 
 
+
         private ApplicationDBContext _db;
 
         public UnitOfWork(ApplicationDBContext db)
