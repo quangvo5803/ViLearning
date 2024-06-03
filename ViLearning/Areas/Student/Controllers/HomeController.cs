@@ -31,7 +31,7 @@ namespace ViLearning.Areas.Student.Controllers
             }
             var viewModel = new LandingPageVM
             {
-                Courses = _unitOfWork.Course.GetAll().ToList(),
+                Courses = _unitOfWork.Course.GetAll(includeProperties: "Subject,ApplicationUser").ToList(),
                 UserList = userList,
                 TeacherList = teacherList
             };
