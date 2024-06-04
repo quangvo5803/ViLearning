@@ -58,27 +58,30 @@
 
         @foreach(var course in popularCourse)
         {
-            <div class="col-md-4">
-                <div class="card">
-                    <img src="@course.CoverImgUrl" class="card-img-top" alt="@course.CourseName" style="max-height:400px;width:auto;">
-                    <div class="card-body">
-                        <span class="badge badge-success">@course.Subject?.Name</span>
-                        <h5 class="card-title mt-2">@course.CourseName</h5>
-                        <p class="card-text">@course.Description</p>
-                        <div class="d-flex justify-content-between align-items-center mt-3">
-                            <div class="d-flex align-items-center">           
-                                <span class="ms-2">@course.ApplicationUser?.FullName</span>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <a class="btn btn-dark">@course.Subject.Name</a>
+            <a asp-action="Details" asp-route-productId="@course.CourseId" style="text-decoration:none" >
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="@course.CoverImgUrl" class="card-img-top" alt="@course.CourseName" style="max-height:400px;width:auto;">
+                        <div class="card-body">
+                            <span class="badge badge-success">@course.Subject?.Name</span>
+                            <h5 class="card-title mt-2">@course.CourseName</h5>
+                            <p class="card-text">@course.Description</p>
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <div class="d-flex align-items-center">
+                                    <span class="ms-2">@course.ApplicationUser?.FullName</span>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <a class="btn btn-dark">@course.Subject.Name</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="card-footer d-flex justify-content-between bg-transparent border-top-0">
-                        <span class="price" style="font-size:18px; font-weight:bold;">@course.Price?.ToString("N0") VNĐ</span>
+                        <div class="card-footer d-flex justify-content-between bg-transparent border-top-0">
+                            <span class="price" style="font-size:18px; font-weight:bold;">@course.Price?.ToString("N0") VNĐ</span>
+                        </div>
                     </div>
                 </div>
-            </div>
+             </a>
+            
 
         }
     </div>
