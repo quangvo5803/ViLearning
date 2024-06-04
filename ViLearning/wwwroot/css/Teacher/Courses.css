@@ -64,7 +64,7 @@ body {
     }
 .courses .box-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    grid-template-columns:  1fr 1fr 1fr;
     gap: 1.5rem;
     justify-content: center;
     align-items: flex-start;
@@ -76,59 +76,51 @@ body {
         padding: 2rem;
     }
 
-        .courses .box-container .box .tutor {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            margin-bottom: 2.5rem;
-        }
+        
 
-            .courses .box-container .box .tutor img {
-                height: 3rem;
-                width: 5rem;
-                border-radius: 50%;
-                object-fit: cover;
-            }
+.courses .box-container .box .tutor img {
+    height: 3rem;
+    width: 5rem;
+    border-radius: 50%;
+    object-fit: cover;
+}
 
-            .courses .box-container .box .tutor h3 {
-                font-size: 1.8rem;
-                color: var(--black);
-                margin-bottom: .2rem;
-            }
+.courses .box-container .box .tutor h3 {
+    font-size: 1.8rem;
+    color: var(--black);
+    margin-bottom: .2rem;
+}
 
-            .courses .box-container .box .tutor span {
-                font-size: 1.3rem;
-                color: var(--light-color);
-            }
+            
 
-        .courses .box-container .box .thumb {
-            position: relative;
-        }
+.courses .box-container .box .thumb {
+    position: relative;
+}
 
-            .courses .box-container .box .thumb span {
-                position: absolute;
-                top: 1rem;
-                left: 1rem;
-                border-radius: .5rem;
-                padding: .5rem 1.5rem;
-                background-color: rgba(0,0,0,.3);
-                color: #fff;
-                font-size: 1.5rem;
-            }
+    .courses .box-container .box .thumb span {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        border-radius: .5rem;
+        padding: .5rem 1.5rem;
+        background-color: rgba(0,0,0,.3);
+        color: #fff;
+        font-size: 1.5rem;
+    }
 
-            .courses .box-container .box .thumb img {
-                width: 100%;
-                height: 20rem;
-                object-fit: cover;
-                border-radius: .5rem;
-            }
+    .courses .box-container .box .thumb img {
+        width: 100%;
+        height: 20rem;
+        object-fit: cover;
+        border-radius: .5rem;
+    }
 
-        .courses .box-container .box .title {
-            font-size: 2rem;
-            color: var(--black);
-            padding-bottom: .5rem;
-            padding-top: 1rem;
-        }
+.courses .box-container .box .title {
+    font-size: 2rem;
+    color: var(--black);
+    padding-bottom: .5rem;
+    padding-top: 1rem;
+}
 
 .courses .more-btn {
     text-align: center;
@@ -139,3 +131,98 @@ section {
     margin: 0 auto;
     max-width: 1500px;
 }
+.middle {
+    transition: .3s ease;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    text-align: center;
+}
+.thumb {
+    opacity: 1;
+    transition: .3s ease;
+    backface-visibility: hidden;
+}
+.thumb:hover .image {
+    opacity: 0.3;
+}
+
+.thumb:hover .middle {
+    opacity: 1;
+}
+.delete-btn {
+    background-color: var(--red);
+    color: var(--white);
+    border: none;
+    border-radius: 50px;
+    padding: .3rem 1rem; /* Reduced padding */
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color .3s ease, transform .3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 1rem auto 0;
+    text-align: center;
+    width: fit-content;
+}
+
+    .delete-btn i {
+        font-size: 1.2rem;
+    }
+
+    .delete-btn:hover {
+        background-color: darken(var(--red), 10%);
+        transform: scale(1.05);
+    }
+
+    .delete-btn:active {
+        transform: scale(0.95);
+    }
+
+    .delete-btn:focus {
+        outline: 2px solid darken(var(--red), 20%);
+    }
+
+.box-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    align-items: center; /* Align items vertically center */
+}
+
+.add-course {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--light-bg);
+    border: var(--border);
+    border-style: dashed;
+    border-radius: .5rem;
+    height: 20rem;
+    position: relative;
+    cursor: pointer;
+    transition: background-color .3s ease;
+    text-align: center;
+}
+
+    .add-course:hover {
+        background-color: var(--light-color);
+    }
+
+    .add-course .plus-icon {
+        font-size: 7rem!important; /* Dramatically increased size */
+        color: var(--main-color);
+    }
+
+    .add-course .add-title {
+        margin-top: 1rem;
+        font-size: 1.5rem;
+        color: var(--main-color);
+    }
