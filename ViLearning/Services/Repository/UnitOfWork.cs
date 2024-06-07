@@ -18,6 +18,7 @@ namespace ViLearning.Services.Repository
         public IStudentCertificateRepository StudentCertificate { get; private set; }
 
 
+
         private ApplicationDBContext _db;
 
         public UnitOfWork(ApplicationDBContext db)

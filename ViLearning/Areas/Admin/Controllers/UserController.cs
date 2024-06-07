@@ -14,12 +14,15 @@ namespace ViLearning.Areas.Admin.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly BlobStorageService _blobStorageService;
 
-        public UserController(IUnitOfWork unitOfWork,UserManager<ApplicationUser> userManager,IWebHostEnvironment webHostEnvironment)
+
+        public UserController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IWebHostEnvironment webHostEnvironment, BlobStorageService blobStorageService)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
             _webHostEnvironment = webHostEnvironment;
+            _blobStorageService = blobStorageService;
         }
         public IActionResult Index()
         {
@@ -74,6 +77,7 @@ namespace ViLearning.Areas.Admin.Controllers
             return RedirectToAction("Index", "User");
         }
 
+
         public IActionResult Reject(string id)
         {
             var user = _unitOfWork.ApplicationUser.Get(u => u.Id == id);
@@ -81,26 +85,42 @@ namespace ViLearning.Areas.Admin.Controllers
             {
                 return Json(new { success = false, message = "Error while delete" });
             }
-            var cerfiticateUrl = Path.Combine(_webHostEnvironment.WebRootPath, user.TeacherCertificateImgUrl.TrimStart('/'));
-            if (System.IO.File.Exists(cerfiticateUrl))
+
+            // Get the container name and blob name from the user's data
+            string containerName = "teacher-certificate";
+            string blobName = Path.GetFileName(user.TeacherCertificateImgUrl);
+
+            try
             {
-                System.IO.File.Delete(cerfiticateUrl);
+                // Delete the blob using BlobStorageService
+                _blobStorageService.DeleteFileAsync(containerName, blobName).GetAwaiter().GetResult();
+
+                // Update the user's data
+                user.TeacherCertificateImgUrl = null;
+                _unitOfWork.Save();
+
+                TempData["success"] = "Đã từ chối đơn xét duyệt";
+                return RedirectToAction("Index", "User");
             }
-            user.TeacherCertificateImgUrl = null;
-            _unitOfWork.Save();
-            TempData["success"] = "Đã từ chối đơn xét duyệt";
-            return RedirectToAction("Index", "User");
+            catch (Exception ex)
+            {
+                // Log or handle the exception
+                TempData["error"] = "Error while deleting the blob: " + ex.Message;
+                return RedirectToAction("Index", "User");
+            }
         }
+
+
 
         #region API CALLS
         [HttpGet]
         public IActionResult GetAll()
         {
             List<ApplicationUser> objUserList = _unitOfWork.ApplicationUser.GetAll().ToList();
-            foreach(var user in objUserList)
+            foreach (var user in objUserList)
             {
                 user.Role = _userManager.GetRolesAsync(user).GetAwaiter().GetResult().FirstOrDefault();
-            } 
+            }
             return Json(new { data = objUserList });
         }
         #endregion
