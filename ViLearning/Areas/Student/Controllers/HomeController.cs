@@ -24,20 +24,39 @@ namespace ViLearning.Areas.Student.Controllers
             List<ApplicationUser> userList = _unitOfWork.ApplicationUser.GetAll().ToList();
             foreach (ApplicationUser user in userList)
             {
-                if(user.Role == "Teacher")
+                if (user.Role == "Teacher")
                 {
                     teacherList.Add(user);
                 }
             }
             var viewModel = new LandingPageVM
             {
-                Courses = _unitOfWork.Course.GetAll().ToList(),
+                Courses = _unitOfWork.Course.GetAll(includeProperties: "Subject,ApplicationUser").ToList(),
                 UserList = userList,
                 TeacherList = teacherList
             };
             return View(viewModel);
         }
 
+        public IActionResult Details(int CourseId)
+        {
+            List<Lesson> lessonOfCourse = new List<Lesson>();
+            List<Lesson> lessons = _unitOfWork.Lesson.GetAll().ToList();
+            Course course = _unitOfWork.Course.Get(c => c.CourseId == CourseId, includeProperties: "Subject,ApplicationUser");
+            foreach (Lesson lesson in lessons)
+            {
+                if (lesson.Course.CourseId == CourseId)
+                {
+                    lessonOfCourse.Add(lesson);
+                }
+            }
+            var detailViewModel = new CourseDetailsVM
+            {
+                Course = course,
+                Lessons = lessonOfCourse
+            };
+            return View(detailViewModel);
+        }
         public IActionResult Privacy()
         {
             return View();
