@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +28,10 @@ namespace ViLearning.Areas.Teacher.Controllers
         // GET: Teacher/Courses
         public async Task<IActionResult> Index()
         {
-            List<Course> courses = _unitOfWork.Course.GetAll().ToList();
+
+            string currentUserId = User.Identity.GetUserId();
+         
+            var courses = _unitOfWork.Course.GetAll().Where(c => c.UserId == currentUserId).ToList();
 
             return View(courses);
         }

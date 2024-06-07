@@ -1,0 +1,60 @@
+﻿@model IEnumerable<ViLearning.Models.Lesson>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create" asp-route-name="@Model.First().Course.CourseName">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.LessonName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NumberOfQuestion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LessonNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Content)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Course)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.LessonName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NumberOfQuestion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LessonNo)
+            </td>
+            <td>
+                @Html.Raw(item.Content);
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Course.CourseName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.LessonId" asp-route-name="@item.Course.CourseName">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.LessonId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.LessonId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
