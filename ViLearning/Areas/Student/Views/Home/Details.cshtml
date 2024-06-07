@@ -1,0 +1,70 @@
+﻿@model CourseDetailsVM
+<div class="course-header">
+    <h1 class="text-white">COURSE DETAILS</h1>
+    <p>Odio et unde deleniti. Deserunt numquam exercitationem. Officiis quo odio sint voluptas.</p>
+</div>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item text-white"><a asp-action="Index">Trang chủ</a></li>
+        <li class="breadcrumb-item active text-white" aria-current="page">Thông tin khóa học</li>
+    </ol>
+</nav>
+<div class="container mt-5">
+    <div class="row course-info justify-content-center ">
+        <div class="col-sm-7">
+            <div style="width: 800px; height: 400px; background-image: url('@Model.Course.CoverImgUrl'); background-size: cover; background-position: center;"></div>
+            <h3 class="mt-5">@Model.Course.CourseName</h3>
+            <hr />
+            <p>@Model.Course.Description</p>
+            <div class="course-lessons">
+                <div class="chapter">
+                    <h4>Nội dung khóa học:</h4>
+                    <ul>
+                        <a asp-controller="Home" asp-action="Index" class="text-decoration-none">
+                        <li>
+                            <span class="lesson-title">Cài đặt môi trường lập trình C</span>
+                            <span class="lesson-status"><i class="bi bi-circle"></i></span>
+                        </li>
+                        </a>
+
+                        <li>
+                            <span class="lesson-title">Viết chương trình Hello World đầu tiên trong C</span>
+                            <span class="lesson-status"><i class="bi bi-check-circle-fill"></i></span>
+                        </li>
+                        <li>
+                            <span class="lesson-title">Bài tập C cơ bản: câu lệnh print</span>
+                            <span class="lesson-status"><i class="bi bi-check-circle-fill"></i> </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="course-details">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 style="margin:0"> Giáo viên: </h5>
+                    <p>@Model.Course.ApplicationUser.FullName</p>
+                </div>
+            </div>
+            <div class="course-details">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5>Giá: </h5>
+                    <p>@Model.Course.Price?.ToString("N0") VNĐ</p>
+                </div>
+            </div>
+            <div class="course-details">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5>Số bài học: </h5>
+                    <p>@Model.Lessons.Count()</p>
+                </div>
+            </div>
+            <div class="mt-4">
+                <a class="btn btn-success d-flex justify-content-center">Đăng kí khóa học</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Student/CourseDetails.css">
+}

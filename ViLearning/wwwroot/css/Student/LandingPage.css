@@ -74,11 +74,6 @@
     display: flex;
     align-items: center;
 }
-
-    .author img {
-        margin-right: 10px;
-    }
-
 .stats {
     display: flex;
     align-items: center;

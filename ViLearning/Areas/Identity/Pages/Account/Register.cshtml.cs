@@ -145,8 +145,44 @@ namespace ViLearning.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Vui lòng xác nhận email của bạn bằng cách <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>bấm vào đây</a>.");
+                    await _emailSender.SendEmailAsync(
+     Input.Email,
+     "Xác thực email",
+     $"<table role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;\">" +
+     $"<tr>" +
+     $"<td></td>" +
+     $"<td class=\"container\" style=\"margin: 0 auto !important; max-width: 600px; padding: 0; padding-top: 24px; width: 600px;\">" +
+     $"<div class=\"content\" style=\"box-sizing: border-box; display: block; margin: 0 auto; max-width: 600px; padding: 0;\">" +
+     $" <table role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"main\" style=\"background: #ffffff; border: 1px solid #eaebed; border-radius: 16px; width: 100%; text-align: center;\">" +
+     $"                <tr>" +
+     $"                <td class=\"wrapper\" style=\"box-sizing: border-box; padding: 24px;\">\r\n" +
+     $"                  <p style=\"font-weight: normal; margin: 0; margin-bottom: 16px;color:#000000;\">Chào bạn</p>\r\n" +
+     $"                  <p style=\"font-weight: normal; margin: 0; margin-bottom: 16px;color:#000000;\">Chúng tôi cần xác thực email của bạn trước khi hoàn tất đăng kí tài khoản. Vui lòng bấm vào nút bên dưới.</p>\r\n" +
+     $"                  <table role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"btn btn-primary\" style=\"min-width: 100% !important; width: 100%;\">\r\n" +
+     $"                    <tbody>\r\n" +
+     $"                      <tr>\r\n" +
+     $"                        <td align=\"center\" style=\"padding-bottom: 16px;\">\r\n" +
+     $"                          <table role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\r\n" +
+     $"                            <tbody>\r\n" +
+     $"                              <tr>\r\n" +
+     $"                                <td><a href='{HtmlEncoder.Default.Encode(callbackUrl)}' style=\"background-color: #ffffff; border: solid 2px #0867ec; border-radius: 4px; box-sizing: border-box; color: #0867ec; cursor: pointer; display: inline-block; font-size: 16px; font-weight: bold; margin: 0; padding: 12px 24px; text-decoration: none; text-transform: capitalize;\">Bấm vào đây</a></td>\r\n" +
+     $"                              </tr>\r\n" +
+     $"                            </tbody>\r\n" +
+     $"                          </table>\r\n" +
+     $"                        </td>\r\n" +
+     $"                      </tr>\r\n" +
+     $"                    </tbody>\r\n" +
+     $"                  </table>\r\n" +
+     $"                  <p style=\"font-weight: normal; margin: 0; margin-bottom: 16px;color:#000000;\">Cảm ơn bạn đã tin tưởng Vi-Learning</p>\r\n" +
+     $"                  <p style=\"font-weight: normal; margin: 0; margin-bottom: 16px;color:#000000;\">Vi-Learning</p>\r\n" +
+     $"                </td>\r\n" +
+     $"              </tr>\r\n" +
+     $"            </table>\r\n" +
+     $"          </div>\r\n" +
+     $"        </td>\r\n" +
+     $"        <td></td>\r\n" +
+     $"      </tr>\r\n" +
+     $"    </table>\r\n");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
