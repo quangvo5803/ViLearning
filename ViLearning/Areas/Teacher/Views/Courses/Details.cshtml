@@ -5,57 +5,82 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Details</h1>
+@section Styles {
+    <link rel="stylesheet" href="~/css/Teacher/Lessons.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+}
+<div id="course-details-container" class="course-details-container">
+    <section class="playlist-details">
+        <h1 class="heading">playlist details</h1>
+        <div class="playlist-details__row">
+            <div class="playlist-details__column">
+                <div class="playlist-details__thumb">
+                    <img src="~/images/Course/@Model.CoverImgUrl" alt="">
+                    <span>10 Lessons</span>
+                </div>
+            </div>
+            <div class="playlist-details__column">
+                
+                <div class="playlist-details__details">
+                    <h3>complete HTML tutorial</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum minus reiciendis, error sunt veritatis exercitationem deserunt velit doloribus itaque voluptate.</p>
+                    <a asp-action="Edit" asp-route-id="@Model.CourseId" class="inline-btn">Edit Course</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="playlist-videos">
+        <h1 class="heading">playlist videos</h1>
+        <div class="playlist-videos__box-container">
+            <a class="playlist-videos__box" href="watch-video.html">
+                <i class="fas fa-play"></i>
+                <div class="playlist-videos__image-wrapper">
+                    <img src="~/images/Course/thumb-4.png" alt="">
+                    <span class="lesson-number">#01</span>
+                </div>
+                <h3>complete HTML tutorial (part 01)</h3>
+            </a>
+            <a class="playlist-videos__box" href="watch-video.html">
+                <i class="fas fa-play"></i>
+                <div class="playlist-videos__image-wrapper">
+                    <img src="~/images/Course/thumb-1.png" alt="">
+                    <span class="lesson-number">#02</span>
+                </div>
+                <h3>complete HTML tutorial (part 02)</h3>
+            </a>
+            <a class="playlist-videos__box" href="watch-video.html">
+                <i class="fas fa-play"></i>
+                <div class="playlist-videos__image-wrapper">
+                    <img src="~/images/Course/thumb-3.png" alt="">
+                    <span class="lesson-number">#03</span>
+                </div>
+                <h3>complete HTML tutorial (part 03)</h3>
+            </a>
+            <a class="playlist-videos__box" href="watch-video.html">
+                <i class="fas fa-play"></i>
+                <div class="playlist-videos__image-wrapper">
+                    <img src="~/images/Course/thumb-2.png" alt="">
+                    <span class="lesson-number">#04</span>
+                </div>
+                <h3>complete HTML tutorial (part 01)</h3>
+            </a>
+            <a class="playlist-videos__box" href="watch-video.html">
+                <i class="fas fa-play"></i>
+                <div class="playlist-videos__image-wrapper">
+                    <img src="~/images/Course/thumb-1.png" alt="">
+                    <span class="lesson-number">#05</span>
+                </div>
+                <h3>complete HTML tutorial (part 02)</h3>
+            </a>
 
-<div>
-    <h4>Course</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CourseName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CourseName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CoverImgUrl)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CoverImgUrl)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Grade)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Grade)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Subject)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Subject.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ApplicationUser)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ApplicationUser.Id)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.CourseId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+            <a asp-action="Create" class="playlist-videos__box">
+                <div class="box add-course">
+                    <div class="plus-icon">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                   
+                </div>
+            </a>            
+        </div>
+    </section>
 </div>

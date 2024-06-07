@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using ViLearning.Data;
 using ViLearning.Models;
-using ViLearning.Services.Repository;
 using ViLearning.Services.Repository.IRepository;
 
 namespace ViLearning.Areas.Teacher.Controllers
@@ -15,34 +11,31 @@ namespace ViLearning.Areas.Teacher.Controllers
     [Area("Teacher")]
     public class CoursesController : Controller
     {
-        private readonly ApplicationDBContext _context;
         private readonly IUnitOfWork _unitOfWork;
-        public CoursesController(ApplicationDBContext context, IUnitOfWork unitOfWork)
+
+        public CoursesController(IUnitOfWork unitOfWork)
         {
-            _context = context;
             _unitOfWork = unitOfWork;
         }
 
         // GET: Teacher/Courses
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            List<Course> courses = _unitOfWork.Course.GetAll().ToList();
-
+            string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var courses = _unitOfWork.Course.GetAll().Where(c => c.UserId == currentUserId).ToList();
             return View(courses);
         }
 
         // GET: Teacher/Courses/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var course = await _context.Courses
-                .Include(c => c.ApplicationUser)
-                .Include(c => c.Subject)
-                .FirstOrDefaultAsync(m => m.CourseId == id);
+            var course = _unitOfWork.Course.Get(c => c.CourseId == id, includeProperties: "ApplicationUser,Subject");
+
             if (course == null)
             {
                 return NotFound();
@@ -54,96 +47,96 @@ namespace ViLearning.Areas.Teacher.Controllers
         // GET: Teacher/Courses/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Name");
-            return View();
+            ViewBag.SubjectId = new SelectList(_unitOfWork.Subject.GetAll(), "Id", "Name");
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            ViewBag.UserId = userId;
+            return View(new Course { UserId = userId });
         }
 
         // POST: Teacher/Courses/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CourseId,CourseName,Price,Description,CoverImgUrl,SubjectId,UserId,Grade")] Course course)
+        public IActionResult Create([Bind("CourseName,Price,Description,CoverImgUrl,SubjectId,Grade")] Course course)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            course.UserId = userId;
+
             if (ModelState.IsValid)
             {
-                _context.Add(course);
-                await _context.SaveChangesAsync();
+                _unitOfWork.Course.Add(course);
+                _unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", course.UserId);
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Name", course.SubjectId);
+            else
+            {
+                // Log the validation errors
+                var errors = ModelState.Values.SelectMany(v => v.Errors);
+                foreach (var error in errors)
+                {
+                    Console.WriteLine(error.ErrorMessage);
+                }
+            }
+
+            ViewBag.SubjectId = new SelectList(_unitOfWork.Subject.GetAll(), "Id", "Name", course.SubjectId);
             return View(course);
         }
 
         // GET: Teacher/Courses/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var course = await _context.Courses.FindAsync(id);
+            var course = _unitOfWork.Course.Get(c => c.CourseId == id);
             if (course == null)
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", course.UserId);
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Name", course.SubjectId);
+
+            ViewBag.SubjectId = new SelectList(_unitOfWork.Subject.GetAll(), "Id", "Name", course.SubjectId);
             return View(course);
         }
 
         // POST: Teacher/Courses/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CourseId,CourseName,Price,Description,CoverImgUrl,SubjectId,UserId,Grade")] Course course)
+        public IActionResult Edit(int id, [Bind("CourseId,CourseName,Price,Description,CoverImgUrl,SubjectId,Grade")] Course course)
         {
             if (id != course.CourseId)
             {
                 return NotFound();
             }
 
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            course.UserId = userId;
+
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(course);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CourseExists(course.CourseId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+               
+                    _unitOfWork.Course.Update(course);
+                    _unitOfWork.Save();
+
+               
+                
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", course.UserId);
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Name", course.SubjectId);
+
+            ViewBag.SubjectId = new SelectList(_unitOfWork.Subject.GetAll(), "Id", "Name", course.SubjectId);
             return View(course);
         }
 
         // GET: Teacher/Courses/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var course = await _context.Courses
-                .Include(c => c.ApplicationUser)
-                .Include(c => c.Subject)
-                .FirstOrDefaultAsync(m => m.CourseId == id);
+            var course = _unitOfWork.Course.Get(c => c.CourseId == id, includeProperties: "ApplicationUser,Subject");
+
             if (course == null)
             {
                 return NotFound();
@@ -155,21 +148,71 @@ namespace ViLearning.Areas.Teacher.Controllers
         // POST: Teacher/Courses/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
-            var course = await _context.Courses.FindAsync(id);
+            var course = _unitOfWork.Course.Get(c => c.CourseId == id);
             if (course != null)
             {
-                _context.Courses.Remove(course);
+                _unitOfWork.Course.Remove(course);
+                _unitOfWork.Save();
             }
-
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CourseExists(int id)
+        // GET: Teacher/Courses/Search
+        public IActionResult Search(string searchString)
         {
-            return _context.Courses.Any(e => e.CourseId == id);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var courses = _unitOfWork.Course.GetAll().Where(c => c.UserId == userId);
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                courses = courses.Where(s => s.CourseName.Contains(searchString));
+            }
+
+            ViewBag.Subjects = _unitOfWork.Subject.GetAll();
+            return View("Index", courses.ToList());
+        }
+
+        // GET: Teacher/Courses/Filter
+        public IActionResult Filter(int? subjectId, double? minPrice, double? maxPrice, string sortOrder)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var courses = _unitOfWork.Course.GetAll().Where(c => c.UserId == userId);
+
+            if (subjectId.HasValue && subjectId > 0)
+            {
+                courses = courses.Where(c => c.SubjectId == subjectId);
+            }
+
+            if (minPrice.HasValue)
+            {
+                courses = courses.Where(c => c.Price >= minPrice);
+            }
+
+            if (maxPrice.HasValue)
+            {
+                courses = courses.Where(c => c.Price <= maxPrice);
+            }
+
+            switch (sortOrder)
+            {
+                case "asc":
+                    courses = courses.OrderBy(c => c.Price);
+                    break;
+                case "desc":
+                    courses = courses.OrderByDescending(c => c.Price);
+                    break;
+                default:
+                    break;
+            }
+
+            ViewBag.SelectedSubjectId = subjectId;
+            ViewBag.MinPrice = minPrice;
+            ViewBag.MaxPrice = maxPrice;
+            ViewBag.Subjects = _unitOfWork.Subject.GetAll();
+
+            return View("Index", courses.ToList());
         }
     }
 }

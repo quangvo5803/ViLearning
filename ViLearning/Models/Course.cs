@@ -24,7 +24,7 @@ namespace ViLearning.Models
 
         //Foreign key
         public int SubjectId { get; set; }
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
         public int Grade {  get; set; }
         //Relation
         [ForeignKey("SubjectId")]
