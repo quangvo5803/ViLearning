@@ -1,4 +1,5 @@
-﻿using ViLearning.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using ViLearning.Data;
 using ViLearning.Models;
 using ViLearning.Services.Repository.IRepository;
 
@@ -15,6 +16,19 @@ namespace ViLearning.Services.Repository
         public void Update(Lesson lesson)
         {
             _db.Lessons.Update(lesson);
+        }
+
+        public async Task<List<Lesson>?> GetLessonByCourseId(int courseId)
+        {
+            try
+            {
+                return await _db.Lessons.Where(x => x.CourseId == courseId).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw;
+            }
         }
     }
 }

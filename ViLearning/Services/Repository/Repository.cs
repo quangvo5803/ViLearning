@@ -46,6 +46,20 @@ namespace ViLearning.Services.Repository
             return query.ToList();
         }
 
+        public IEnumerable<T> GetRange(Expression<Func<T, bool>> filter, string? includeProperties = null)
+        {
+            IQueryable<T> query = dbSet;
+            query = query.Where(filter);
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var includeProp in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProp);
+                }
+            }
+            return query.ToList();
+        }
+
         public void Remove(T entity)
         {
             dbSet.Remove(entity);
@@ -55,5 +69,6 @@ namespace ViLearning.Services.Repository
         {
             dbSet.RemoveRange(entities);
         }
+
     }
 }
