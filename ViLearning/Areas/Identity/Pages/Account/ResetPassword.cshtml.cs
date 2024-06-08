@@ -52,6 +52,7 @@ namespace ViLearning.Areas.Identity.Pages.Account
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Password)]
+            [Display(Name = "Mật khẩu mới")]
             public string Password { get; set; }
 
             /// <summary>
@@ -59,8 +60,8 @@ namespace ViLearning.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Display(Name = "Xác nhận mật khẩu mới")]
+            [Compare("Password", ErrorMessage = "Mật khẩu không giống nhau. Vui lòng nhập lại")]
             public string ConfirmPassword { get; set; }
 
             /// <summary>
@@ -72,7 +73,7 @@ namespace ViLearning.Areas.Identity.Pages.Account
 
         }
 
-        public IActionResult OnGet(string code = null)
+        public IActionResult OnGet(string code = null,string email = null)
         {
             if (code == null)
             {
@@ -82,6 +83,7 @@ namespace ViLearning.Areas.Identity.Pages.Account
             {
                 Input = new InputModel
                 {
+                    Email = email,
                     Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code))
                 };
                 return Page();
@@ -99,13 +101,14 @@ namespace ViLearning.Areas.Identity.Pages.Account
             if (user == null)
             {
                 // Don't reveal that the user does not exist
-                return RedirectToPage("./ResetPasswordConfirmation");
+                return RedirectToPage("./Login");
             }
 
             var result = await _userManager.ResetPasswordAsync(user, Input.Code, Input.Password);
             if (result.Succeeded)
             {
-                return RedirectToPage("./ResetPasswordConfirmation");
+                TempData["Success"] = "Thay đổi mật khẩu thành công";
+                return RedirectToPage("./Login");
             }
 
             foreach (var error in result.Errors)
