@@ -22,12 +22,12 @@
                     <ul>
                         @foreach(var lesson in Model.Lessons)
                         {
-                            <a asp-controller="Home" asp-action="Index" class="text-decoration-none">
-                            <li>
+                        <a asp-controller="Home" asp-action="Index" class="text-decoration-none">
+                        <li>
                                 <span class="lesson-title">@lesson.LessonName</span>
-                                <span class="lesson-status"><i class="bi bi-circle"></i></span>
-                            </li>
-                            </a>
+                            <span class="lesson-status"><i class="bi bi-circle"></i></span>
+                        </li>
+                        </a>
                         }
                     </ul>
                 </div>
