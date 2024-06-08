@@ -1,5 +1,8 @@
 ﻿using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +28,11 @@ namespace ViLearning.Areas.Teacher.Controllers
         {
             string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var courses = _unitOfWork.Course.GetAll().Where(c => c.UserId == currentUserId).ToList();
+
+            string currentUserId = User.Identity.GetUserId();
+         
+            var courses = _unitOfWork.Course.GetAll().Where(c => c.UserId == currentUserId).ToList();
+
             return View(courses);
         }
 

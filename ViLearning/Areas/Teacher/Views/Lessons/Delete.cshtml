@@ -19,16 +19,32 @@
             @Html.DisplayFor(model => model.LessonName)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.statusBoolean)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.statusBoolean)
-        </dd>
-        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.NumberOfQuestion)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.NumberOfQuestion)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.LessonNo)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.LessonNo)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Content)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.Raw(@Model.Content);
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Video)
+        </dt>
+        <dd class="col-sm-10">
+            <video width="320" height="240" controls>
+                <source src="@Model.Video" type="video/mp4">
+                <source src="@Model.Video" type="video/ogg">
+                Your browser does not support the video tag.
+            </video>
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Course)

@@ -10,10 +10,14 @@ namespace ViLearning.Models
         public int LessonId { get; set; }
         [Required]
         public string LessonName { get; set; }
-        public bool statusBoolean { get; set; }
 
         public int NumberOfQuestion { get; set; }
+        [Required]
+        public int LessonNo { get; set; }
+        [Required]
+        public string Content { get; set; }
 
+        public string? Video { get; set; }
         //Foreign key
         public int CourseId { get; set; }
 
@@ -23,7 +27,7 @@ namespace ViLearning.Models
         public Course Course { get; set; }
 
         //Navigation property
-        public virtual ICollection<Comment> Comments { get;}
+        public virtual ICollection<Comment>? Comments { get;}
         public virtual ICollection<Question>? Questions { get;}
     }
 }
