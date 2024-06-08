@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ViLearning.Models;
 using ViLearning.Services.Repository.IRepository;
+using ViLearning.Utility;
 
 namespace ViLearning.Areas.Teacher.Controllers
 {
@@ -12,10 +13,11 @@ namespace ViLearning.Areas.Teacher.Controllers
     public class CoursesController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-
-        public CoursesController(IUnitOfWork unitOfWork)
+        private readonly BlobStorageService _blobStorageService;
+        public CoursesController(IUnitOfWork unitOfWork, BlobStorageService blobStorageService)
         {
             _unitOfWork = unitOfWork;
+            _blobStorageService = blobStorageService;
         }
 
         // GET: Teacher/Courses
@@ -56,15 +58,28 @@ namespace ViLearning.Areas.Teacher.Controllers
         // POST: Teacher/Courses/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("CourseName,Price,Description,CoverImgUrl,SubjectId,Grade")] Course course)
+        public async Task<IActionResult> Create([Bind("CourseName,Price,Description,CoverImgUrl,SubjectId,Grade")] Course course, IFormFile coverImage)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             course.UserId = userId;
 
+            if (coverImage != null && coverImage.Length > 0)
+            {
+                // Generate a unique file name
+                string containerName = "course-cover-img";
+                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(coverImage.FileName);
+
+                // Upload file to Azure Blob Storage
+                using (var stream = coverImage.OpenReadStream())
+                {
+                    course.CoverImgUrl = await _blobStorageService.UploadFileAsync(containerName, fileName, stream);
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 _unitOfWork.Course.Add(course);
-                _unitOfWork.Save();
+                _unitOfWork.Save(); 
                 return RedirectToAction(nameof(Index));
             }
             else
@@ -80,6 +95,7 @@ namespace ViLearning.Areas.Teacher.Controllers
             ViewBag.SubjectId = new SelectList(_unitOfWork.Subject.GetAll(), "Id", "Name", course.SubjectId);
             return View(course);
         }
+
 
         // GET: Teacher/Courses/Edit/5
         public IActionResult Edit(int? id)
@@ -102,7 +118,7 @@ namespace ViLearning.Areas.Teacher.Controllers
         // POST: Teacher/Courses/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("CourseId,CourseName,Price,Description,CoverImgUrl,SubjectId,Grade")] Course course)
+        public async Task<IActionResult> Edit(int id, [Bind("CourseId,CourseName,Price,Description,CoverImgUrl,SubjectId,Grade")] Course course, IFormFile coverImage)
         {
             if (id != course.CourseId)
             {
@@ -114,18 +130,47 @@ namespace ViLearning.Areas.Teacher.Controllers
 
             if (ModelState.IsValid)
             {
-               
-                    _unitOfWork.Course.Update(course);
-                    _unitOfWork.Save();
+                try
+                {
+                    if (coverImage != null && coverImage.Length > 0)
+                    {
+                        // Generate a unique file name
+                        string containerName = "course-cover-img";
+                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(coverImage.FileName);
 
-               
-                
+                        // Delete the old file from Azure Blob Storage if exists
+                        if (!string.IsNullOrEmpty(course.CoverImgUrl))
+                        {
+                            Uri oldUri = new Uri(course.CoverImgUrl);
+                            string oldFileName = Path.GetFileName(oldUri.LocalPath);
+                            await _blobStorageService.DeleteFileAsync(containerName, oldFileName);
+                        }
+
+                        // Upload the new file to Azure Blob Storage
+                        using (var stream = coverImage.OpenReadStream())
+                        {
+                            course.CoverImgUrl = await _blobStorageService.UploadFileAsync(containerName, fileName, stream);
+                        }
+                    }
+
+                    _unitOfWork.Course.Update(course);
+                    _unitOfWork.Save(); 
+                }
+                catch (Exception ex)
+                {
+                    
+                    Console.WriteLine($"Error updating course: {ex.Message}");
+                   
+                    ModelState.AddModelError(string.Empty, $"Error updating course: {ex.Message}");
+                }
+
                 return RedirectToAction(nameof(Index));
             }
 
             ViewBag.SubjectId = new SelectList(_unitOfWork.Subject.GetAll(), "Id", "Name", course.SubjectId);
             return View(course);
         }
+
 
         // GET: Teacher/Courses/Delete/5
         public IActionResult Delete(int? id)

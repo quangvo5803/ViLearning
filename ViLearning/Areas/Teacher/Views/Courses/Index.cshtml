@@ -15,7 +15,7 @@
                 <div class="box">
 
                     <div class="thumb">
-                        <a asp-action="Details" asp-route-id="@course.CourseId"><img src="~/images/Course/@course.CoverImgUrl" alt=""></a>
+                        <a asp-action="Details" asp-route-id="@course.CourseId"><img src="@course.CoverImgUrl" alt=""></a>
                         <div class="middle">
                             <div class="text"><div class="text"><a asp-action="Details" asp-route-id="@course.CourseId"></a></div></div>
                         </div>
