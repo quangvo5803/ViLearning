@@ -17,6 +17,7 @@ namespace ViLearning.Models
         [Required]
         public string Content { get; set; }
 
+        public string? Video { get; set; }
         //Foreign key
         public int CourseId { get; set; }
 

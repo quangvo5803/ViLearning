@@ -1,43 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Shared;
 using ViLearning.Data;
 using ViLearning.Models;
+using ViLearning.Services.Repository.IRepository;
+using ViLearning.Utility;
 
 namespace ViLearning.Areas.Teacher.Controllers
 {
     [Area("Teacher")]
     public class LessonsController : Controller
     {
-        private readonly ApplicationDBContext _context;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly BlobStorageService _blobStorageService;
 
-        public LessonsController(ApplicationDBContext context)
+        public LessonsController(IUnitOfWork unitOfWork, BlobStorageService blobStorageService)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
+            _blobStorageService = blobStorageService;
         }
 
         // GET: Teacher/Lessons
         public async Task<IActionResult> Index()
         {
-            var applicationDBContext = _context.Lessons.Include(l => l.Course);
-            return View(await applicationDBContext.ToListAsync());
+
+            var applicationDBContext = _unitOfWork.Lesson.GetAll(includeProperties:"Course");
+            /*var applicationDBContext = _context.Lessons.Include(l => l.Course);*/
+            return View( applicationDBContext);
         }
 
         // GET: Teacher/Lessons/Details/5
-        public async Task<IActionResult> Details(int? id)
+        [HttpGet("Teacher/{CourseName}/{LessonName}/Detail")]
+        public async Task<IActionResult> Details(string CourseName, string LessonName, int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-
-            var lesson = await _context.Lessons
-                .Include(l => l.Course)
-                .FirstOrDefaultAsync(m => m.LessonId == id);
+            var lesson = _unitOfWork.Lesson.Get(m => m.LessonId == id,includeProperties:"Course");
             if (lesson == null)
             {
                 return NotFound();
@@ -47,55 +56,88 @@ namespace ViLearning.Areas.Teacher.Controllers
         }
 
         // GET: Teacher/Lessons/Create
-        [HttpGet("Teacher/Courses/{name}/Create")]
+        [HttpGet("Teacher/{name}/Lessons/Create")]
         public IActionResult Create(string name)
         {
-            ViewData["CourseId"] = new SelectList(_context.Courses.Where(c => c.CourseName.Equals(name)).ToList(), "CourseId", "CourseName");
+            
+            ViewData["CourseId"] = new SelectList
+                    (_unitOfWork.Course
+                    .GetRange(c => c.CourseName.Equals(name)), "CourseId", "CourseName");
             return View();
         }
 
+        [TempData]
+        public string StatusMessage { get; set; }
         // POST: Teacher/Lessons/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost("Teacher/Courses/{name}/Create")]
+        [HttpPost("Teacher/{name}/Lessons/Create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(string name, [Bind("LessonId,LessonName,NumberOfQuestion,LessonNo,Content,CourseId")] Lesson lesson)
+        public async Task<IActionResult> Create(string name, [Bind("LessonId,LessonName,NumberOfQuestion,LessonNo,Content,Video,CourseId")] Lesson lesson, IFormFile Video)
         {
             ModelState.Remove("Comments");
             if (ModelState.IsValid)
             {
-                _context.Add(lesson);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    string containerName = "lesson-video";
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(Video.FileName);
+
+                    // Check and delete old file from Azure Blob Storage
+                    if (!string.IsNullOrEmpty(lesson.Video))
+                    {
+                        Uri oldUri = new Uri(lesson.Video);
+                        string oldFileName = Path.GetFileName(oldUri.LocalPath);
+                        await _blobStorageService.DeleteFileAsync(containerName, oldFileName);
+                    }
+
+                    // Upload new file to Azure Blob Storage
+                    using (var stream = Video.OpenReadStream())
+                    {
+                        lesson.Video = await _blobStorageService.UploadFileAsync(containerName, fileName, stream);
+                    }
+
+                    _unitOfWork.Lesson.Add(lesson);
+                    _unitOfWork.Save();
+
+
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    StatusMessage = $"Error uploading file: {ex.Message}";
+                    ViewData["CourseId"] = new SelectList(_unitOfWork.Course.GetRange(c => c.CourseName.Equals(name)), "CourseId", "CourseName", lesson.CourseId);
+                    return View(lesson);
+                }
             }
-            ViewData["CourseId"] = new SelectList(_context.Courses.Where(c => c.CourseName.Equals(name)).ToList(), "CourseId", "CourseName", lesson.CourseId);
+            
             return View(lesson);
         }
 
         // GET: Teacher/Lessons/Edit/5
-        [HttpGet("Teacher/Courses/{name}/Lessons/{id}")]
-        public async Task<IActionResult> Edit(string name, int? id)
+        [HttpGet("Teacher/{CourseName}/{LessonName}/Edit")]
+        public async Task<IActionResult> Edit(string CourseName, string LessonName, int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var lesson = await _context.Lessons.FindAsync(id);
+            var lesson = _unitOfWork.Lesson.Get(c => c.LessonId == id);
             if (lesson == null)
             {
                 return NotFound();
             }
-            ViewData["CourseId"] = new SelectList(_context.Courses, "CourseId", "CourseName", lesson.CourseId);
+            ViewData["CourseId"] = new SelectList(_unitOfWork.Course.GetAll(), "CourseId", "CourseName", lesson.CourseId);
             return View(lesson);
         }
 
         // POST: Teacher/Lessons/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost("Teacher/Courses/{name}/Lessons/{id}")]
+        [HttpPost("Teacher/{CourseName}/{LessonName}/Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("LessonId,LessonName,NumberOfQuestion,LessonNo,Content,CourseId")] Lesson lesson)
+        public async Task<IActionResult> Edit(string CourseName, string LessonName, int id, [Bind("LessonId,LessonName,NumberOfQuestion,LessonNo,Content,Video,CourseId")] Lesson lesson, IFormFile Video)
         {
             if (id != lesson.LessonId)
             {
@@ -107,8 +149,36 @@ namespace ViLearning.Areas.Teacher.Controllers
             {
                 try
                 {
-                    _context.Update(lesson);
-                    await _context.SaveChangesAsync();
+                    try
+                    {
+                        string containerName = "lesson-video";
+                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(Video.FileName);
+
+                        // Check and delete old file from Azure Blob Storage
+                        if (!string.IsNullOrEmpty(lesson.Video))
+                        {
+                            Uri oldUri = new Uri(lesson.Video);
+                            string oldFileName = Path.GetFileName(oldUri.LocalPath);
+                            await _blobStorageService.DeleteFileAsync(containerName, oldFileName);
+                        }
+
+                        // Upload new file to Azure Blob Storage
+                        using (var stream = Video.OpenReadStream())
+                        {
+                            lesson.Video = await _blobStorageService.UploadFileAsync(containerName, fileName, stream);
+                        }
+
+                        _unitOfWork.Lesson.Update(lesson);
+                        _unitOfWork.Save();
+
+
+                        return RedirectToAction(nameof(Index));
+                    }
+                    catch (Exception ex)
+                    {
+                        StatusMessage = $"Error uploading file: {ex.Message}";
+                        return View(lesson);
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -128,16 +198,17 @@ namespace ViLearning.Areas.Teacher.Controllers
         }
 
         // GET: Teacher/Lessons/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        [HttpGet("Teacher/{CourseName}/{LessonName}/Delete")]
+        public async Task<IActionResult> Delete(string CourseName, string LessonName,int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-
-            var lesson = await _context.Lessons
+            var lesson = _unitOfWork.Lesson.Get(m => m.LessonId == id, includeProperties: "Course");
+/*            var lesson = await _context.Lessons
                 .Include(l => l.Course)
-                .FirstOrDefaultAsync(m => m.LessonId == id);
+                .FirstOrDefaultAsync(m => m.LessonId == id);*/
             if (lesson == null)
             {
                 return NotFound();
@@ -147,23 +218,23 @@ namespace ViLearning.Areas.Teacher.Controllers
         }
 
         // POST: Teacher/Lessons/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost("Teacher/{CourseName}/{LessonName}/Delete"), ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string CourseName, string LessonName, int id)
         {
-            var lesson = await _context.Lessons.FindAsync(id);
+            var lesson = _unitOfWork.Lesson.Get(l => l.LessonId == id);
             if (lesson != null)
             {
-                _context.Lessons.Remove(lesson);
+                _unitOfWork.Lesson.Remove(lesson);
             }
 
-            await _context.SaveChangesAsync();
+            _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
         }
 
         private bool LessonExists(int id)
         {
-            return _context.Lessons.Any(e => e.LessonId == id);
+            return (_unitOfWork.Lesson.Get(l => l.LessonId == id) != null);
         }
     }
 }

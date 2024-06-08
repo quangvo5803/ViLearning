@@ -26,13 +26,13 @@
                 @Html.DisplayNameFor(model => model.Content)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Course)
+                @Html.DisplayNameFor(model => model.Video)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.OrderBy(i =>i.LessonNo)) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.LessonName)
@@ -44,15 +44,20 @@
                 @Html.DisplayFor(modelItem => item.LessonNo)
             </td>
             <td>
-                @Html.Raw(item.Content);
+                @Html.Raw(item.Content)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Course.CourseName)
+                <video width="320" height="240" controls>
+                    <source src="@item.Video" type="video/mp4">
+                    <source src="@item.Video" type="video/ogg">
+                    Your browser does not support the video tag.
+                </video>
+                @* @Html.Raw(item.Video); *@
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.LessonId" asp-route-name="@item.Course.CourseName">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.LessonId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.LessonId">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@item.LessonId" asp-route-CourseName="@item.Course.CourseName" asp-route-LessonName="@item.LessonName">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.LessonId" asp-route-CourseName="@item.Course.CourseName" asp-route-LessonName="@item.LessonName">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.LessonId" asp-route-CourseName="@item.Course.CourseName" asp-route-LessonName="@item.LessonName">Delete</a>
             </td>
         </tr>
 }

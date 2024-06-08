@@ -4,52 +4,80 @@
     ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<body>
+<center>
+    <h1>Edit</h1>
 
-<h1>Edit</h1>
+    <h4>Lesson</h4>
+</center>
 
-<h4>Lesson</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit" method="post">  
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input  asp-for="LessonId" value="@Model.LessonId"/>
-            <div class="form-group">
-                <label asp-for="LessonName" class="control-label"></label>
-                <input asp-for="LessonName" class="form-control" />
-                <span asp-validation-for="LessonName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="NumberOfQuestion" class="control-label"></label>
-                <input asp-for="NumberOfQuestion" class="form-control" />
-                <span asp-validation-for="NumberOfQuestion" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LessonNo" class="control-label"></label>
-                <input asp-for="LessonNo" class="form-control" />
-                <span asp-validation-for="LessonNo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Content" class="control-label"></label>
-                <input asp-for="Content" class="form-control" />
-                <span asp-validation-for="Content" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CourseId" class="control-label"></label>
-                <input asp-for="CourseId" class="form-control" value="@Model.CourseId"></input>
-                <span asp-validation-for="CourseId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+    <hr />
+    <div class="row">
+        <div class="col-md-́́10 mx-auto">
+            <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input  asp-for="LessonId" value="@Model.LessonId" type="hidden"/>
+                <div class="form-group">
+                    <label asp-for="LessonName" class="control-label"></label>
+                    <input asp-for="LessonName" class="form-control" />
+                    <span asp-validation-for="LessonName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="NumberOfQuestion" class="control-label"></label>
+                    <input asp-for="NumberOfQuestion" class="form-control" />
+                    <span asp-validation-for="NumberOfQuestion" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LessonNo" class="control-label"></label>
+                    <input asp-for="LessonNo" class="form-control" />
+                    <span asp-validation-for="LessonNo" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Content" class="control-label"></label>
+                    <textarea asp-for="Content" class="form-control" ></textarea>
+                    <span asp-validation-for="Content" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Video" class="control-label"></label>
+                    <input type="file" name="Video" asp-for="Video" class="form-control" />
+                    <span asp-validation-for="Video" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+  
+                    <input asp-for="CourseId" class="form-control" value="@Model.CourseId" hidden></input>
+                    <span asp-validation-for="CourseId" class="text-danger"></span>
+                </div>
+                <center>
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                    </div>
+                </center>
+            
+            </form>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+<center>
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+</center>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage advtemplate ai mentions tinycomments tableofcontents footnotes mergetags autocorrect typography inlinecss markdown',
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent',
+            tinycomments_mode: 'embedded',
+            tinycomments_author: 'Author name',
+            mergetags_list: [
+                { value: 'First.Name', title: 'First Name' },
+                { value: 'Email', title: 'Email' },
+            ],
+            ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
+        });
+    </script>
 }
+</body>

@@ -34,7 +34,17 @@
             @Html.DisplayNameFor(model => model.Content)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Content)
+            @Html.Raw(@Model.Content);
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Video)
+        </dt>
+        <dd class="col-sm-10">
+            <video width="320" height="240" controls>
+                <source src="@Model.Video" type="video/mp4">
+                <source src="@Model.Video" type="video/ogg">
+                Your browser does not support the video tag.
+            </video>
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Course)
