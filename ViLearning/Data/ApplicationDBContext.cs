@@ -26,21 +26,6 @@ namespace ViLearning.Data
         {
             base.OnModelCreating(modelBuilder);
 
-           
-
-
-            modelBuilder.Entity<Course>().HasData(
-                new Course { CourseId = 1, CourseName = "Toán lớp 1", SubjectId = 1, UserId = "9999c715-539e-4c36-842d-712c6a5ec32e", CoverImgUrl = "aaa.png" },
-                new Course { CourseId = 2, CourseName = "Toán lớp 2", SubjectId = 1, UserId = "9999c715-539e-4c36-842d-712c6a5ec32e", CoverImgUrl = "bbb.png" }
-            );
-
-            modelBuilder.Entity<Lesson>().HasData(
-                new Lesson { LessonId = 1, LessonName = "Bài 1: Cộng, trừ", NumberOfQuestion = 3, statusBoolean = true, CourseId = 1 },
-                new Lesson { LessonId = 2, LessonName = "Bài 2: Nhân, chia", NumberOfQuestion = 3, statusBoolean = true, CourseId = 1 },
-                new Lesson { LessonId = 3, LessonName = "Bài 1: Chu vi", NumberOfQuestion = 3, statusBoolean = true, CourseId = 2 }
-            );
-
-
             // Configuration for StudentCertificate
             modelBuilder.Entity<StudentCertificate>()
                 .HasKey(sc => new { sc.CourseCertificateId, sc.UserId });
