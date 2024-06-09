@@ -4,6 +4,7 @@ namespace ViLearning.Services.Repository.IRepository
 {
     public interface ILessonRepository :IRepository<Lesson>
     {
+        Task<List<Lesson>?> GetLessonByCourseId(int courseId);
         void Update(Lesson lesson);
     }
 }

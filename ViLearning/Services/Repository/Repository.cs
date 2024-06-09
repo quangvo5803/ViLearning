@@ -5,19 +5,20 @@ using ViLearning.Services.Repository.IRepository;
 
 namespace ViLearning.Services.Repository
 {
-    public class Repository<T>: IRepository<T> where T:class
+    public class Repository<T> : IRepository<T> where T : class
     {
         private readonly ApplicationDBContext _db;
         internal DbSet<T> dbSet;
+
         public Repository(ApplicationDBContext db)
         {
             _db = db;
-            this.dbSet = _db.Set<T>();
+            dbSet = _db.Set<T>();
         }
 
         public void Add(T entity)
         {
-           dbSet.Add(entity);
+            dbSet.Add(entity);
         }
 
         public T Get(Expression<Func<T, bool>> filter)
@@ -68,7 +69,19 @@ namespace ViLearning.Services.Repository
             return query.ToList();
         }
 
-
+        public IEnumerable<T> GetRange(Expression<Func<T, bool>> filter, string? includeProperties = null)
+        {
+            IQueryable<T> query = dbSet;
+            query = query.Where(filter);
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var includeProp in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProp);
+                }
+            }
+            return query.ToList();
+        }
         public void Remove(T entity)
         {
             dbSet.Remove(entity);
@@ -78,5 +91,6 @@ namespace ViLearning.Services.Repository
         {
             dbSet.RemoveRange(entities);
         }
+
     }
 }

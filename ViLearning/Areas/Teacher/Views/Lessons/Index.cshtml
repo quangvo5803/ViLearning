@@ -1,0 +1,89 @@
+﻿@model IEnumerable<ViLearning.Models.Lesson>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create" asp-route-name="@Model.First().Course.CourseName">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.LessonName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LessonNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Content)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Video)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalQuestions)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EasyQuestions)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MediumQuestions)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HardQuestions)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TestDuration)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.OrderBy(i =>i.LessonNo)) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.LessonName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LessonNo)
+            </td>
+            <td>
+                @Html.Raw(item.Content)
+            </td>
+            <td>
+                <video width="320" height="240" controls>
+                    <source src="@item.Video" type="video/mp4">
+                    <source src="@item.Video" type="video/ogg">
+                    Your browser does not support the video tag.
+                </video>
+
+            </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TotalQuestions)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EasyQuestions)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MediumQuestions)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.HardQuestions)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TestDuration)
+                </td>
+            <td>
+                    <a asp-action="Edit" asp-route-id="@item.LessonId" asp-route-CourseName="@item.Course.CourseName" asp-route-LessonName="@item.LessonName">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.LessonId" asp-route-CourseName="@item.Course.CourseName" asp-route-LessonName="@item.LessonName">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.LessonId" asp-route-CourseName="@item.Course.CourseName" asp-route-LessonName="@item.LessonName">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

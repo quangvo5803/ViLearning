@@ -4,6 +4,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ViLearning.Models
 {
+    public enum Difficulty
+    {
+        Easy,
+        Medium,
+        Hard
+    }
+
+    public enum QuestionType
+    {
+        MultipleChoice,
+        Essay
+    }
     public class Question
     {
         [Key]
@@ -14,6 +26,9 @@ namespace ViLearning.Models
         public string? OptionC { get; set; }
         public string? OptionD { get; set; }
         public string RightAnswer { get; set; }
+
+        public QuestionType QuestionType { get; set; }
+        public Difficulty Difficulty { get; set; }
 
         //Foreign key
         public int LessonId { get; set; }

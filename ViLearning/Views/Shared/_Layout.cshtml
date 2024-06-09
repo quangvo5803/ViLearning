@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+    <script src="https://cdn.tiny.cloud/1/5rptwamjf7aekjmn9yhru338ugqvhvdb5t6lji10j9wl1d88/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
     <link rel="stylesheet" href="~/ViLearning.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="//cdn.datatables.net/2.0.7/css/dataTables.dataTables.min.css" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/venobox.min.css"/>
@@ -64,13 +65,13 @@
                                 <a class="nav-link text-dark" asp-area="Teacher" asp-controller="Home" asp-action="Index">Trang chủ</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Teacher" asp-controller="Home" asp-action="Courses">Quản lí khóa học</a>
+                                <a class="nav-link text-dark" asp-area="Teacher" asp-controller="Courses" asp-action="Index">Quản lí khóa học</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Quản lí ngân hàng câu hỏi</a>
+                                <a class="nav-link text-dark" asp-area="Teacher" asp-controller="Question" asp-action="QuestionManage">Quản lí ngân hàng câu hỏi</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Quản lí bài kiểm tra</a>
+                                <a class="nav-link text-dark" asp-area="Teacher" asp-controller="Home" asp-action="Privacy">Quản lí bài kiểm tra</a>
                             </li>
                         }
                         else
@@ -150,7 +151,7 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="//cdn.datatables.net/2.0.7/js/dataTables.min.js" asp-append-version="true"></script>
-    <script src="https://cdn.tiny.cloud/1/txa9frhpdx819f6c5lzpoon7cldog6r6cjn578dgp43cfi7x/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/venobox.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
