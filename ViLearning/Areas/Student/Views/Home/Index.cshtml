@@ -6,6 +6,14 @@
     var random = new Random();
     var popularCourse = Model.Courses.OrderBy(x => random.Next()).Take(3);
 }
+<nav class="navbar bg-body-tertiary">
+    <div class="container-fluid" style="display:flex;justify-content:center;">
+        <form class="d-flex" role="search" action="/Student/Home/Search" method="get">
+            <input class="form-control me-2" type="text" name="query" placeholder="Search" aria-label="Search" style="width:700px">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+    </div>
+</nav>
 <div class="container" style="background:black">
     <img src="/images/index-bg.jpg" alt="Certificate" style="opacity:0.6" />
     <div class="overlay">
