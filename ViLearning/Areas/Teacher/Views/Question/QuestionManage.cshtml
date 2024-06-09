@@ -16,7 +16,13 @@
                 <h2 class="text-dark py-2">Question List</h2>
             </div>
         </div>
-        <div class="row" style="justify-content:end">
+        <div class="row" style="justify-content:space-between">
+            <div class="search-container col-md-3 p-2 rounded-3 text-center mx-3 my-3 text-center">
+                <form method="get" asp-area="Teacher" asp-controller="Question" asp-action="Search">
+                    <input type="text" placeholder="Search question" name="search">
+                    <button class="btn btn-success px-2 py-1 rounded-3" type="submit"><i class="bi bi-search"></i></button>
+                </form>
+            </div>
             <div class="col-md-2 text-bg-success p-2 rounded-3 text-center mx-3 my-3">
                 <a href="#" data-bs-toggle="modal" data-bs-target="#addQuestionModal" class="text-decoration-none text-dark text-center fw-bold">ADD QUESTION</a>
             </div>

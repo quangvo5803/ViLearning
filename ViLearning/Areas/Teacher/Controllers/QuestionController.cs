@@ -60,6 +60,13 @@ namespace ViLearning.Areas.Teacher.Controllers
             return RedirectToAction("QuestionManage", new { lessonId = lesson.LessonId });
         }
 
-        
+        [HttpGet]
+        public async Task<IActionResult> Search(QuestionManageVM vm)
+        {
+            vm.Questions = _unitOfWork.Question.GetRange(q => q.LessonId == vm.Lesson.LessonId && q.QuestionName.Contains(vm.searchString)).ToList();
+            
+
+            return View("QuestionManage",vm);
+        }
     }
 }
