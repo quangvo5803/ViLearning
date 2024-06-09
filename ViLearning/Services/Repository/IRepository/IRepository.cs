@@ -11,5 +11,7 @@ namespace ViLearning.Services.Repository.IRepository
         public IEnumerable<T> GetRange(Expression<Func<T, bool>> filter, string? includeProperties = null);
         void Remove(T entity);
         void RemoveRange(IEnumerable<T> entities);
+
+        IEnumerable<T> GetRange(Expression<Func<T, bool>> filter, string? includeProperties = null);
     }
 }

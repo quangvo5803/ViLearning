@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ViLearning.Data;
 
@@ -11,9 +12,11 @@ using ViLearning.Data;
 namespace ViLearning.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240603202445_AddFakeData")]
+    partial class AddFakeData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -304,13 +307,11 @@ namespace ViLearning.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CoverImgUrl")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
                         .HasColumnType("ntext");
-
-                    b.Property<int>("Grade")
-                        .HasColumnType("int");
 
                     b.Property<double?>("Price")
                         .HasColumnType("float");
@@ -319,6 +320,7 @@ namespace ViLearning.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("CourseId");
@@ -328,6 +330,24 @@ namespace ViLearning.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Courses");
+
+                    b.HasData(
+                        new
+                        {
+                            CourseId = 1,
+                            CourseName = "Toán lớp 1",
+                            CoverImgUrl = "aaa.png",
+                            SubjectId = 1,
+                            UserId = "9999c715-539e-4c36-842d-712c6a5ec32e"
+                        },
+                        new
+                        {
+                            CourseId = 2,
+                            CourseName = "Toán lớp 2",
+                            CoverImgUrl = "bbb.png",
+                            SubjectId = 1,
+                            UserId = "9999c715-539e-4c36-842d-712c6a5ec32e"
+                        });
                 });
 
             modelBuilder.Entity("ViLearning.Models.CourseCertificate", b =>
@@ -400,43 +420,50 @@ namespace ViLearning.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LessonId"));
 
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("CourseId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EasyQuestions")
-                        .HasColumnType("int");
-
-                    b.Property<int>("HardQuestions")
                         .HasColumnType("int");
 
                     b.Property<string>("LessonName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("LessonNo")
+                    b.Property<int>("NumberOfQuestion")
                         .HasColumnType("int");
 
-                    b.Property<int>("MediumQuestions")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TestDuration")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TotalQuestions")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Video")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("statusBoolean")
+                        .HasColumnType("bit");
 
                     b.HasKey("LessonId");
 
                     b.HasIndex("CourseId");
 
                     b.ToTable("Lessons");
+
+                    b.HasData(
+                        new
+                        {
+                            LessonId = 1,
+                            CourseId = 1,
+                            LessonName = "Bài 1: Cộng, trừ",
+                            NumberOfQuestion = 3,
+                            statusBoolean = true
+                        },
+                        new
+                        {
+                            LessonId = 2,
+                            CourseId = 1,
+                            LessonName = "Bài 2: Nhân, chia",
+                            NumberOfQuestion = 3,
+                            statusBoolean = true
+                        },
+                        new
+                        {
+                            LessonId = 3,
+                            CourseId = 2,
+                            LessonName = "Bài 1: Chu vi",
+                            NumberOfQuestion = 3,
+                            statusBoolean = true
+                        });
                 });
 
             modelBuilder.Entity("ViLearning.Models.Question", b =>
@@ -446,9 +473,6 @@ namespace ViLearning.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("QuestionId"));
-
-                    b.Property<int>("Difficulty")
-                        .HasColumnType("int");
 
                     b.Property<int>("LessonId")
                         .HasColumnType("int");
@@ -468,9 +492,6 @@ namespace ViLearning.Migrations
                     b.Property<string>("QuestionName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("QuestionType")
-                        .HasColumnType("int");
 
                     b.Property<string>("RightAnswer")
                         .IsRequired()
@@ -685,7 +706,9 @@ namespace ViLearning.Migrations
 
                     b.HasOne("ViLearning.Models.ApplicationUser", "ApplicationUser")
                         .WithMany("Courses")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("ApplicationUser");
 
