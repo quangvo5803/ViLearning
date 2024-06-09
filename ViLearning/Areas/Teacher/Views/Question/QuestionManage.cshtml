@@ -7,8 +7,8 @@
 <div class="card shadow border-0 mt-4">
     <div class="card-header bg-secondary bg-gradient ml-0 py-0">
         <button type="button" class="btn btn-secondary my-2">
-            <a class="text-decoration-none text-dark" asp-area="Teacher" asp-controller="" asp-action=""
-               asp-route-questionId="@Model.Lesson.LessonId"><i class="bi bi-arrow-return-left mx-2"></i>Back to lesson</a>
+            <a class="text-decoration-none text-dark" asp-area="Teacher" asp-controller="Lessons" asp-action="Details"
+               asp-route-Id="@Model.Lesson.LessonId" asp-route-CourseName="@Model.Lesson.Course.CourseName" asp-route-LessonName="@Model.Lesson.LessonName"><i class="bi bi-arrow-return-left mx-2"></i>Back to lesson</a>
         </button>
         <h2 class="text-center text-dark-emphasis">@Model.Lesson.LessonName</h2>
         <div class="row">

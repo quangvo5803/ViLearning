@@ -24,8 +24,8 @@ namespace ViLearning.Areas.Teacher.Controllers
         {
             QuestionManageVM vm = new QuestionManageVM();
             vm.Questions = await _unitOfWork.Question.GetQuestionByLessonId(lessonId);
-            vm.Lesson = _unitOfWork.Lesson.Get(l => l.LessonId == lessonId);
-
+            vm.Lesson = _unitOfWork.Lesson.Get(l => l.LessonId == lessonId, includeProperties: "Course");
+           
             return View(vm);
         }
 
