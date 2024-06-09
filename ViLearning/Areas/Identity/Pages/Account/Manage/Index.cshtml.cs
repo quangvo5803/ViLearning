@@ -5,6 +5,7 @@
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -32,6 +33,7 @@ namespace ViLearning.Areas.Identity.Pages.Account.Manage
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         public string Username { get; set; }
+        public IList<string> Role { get; set; }
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -74,6 +76,7 @@ namespace ViLearning.Areas.Identity.Pages.Account.Manage
             public Gender? Gender { get; set; }
 
 
+
         }
 
         private async Task LoadAsync(ApplicationUser user)
@@ -82,12 +85,13 @@ namespace ViLearning.Areas.Identity.Pages.Account.Manage
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             var userInfor = await _userManager.GetUserAsync(User);
             Username = userName;
+            Role = await _userManager.GetRolesAsync(userInfor);
             Input = new InputModel
             {
                 PhoneNumber = phoneNumber,
                 FullName = userInfor.FullName,
                 DOB = userInfor.DOB,
-                Gender = userInfor.Gender,
+                Gender = userInfor.Gender,              
             };
             
         }

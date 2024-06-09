@@ -26,10 +26,8 @@ namespace ViLearning.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Subject>().HasData(
-                new Subject { Id = 1, Name = "Toán" },
-                new Subject { Id = 2, Name = "Ngữ Văn" }
-            );
+           
+
 
             modelBuilder.Entity<Course>().HasData(
                 new Course { CourseId = 1, CourseName = "Toán lớp 1", SubjectId = 1, UserId = "9999c715-539e-4c36-842d-712c6a5ec32e", CoverImgUrl = "aaa.png" },

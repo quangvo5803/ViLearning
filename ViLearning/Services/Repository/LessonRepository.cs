@@ -12,7 +12,7 @@ namespace ViLearning.Services.Repository
         {
             _db = db;
         }
-
+        
         public void Update(Lesson lesson)
         {
             _db.Lessons.Update(lesson);

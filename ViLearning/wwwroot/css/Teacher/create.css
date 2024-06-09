@@ -1,0 +1,95 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700&display=swap');
+
+:root {
+    --main-color: #8e44ad;
+    --red: #e74c3c;
+    --orange: #f39c12;
+    --light-color: #888;
+    --light-bg: #eee;
+    --black: #2c3e50;
+    --white: #fff;
+    --border: 0.1rem solid rgba(0, 0, 0, 0.2);
+}
+
+#create-course-container {
+    font-family: 'Nunito', sans-serif;
+    background-color: var(--light-bg);
+    padding: 2rem;
+    border-radius: 1rem;
+    max-width: 800px;
+    margin: 2rem auto;
+}
+
+#create-course-container h1,
+#create-course-container h3,
+#create-course-container h4 {
+    color: var(--black);
+    margin-bottom: 1.5rem;
+}
+
+#create-course-container .form-group,
+#create-course-container dl.row {
+    margin-bottom: 1.5rem;
+}
+
+#create-course-container .form-group label,
+#create-course-container dt {
+    font-weight: bold;
+    color: var(--black);
+}
+
+#create-course-container .form-control {
+    border: var(--border);
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    font-size: 1rem;
+    color: var(--black);
+}
+
+#create-course-container .form-control:focus {
+    border-color: var(--main-color);
+    box-shadow: 0 0 0.5rem rgba(142, 68, 173, 0.5);
+}
+
+#create-course-container .btn-primary,
+#create-course-container .btn-danger {
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    text-transform: capitalize;
+    color: #fff;
+}
+
+#create-course-container .btn-primary {
+    background-color: var(--main-color);
+    border: none;
+}
+
+#create-course-container .btn-primary:hover {
+    background-color: darken(var(--main-color), 10%);
+}
+
+#create-course-container .btn-danger {
+    background-color: var(--red);
+    border: none;
+}
+
+#create-course-container .btn-danger:hover {
+    background-color: darken(var(--red), 10%);
+}
+
+#create-course-container .text-danger {
+    color: var(--red);
+    font-size: 0.9rem;
+}
+
+#create-course-container .back-to-list {
+    color: var(--main-color);
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+#create-course-container .back-to-list:hover {
+    text-decoration: underline;
+}

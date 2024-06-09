@@ -19,14 +19,13 @@ namespace ViLearning.Models
         [Column(TypeName = "ntext")]
         public string? Description { get; set; }
         [Display(Name = "Ảnh bìa khóa học: ")]
-        public string CoverImgUrl { get; set; }
+        public string? CoverImgUrl { get; set; }
 
 
         //Foreign key
         public int SubjectId { get; set; }
-        public string UserId { get; set; }
-
-
+        public string? UserId { get; set; }
+        public int Grade {  get; set; }
         //Relation
         [ForeignKey("SubjectId")]
         [ValidateNever]

@@ -1,0 +1,76 @@
+﻿body {
+}
+.container {
+    max-width: 2500px;
+    padding: 0;
+}
+
+.course-header {
+    background-color: #5fcf80;
+    color: white;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.breadcrumb {
+    background: none;
+    padding: 10px 200px;
+    margin-bottom: 0;
+    background-color: color-mix(in srgb,#5fcf80 90%,black 5%);
+    color: white;
+}
+
+    .breadcrumb a {
+        text-decoration: none;
+        color: white;
+    }
+
+.breadcrumb-item + .breadcrumb-item::before {
+    color: white;
+}
+.card {
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-body .badge {
+    display: inline-block;
+    padding: 0.5em 1em;
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+.card-title {
+    font-size: 22px;
+}
+
+.card-text {
+    color: #777;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.author {
+    display: flex;
+    align-items: center;
+}
+
+.stats {
+    display: flex;
+    align-items: center;
+}
+
+    .stats span {
+        font-size: 14px;
+        color: #333;
+        margin-right: 10px;
+    }
+
+    .stats .ml-2 {
+        margin-left: 10px;
+    }
+
+.price {
+    font-size: 18px;
+    font-weight: bold;
+}

@@ -7,24 +7,25 @@
 <div class="card shadow border-0 mt-4">
     <div class="card-header bg-secondary bg-gradient ml-0 py-0">
         <button type="button" class="btn btn-secondary my-2">
-            <a class="text-decoration-none text-dark" asp-area="Teacher" asp-controller="" asp-action=""
-               asp-route-questionId="@Model.Lesson.LessonId"><i class="bi bi-arrow-return-left mx-2"></i>Back to lesson</a>
+            <a class="text-decoration-none text-dark" asp-area="Teacher" asp-controller="Lessons" asp-action="Details"
+               asp-route-Id="@Model.Lesson.LessonId" asp-route-CourseName="@Model.Lesson.Course.CourseName" asp-route-LessonName="@Model.Lesson.LessonName"><i class="bi bi-arrow-return-left mx-2"></i>Back to lesson</a>
         </button>
         <h2 class="text-center text-dark-emphasis">@Model.Lesson.LessonName</h2>
         <div class="row">
             <div class="col-12 text-center">
-                <h2 class="text-dark py-2">Question List</h2>
+                <h2 class="text-dark py-2">Danh sách câu hỏi</h2>
             </div>
         </div>
         <div class="row" style="justify-content:space-between">
             <div class="search-container col-md-3 p-2 rounded-3 text-center mx-3 my-3 text-center">
                 <form method="get" asp-area="Teacher" asp-controller="Question" asp-action="Search">
-                    <input type="text" placeholder="Search question" name="search">
+                    <input asp-for="@Model.searchString" type="text" placeholder="Tìm kiếm câu hỏi" name="search">
+                    <input asp-for="@Model.Question.LessonId" type="hidden" value="@Model.Lesson.LessonId" class="form-control" name="Question.LessonId">
                     <button class="btn btn-success px-2 py-1 rounded-3" type="submit"><i class="bi bi-search"></i></button>
                 </form>
             </div>
             <div class="col-md-2 text-bg-success p-2 rounded-3 text-center mx-3 my-3">
-                <a href="#" data-bs-toggle="modal" data-bs-target="#addQuestionModal" class="text-decoration-none text-dark text-center fw-bold">ADD QUESTION</a>
+                <a href="#" data-bs-toggle="modal" data-bs-target="#addQuestionModal" class="text-decoration-none text-dark text-center fw-bold">THÊM CÂU HỎI</a>
             </div>
         </div>
     </div>
@@ -32,15 +33,15 @@
         <table id="tblData" class="table table-bordered table-striped table-hover " width="100%">
             <thead>
                 <tr>
-                    <th class="text-center" style="width:50px">No</th>
-                    <th class="text-center" style="width:50px">Difficulty</th>
-                    <th>Question</th>
+                    <th class="text-center" style="width:50px">STT</th>
+                    <th class="text-center" style="width:50px">ĐỘ KHÓ</th>
+                    <th>CÂU HỎI</th>
                 </tr>
             </thead>
             <tbody>
                 @if (Model.Questions.Count == 0)
                 {
-                    <p> NO QUESTION ADDED </p>
+                    <p> CHƯA CÓ CÂU HỎI </p>
                 }
                 else
                 {
@@ -53,7 +54,7 @@
                                 <p>@Model.Questions[i].QuestionName</p>
                                 <button class="btn btn-light btn-sm btn-primary float-right" 
                                         type="button" data-bs-toggle="collapse" data-bs-target="#answers-@Model.Questions[i].QuestionId">
-                                    Show Answers
+                                    Hiển thị đáp án
                                 </button>
                                 <div class="answer-list collapse" id="answers-@Model.Questions[i].QuestionId">
                                     <input type="checkbox" name="options" value="A" @(Model.Questions[i].RightAnswer == "A" ? "checked" : "")> A. @Model.Questions[i].OptionA <br />

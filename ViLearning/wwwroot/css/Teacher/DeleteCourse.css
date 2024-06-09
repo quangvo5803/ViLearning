@@ -1,0 +1,88 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700&display=swap');
+
+#delete-course-container {
+    font-family: 'Nunito', sans-serif;
+    background-color: var(--light-bg);
+    padding: 2rem;
+    border-radius: 1rem;
+    max-width: 800px;
+    margin: 2rem auto;
+    text-align: center;
+}
+
+    #delete-course-container h1,
+    #delete-course-container h3,
+    #delete-course-container h4 {
+        color: var(--black);
+        margin-bottom: 1.5rem;
+    }
+
+    #delete-course-container .course-details {
+        text-align: left;
+    }
+
+        #delete-course-container .course-details dl {
+            margin-bottom: 1.5rem;
+        }
+
+        #delete-course-container .course-details dt {
+            font-weight: bold;
+            color: var(--black);
+        }
+
+        #delete-course-container .course-details dd {
+            margin-bottom: 1rem;
+            color: var(--black);
+        }
+
+    #delete-course-container .course-cover-img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 0.5rem;
+        margin-top: 0.5rem;
+    }
+
+    #delete-course-container .form-actions {
+        margin-top: 2rem;
+    }
+
+    #delete-course-container .btn-primary,
+    #delete-course-container .btn-danger,
+    #delete-course-container .btn-secondary {
+        padding: 1rem 2rem;
+        font-size: 1.2rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        text-transform: capitalize;
+        color: #fff;
+        margin-right: 1rem;
+    }
+
+    #delete-course-container .btn-primary {
+        background-color: var(--main-color);
+        border: none;
+    }
+
+        #delete-course-container .btn-primary:hover {
+            background-color: darken(var(--main-color), 10%);
+        }
+
+    #delete-course-container .btn-danger {
+        background-color: var(--red);
+        border: none;
+    }
+
+        #delete-course-container .btn-danger:hover {
+            background-color: darken(var(--red), 10%);
+        }
+
+    #delete-course-container .btn-secondary {
+        background-color: var(--light-color);
+        border: none;
+        color: var(--black);
+    }
+
+        #delete-course-container .btn-secondary:hover {
+            background-color: darken(var(--light-color), 10%);
+            color: var(--black);
+        }

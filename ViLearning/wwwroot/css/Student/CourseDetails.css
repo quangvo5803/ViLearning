@@ -1,0 +1,86 @@
+﻿body {
+    
+}
+
+.container {
+    max-width: 2500px;
+    padding: 0;
+}
+
+.course-header {
+    background-color: #5fcf80;
+    color: white;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.breadcrumb {
+    background: none;
+    padding: 10px 200px;
+    margin-bottom: 0;
+    background-color: color-mix(in srgb,#5fcf80 90%,black 5%);
+    color:white;
+}
+
+.breadcrumb a{
+    text-decoration:none;
+    color: white;
+}
+.breadcrumb-item + .breadcrumb-item::before{
+    color:white;
+}
+
+.course-info {
+    margin-top: 20px;
+}
+
+.course-details {
+    background-color: rgba(128, 128, 128,0.1);
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+    .course-details p {
+        margin: 0;
+        padding: 5px 0;
+    }
+
+        .course-details p span {
+            color: #5cb85c;
+        }
+.chapter h4 {
+    background-color: #5fcf80;
+    padding: 10px;
+    margin: 0;
+    border-radius: 5px 5px 0 0;
+    color:white;
+}
+
+.chapter ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #e9ecef;
+    border-radius: 0 0 5px 5px;
+}
+
+.chapter li {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+    .chapter li:last-child {
+        border-bottom: none;
+    }
+
+.lesson-title {
+    font-size: 1rem;
+}
+
+.lesson-status {
+    font-size: 0.875rem;
+    color: #5fcf80;
+}

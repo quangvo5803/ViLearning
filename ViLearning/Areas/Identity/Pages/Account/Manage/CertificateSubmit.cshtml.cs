@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ViLearning.Models;
+using ViLearning.Utility;
 
 namespace ViLearning.Areas.Identity.Pages.Account.Manage
 {
@@ -15,17 +16,18 @@ namespace ViLearning.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly BlobStorageService _blobStorageService;
 
         public CertificateSubmitModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            IWebHostEnvironment webHostEnvironment)
+            BlobStorageService blobStorageService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _webHostEnvironment = webHostEnvironment;
+            _blobStorageService = blobStorageService;
         }
+        public IList<string> Role { get; set; }
 
         [BindProperty]
         public InputModel Input { get; set; }
@@ -37,6 +39,7 @@ namespace ViLearning.Areas.Identity.Pages.Account.Manage
         {
             [DisplayName("Chứng chỉ giáo viên")]
             public string? TeacherCertificateImgUrl { get; set; }
+            
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -46,10 +49,10 @@ namespace ViLearning.Areas.Identity.Pages.Account.Manage
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
-
+            Role = await _userManager.GetRolesAsync(user);
             Input = new InputModel
             {
-                TeacherCertificateImgUrl = user.TeacherCertificateImgUrl
+                TeacherCertificateImgUrl = user.TeacherCertificateImgUrl,              
             };
 
             return Page();
@@ -77,34 +80,24 @@ namespace ViLearning.Areas.Identity.Pages.Account.Manage
 
             try
             {
-                string wwwRootPath = _webHostEnvironment.WebRootPath;
+                string containerName = "teacher-certificate";
                 string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                string certificatePath = Path.Combine(wwwRootPath, "images", "CertificateTeacher");
 
-                //Kiểm tra thư mục có tồn tại chưa chưa thì tạo
-                if (!Directory.Exists(certificatePath))
-                {
-                    Directory.CreateDirectory(certificatePath);
-                }
-
-                //Kiểm tra file cũ nếu có thì xóa
+                // Check and delete old file from Azure Blob Storage
                 if (!string.IsNullOrEmpty(user.TeacherCertificateImgUrl))
                 {
-                    var oldCertificate = Path.Combine(wwwRootPath, user.TeacherCertificateImgUrl.TrimStart('/'));
-                    if (System.IO.File.Exists(oldCertificate))
-                    {
-                        System.IO.File.Delete(oldCertificate);
-                    }
+                    Uri oldUri = new Uri(user.TeacherCertificateImgUrl);
+                    string oldFileName = Path.GetFileName(oldUri.LocalPath);
+                    await _blobStorageService.DeleteFileAsync(containerName, oldFileName);
                 }
 
-                //Tạo đường đẫn file mới và copy vào thư mục 
-                string filePath = Path.Combine(certificatePath, fileName);
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                // Upload new file to Azure Blob Storage
+                using (var stream = file.OpenReadStream())
                 {
-                    await file.CopyToAsync(fileStream);
+                    user.TeacherCertificateImgUrl = await _blobStorageService.UploadFileAsync(containerName, fileName, stream);
                 }
-                //Thay đổi cập nhật lại database
-                user.TeacherCertificateImgUrl = "/" + Path.Combine("images", "CertificateTeacher", fileName).Replace("\\", "/");
+
+                // Update user in database
                 var updateResult = await _userManager.UpdateAsync(user);
                 if (!updateResult.Succeeded)
                 {
