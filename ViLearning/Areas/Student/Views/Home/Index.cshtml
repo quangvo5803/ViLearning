@@ -58,25 +58,26 @@
 </div>
 <div class="row mt-5" style="margin-left:100px">
     <div class="col-sm-1" style="text-align:right; font-size:16px; padding:12px">KHÓA HỌC</div>
-    <div class="col-sm-2" style="align-content:center; padding:0;"><hr width="85%"; size="5px"; color="#5fcf80" style="opacity:1;" /></div>
+    <div class="col-sm-2" style="align-content:center; padding:0;"><hr width="85%" ; size="5px" ; color="#5fcf80" style="opacity:1;" /></div>
     <h3 style="margin-left:24px; padding:0; font-weight:1000;font-size:32px">Khóa học phổ biến</h3>
 </div>
 <div class="container mt-5">
     <div class="row" style="margin:0 100px">
 
-        @foreach(var course in popularCourse)
+        @foreach (var course in popularCourse)
         {
-            <a asp-action="Details" asp-route-CourseId="@course.CourseId" style="text-decoration:none" >
-                <div class="col-sm-4">
-                    <div class="card">
-                        <img src="@course.CoverImgUrl" class="card-img-top rounded mx-auto d-block" alt="@course.CourseName" style=" height: 100%; max-height:300px;">
-                        <div class="card-body">
+
+            <div class="col-sm-4 mb-4">
+                <a asp-action="Details" asp-route-CourseId="@course.CourseId" style="text-decoration:none">
+                    <div class="card h-100 d-flex flex-column">
+                        <img src="@course.CoverImgUrl" class="card-img-top rounded mx-auto d-block" alt="@course.CourseName" style=" height: 300px; width:100%; object-fit:cover">
+                        <div class="card-body d-flex flex-column">
                             <span class="badge badge-success">@course.Subject?.Name</span>
                             <h5 class="card-title mt-2">@course.CourseName</h5>
-                            <p class="card-text">Et architecto provident deleniti facere repellat nobis iste. Id facere quia quae dolores dolorem tempore.</p>
-                            <div class="d-flex justify-content-between align-items-center mt-3">
+                            <p class="card-text">@course.Description</p>
+                            <div class="mt-auto d-flex justify-content-between align-items-center mt-3">
                                 <div class="d-flex align-items-center">
-                                    <span class="ms-2">Giáo viên: @course.ApplicationUser?.FullName</span>
+                                    <span class="ms-2">Giáo viên: @(course.ApplicationUser.FullName == null ? course.ApplicationUser.Email : course.ApplicationUser.FullName)</span>
                                 </div>
                                 <div class="d-flex align-items-center">
                                     <a class="btn btn-success">@course.Subject.Name</a>
@@ -84,13 +85,14 @@
                             </div>
                         </div>
 
-                        <div class="card-footer d-flex justify-content-between bg-transparent border-top-0">                           
+                        <div class="card-footer d-flex justify-content-between bg-transparent border-top-0">
                             <span class="ms-auto price" style="font-size:18px; font-weight:bold;">@course.Price?.ToString("N0") VNĐ</span>
                         </div>
                     </div>
-                </div>
-             </a>
-            
+                </a>
+            </div>
+
+
 
         }
     </div>
