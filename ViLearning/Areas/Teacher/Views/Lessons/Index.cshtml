@@ -17,9 +17,6 @@
                 @Html.DisplayNameFor(model => model.LessonName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.NumberOfQuestion)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.LessonNo)
             </th>
             <th>
@@ -27,6 +24,21 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Video)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalQuestions)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EasyQuestions)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MediumQuestions)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HardQuestions)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TestDuration)
             </th>
             <th></th>
         </tr>
@@ -36,9 +48,6 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.LessonName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumberOfQuestion)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.LessonNo)
@@ -52,8 +61,23 @@
                     <source src="@item.Video" type="video/ogg">
                     Your browser does not support the video tag.
                 </video>
-                @* @Html.Raw(item.Video); *@
+
             </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TotalQuestions)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EasyQuestions)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MediumQuestions)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.HardQuestions)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TestDuration)
+                </td>
             <td>
                     <a asp-action="Edit" asp-route-id="@item.LessonId" asp-route-CourseName="@item.Course.CourseName" asp-route-LessonName="@item.LessonName">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.LessonId" asp-route-CourseName="@item.Course.CourseName" asp-route-LessonName="@item.LessonName">Details</a> |

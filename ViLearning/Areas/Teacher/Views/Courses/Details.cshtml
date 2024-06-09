@@ -11,76 +11,58 @@
 }
 <div id="course-details-container" class="course-details-container">
     <section class="playlist-details">
-        <h1 class="heading">playlist details</h1>
+        <h1 class="heading">Thông tin khóa học</h1>
         <div class="playlist-details__row">
             <div class="playlist-details__column">
                 <div class="playlist-details__thumb">
                     <img src="@Model.CoverImgUrl" alt="">
-                    <span>10 Lessons</span>
+                    <span>@Model.Lesson?.Count() Bài Học</span>
                 </div>
             </div>
             <div class="playlist-details__column">
                 
                 <div class="playlist-details__details">
-                    <h3>complete HTML tutorial</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum minus reiciendis, error sunt veritatis exercitationem deserunt velit doloribus itaque voluptate.</p>
-                    <a asp-action="Edit" asp-route-id="@Model.CourseId" class="inline-btn">Edit Course</a>
+                    <h3>@Model.CourseName</h3>
+                    <p>@Model.Description</p>
+                    <a asp-action="Edit" asp-route-id="@Model.CourseId" class="inline-btn">Chỉnh Sửa Khóa Học</a>
                 </div>
             </div>
         </div>
     </section>
     <section class="playlist-videos">
-        <h1 class="heading">playlist videos</h1>
-        <div class="playlist-videos__box-container">
-            <a class="playlist-videos__box" href="watch-video.html">
-                <i class="fas fa-play"></i>
-                <div class="playlist-videos__image-wrapper">
-                    <img src="~/images/Course/thumb-4.png" alt="">
-                    <span class="lesson-number">#01</span>
-                </div>
-                <h3>complete HTML tutorial (part 01)</h3>
-            </a>
-            <a class="playlist-videos__box" href="watch-video.html">
-                <i class="fas fa-play"></i>
-                <div class="playlist-videos__image-wrapper">
-                    <img src="~/images/Course/thumb-1.png" alt="">
-                    <span class="lesson-number">#02</span>
-                </div>
-                <h3>complete HTML tutorial (part 02)</h3>
-            </a>
-            <a class="playlist-videos__box" href="watch-video.html">
-                <i class="fas fa-play"></i>
-                <div class="playlist-videos__image-wrapper">
-                    <img src="~/images/Course/thumb-3.png" alt="">
-                    <span class="lesson-number">#03</span>
-                </div>
-                <h3>complete HTML tutorial (part 03)</h3>
-            </a>
-            <a class="playlist-videos__box" href="watch-video.html">
-                <i class="fas fa-play"></i>
-                <div class="playlist-videos__image-wrapper">
-                    <img src="~/images/Course/thumb-2.png" alt="">
-                    <span class="lesson-number">#04</span>
-                </div>
-                <h3>complete HTML tutorial (part 01)</h3>
-            </a>
-            <a class="playlist-videos__box" href="watch-video.html">
-                <i class="fas fa-play"></i>
-                <div class="playlist-videos__image-wrapper">
-                    <img src="~/images/Course/thumb-1.png" alt="">
-                    <span class="lesson-number">#05</span>
-                </div>
-                <h3>complete HTML tutorial (part 02)</h3>
-            </a>
+        <h1 class="heading">Danh sách bài học</h1>
 
-            <a asp-action="Create" class="playlist-videos__box">
+        <div class="playlist-videos__box-container">
+            @foreach (Lesson lesson in Model.Lesson.OrderBy(l => l.LessonNo))
+            {
+                <a asp-controller="Lessons" asp-action="Details" asp-route-id="@lesson.LessonId" asp-route-CourseName="@lesson.Course.CourseName" asp-route-LessonName="@lesson.LessonName" class="playlist-videos__box" >
+                    <i class="fas fa-play"></i>
+                    <div class="playlist-videos__image-wrapper">
+                        <img src="@Model.CoverImgUrl" alt="">
+                        <span class="lesson-number">#@lesson.LessonNo</span>
+                    </div>
+                    <h3>@lesson.LessonName</h3>
+                </a>
+            }
+            @if (Model.Lesson.Count() % 3 == 0)
+            {
+                <a style="opacity:0" class="playlist-videos__box">
+                    <i class="fas fa-play"></i>
+                    <div class="playlist-videos__image-wrapper">
+                        <img src="" alt="">
+                        <span class="lesson-number"></span>
+                    </div>
+                    <h3></h3>
+                </a>
+            }
+
+            <a asp-controller="Lessons" asp-action="Create" asp-route-name="@Model.CourseName"  class="playlist-videos__box">
                 <div class="box add-course">
                     <div class="plus-icon">
                         <i class="fas fa-plus"></i>
                     </div>
-                   
                 </div>
-            </a>            
+            </a>         
         </div>
     </section>
 </div>

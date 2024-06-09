@@ -16,5 +16,12 @@ namespace ViLearning.Services.Repository
         {
             _db.Courses.Update(course);
         }
+        public void LoadCourse(Course course)
+        {
+            _db.Courses.Entry(course)
+                    .Collection(c => c.Lesson)
+                    .Load();
+            _db.Update(course);
+        }
     }
 }

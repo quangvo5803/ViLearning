@@ -6,8 +6,10 @@
 </head>
 <body>
     <section class="courses">
-
-        <h1 class="heading">our courses</h1>
+        <center>
+            <h1 class="heading">Danh Sách Khóa Học</h1>
+        </center>
+        
 
         <div class="box-container">
             @foreach (Course course in Model)
@@ -17,14 +19,14 @@
                     <div class="thumb">
                         <a asp-action="Details" asp-route-id="@course.CourseId"><img src="@course.CoverImgUrl" alt=""></a>
                         <div class="middle">
-                            <div class="text"><div class="text"><a asp-action="Details" asp-route-id="@course.CourseId"></a></div></div>
+                            <div class="text"><div class="text"><a asp-action="Details" asp-route-id="@course.CourseId"></a></div>view detail</div>
                         </div>
                         
                     </div>
                     <h3 class="title">@course.CourseName</h3>
                     <p class="inline-btn">Lớp @course.Grade</p>
                     <a asp-action="Delete" asp-route-id="@course.CourseId">
-                    <button class="delete-btn"><i class="fas fa-trash-alt"></i>Delete</button>
+                    <button class="delete-btn"><i class="fas fa-trash-alt"></i>Xóa Khóa Học</button>
                     </a>
                 </div>
             }
@@ -35,7 +37,6 @@
                     </div>
                 </div>
             </a>
-
         </div>
 
 </body>

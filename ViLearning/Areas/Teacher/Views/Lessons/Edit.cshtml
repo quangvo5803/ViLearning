@@ -4,48 +4,73 @@
     ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@section Styles {
+    <link rel="stylesheet" href="~/css/Teacher/Lessons/Edit.css" />
+
+}
 <body>
 <center>
-    <h1>Edit</h1>
+    <h1>Thông Tin</h1>
 
-    <h4>Lesson</h4>
+    <h4>Bài Học</h4>
 </center>
 
     <hr />
     <div class="row">
-        <div class="col-md-́́10 mx-auto">
-            <form asp-action="Edit" method="post" enctype="multipart/form-data">
+        <div class="col-md-́́10 mx-auto form-container">
+            <form name="questionForm" asp-action="Edit" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input  asp-for="LessonId" value="@Model.LessonId" type="hidden"/>
+                <input  asp-for="LessonId" value="@Model.LessonId" type="hidden" class="box"/>
                 <div class="form-group">
-                    <label asp-for="LessonName" class="control-label"></label>
-                    <input asp-for="LessonName" class="form-control" />
+                    <label asp-for="LessonName" class="control-label ">Tên Bài Học</label>
+                    <input asp-for="LessonName" class="form-control" class="box" />
                     <span asp-validation-for="LessonName" class="text-danger"></span>
-                </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="statusBoolean" /> @Html.DisplayNameFor(model => model.statusBoolean)
-                </label>
-            </div>
-                <div class="form-group">
-                    <label asp-for="NumberOfQuestion" class="control-label"></label>
-                    <input asp-for="NumberOfQuestion" class="form-control" />
-                    <span asp-validation-for="NumberOfQuestion" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="LessonNo" class="control-label"></label>
-                    <input asp-for="LessonNo" class="form-control" />
+                    <input asp-for="LessonNo" class="form-control" class="box" />
                     <span asp-validation-for="LessonNo" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Content" class="control-label"></label>
+                    <label asp-for="Content" class="control-label">Nội Dung Bài Học</label>
                     <textarea asp-for="Content" class="form-control" ></textarea>
                     <span asp-validation-for="Content" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Video" class="control-label"></label>
-                    <input type="file" name="Video" asp-for="Video" class="form-control" />
+                    <label asp-for="Video" class="control-label">Video Bài Giảng</label>
+                    <br />
+                    <video width="320" height="240" controls>
+                        <source src="@Model.Video" type="video/mp4">
+                        <source src="@Model.Video" type="video/ogg">
+                        Your browser does not support the video tag.
+                    </video>
+                    <input type="file" name="Video" asp-for="Video" class="form-control" class="box" />
                     <span asp-validation-for="Video" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TotalQuestions" class="control-label ">Số Câu Hỏi</label>
+                    <input asp-for="TotalQuestions" name="TotalQuestions" class="form-control" class="box" />
+                    <span asp-validation-for="TotalQuestions" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="EasyQuestions" class="control-label ">Số Câu Hỏi Nhận Biết</label>
+                    <input asp-for="EasyQuestions" name="EasyQuestions" class="form-control" class="box" />
+                    <span asp-validation-for="EasyQuestions" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="MediumQuestions" class="control-label ">Số Câu Hỏi Thông Hiểu</label>
+                    <input asp-for="MediumQuestions" name="MediumQuestions" class="form-control" class="box" />
+                    <span asp-validation-for="MediumQuestions" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="HardQuestions" class="control-label ">Số Câu Hỏi Vận Dụng</label>
+                    <input asp-for="HardQuestions" name="HardQuestions" class="form-control" class="box" />
+                    <span asp-validation-for="HardQuestions" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TestDuration" class="control-label ">Thời Gian Làm Bài</label>
+                    <input asp-for="TestDuration" class="form-control" class="box" />
+                    <span asp-validation-for="TestDuration" class="text-danger"></span>
                 </div>
                 <div class="form-group">
   
@@ -54,19 +79,20 @@
                 </div>
                 <center>
                     <div class="form-group">
-                        <input type="submit" value="Save" class="btn btn-primary" />
+                        <input type="submit" value="Lưu" class="btn btn-primary" />
                     </div>
+
+                    <div>
+                        <a asp-action="Details" asp-controller="Courses" asp-route-id="@Model.CourseId">Quay Lại</a>
+                    </div>
+
                 </center>
-            
+                
             </form>
         </div>
     </div>
 
-<center>
-    <div>
-        <a asp-action="Index">Back to List</a>
-    </div>
-</center>
+<
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
@@ -84,5 +110,25 @@
             ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
         });
     </script>
+        <script>
+            function validateForm() {
+                // Get form values
+                let totalQuestions = parseInt(document.forms["questionForm"]["TotalQuestions"].value);
+                let easyQuestions = parseInt(document.forms["questionForm"]["EasyQuestions"].value);
+                let mediumQuestions = parseInt(document.forms["questionForm"]["MediumQuestions"].value);
+                let hardQuestions = parseInt(document.forms["questionForm"]["HardQuestions"].value);
+
+                // Check if the sum of easy, medium, and hard questions equals the total number of questions
+                if (easyQuestions + mediumQuestions + hardQuestions !== totalQuestions) {
+                    alert("Tổng số câu hỏi phải bằng tổng số câu hỏi nhận biết, thông hiểu và vận dụng!");
+                    document.forms["questionForm"]["TotalQuestions"].value = "";
+                    document.forms["questionForm"]["EasyQuestions"].value = "";
+                    document.forms["questionForm"]["MediumQuestions"].value = "";
+                    document.forms["questionForm"]["HardQuestions"].value = "";
+                    return false;
+                }
+                return true;
+            }
+        </script>
 }
 </body>
