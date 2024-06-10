@@ -34,18 +34,6 @@ html {
 div, h3, span {
     font-size: 100% !important;
 }
-    html::-webkit-scrollbar {
-        width: 1rem;
-        height: .5rem;
-    }
-
-    html::-webkit-scrollbar-track {
-        background-color: transparent;
-    }
-
-    html::-webkit-scrollbar-thumb {
-        background-color: var(--main-color);
-    }
 
 body {
     background-color: var(--light-bg);
@@ -111,9 +99,6 @@ body {
     background-color: var(--main-color);
     border-radius: 10px;
     border: none;
-}
-.btn-primary:hover {
-        background-color: darken(var(--main-color), 10%);
 }
 h1 {
     padding-top: 2rem;

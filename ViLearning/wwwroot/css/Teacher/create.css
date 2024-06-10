@@ -65,9 +65,6 @@
     background-color: var(--main-color);
     border: none;
 }
-
-#create-course-container .btn-primary:hover {
-    background-color: darken(var(--main-color), 10%);
 }
 
 #create-course-container .btn-danger {

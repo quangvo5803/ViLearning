@@ -108,8 +108,8 @@
                 ],
                 ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
             });
-        </script>
-        <script>
+
+
             function validateForm() {
                 // Get form values
                 let totalQuestions = parseInt(document.forms["questionForm"]["TotalQuestions"].value);
@@ -119,27 +119,14 @@
 
                 // Check if the sum of easy, medium, and hard questions equals the total number of questions
                 if (easyQuestions + mediumQuestions + hardQuestions !== totalQuestions) {
-                    alert("<script>
-                                function validateForm() {
-                            // Get form values
-                            let totalQuestions = parseInt(document.forms["questionForm"]["TotalQuestions"].value);
-                            let easyQuestions = parseInt(document.forms["questionForm"]["EasyQuestions"].value);
-                            let mediumQuestions = parseInt(document.forms["questionForm"]["MediumQuestions"].value);
-                            let hardQuestions = parseInt(document.forms["questionForm"]["HardQuestions"].value);
-
-                            // Check if the sum of easy, medium, and hard questions equals the total number of questions
-                            if (easyQuestions + mediumQuestions + hardQuestions !== totalQuestions) {
-                                alert("Tổng số câu hỏi phải bằng tổng số câu hỏi nhận biết, thông hiểu và vận dụng!");
-                                document.forms["questionForm"]["TotalQuestions"].value = "";
-                                document.forms["questionForm"]["EasyQuestions"].value = "";
-                                document.forms["questionForm"]["MediumQuestions"].value = "";
-                                document.forms["questionForm"]["HardQuestions"].value = "";
-
-                            }
-
-                        }
-
-                            }
+                    alert("Tổng số câu hỏi phải bằng tổng số câu hỏi nhận biết, thông hiểu và vận dụng!");
+                    document.forms["questionForm"]["TotalQuestions"].value = "";
+                    document.forms["questionForm"]["EasyQuestions"].value = "";
+                    document.forms["questionForm"]["MediumQuestions"].value = "";
+                    document.forms["questionForm"]["HardQuestions"].value = "";
+                    return false;
+                }
+                return true;
 
             }
         </script>
