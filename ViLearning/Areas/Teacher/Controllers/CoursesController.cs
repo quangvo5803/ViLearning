@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using ViLearning.Models;
 using ViLearning.Services.Repository.IRepository;
 using ViLearning.Utility;
-
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 namespace ViLearning.Areas.Teacher.Controllers
 {
     [Area("Teacher")]
@@ -28,11 +28,6 @@ namespace ViLearning.Areas.Teacher.Controllers
         {
             string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var courses = _unitOfWork.Course.GetAll().Where(c => c.UserId == currentUserId).ToList();
-
-            string currentUserId = User.Identity.GetUserId();
-         
-            var courses = _unitOfWork.Course.GetAll().Where(c => c.UserId == currentUserId).ToList();
-
             return View(courses);
         }
 
@@ -50,7 +45,8 @@ namespace ViLearning.Areas.Teacher.Controllers
             {
                 return NotFound();
             }
-
+            _unitOfWork.Course.LoadCourse(course);
+            
             return View(course);
         }
 

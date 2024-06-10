@@ -10,8 +10,10 @@
 }
 
 <div id="create-course-container">
-    <h1>Create</h1>
-    <h4>Course</h4>
+    <center>
+        <h1>Thông Tin</h1>
+        <h4>Khóa Học</h4>
+    </center>
     <hr />
     <div class="row">
         <div class="col-md-12">
@@ -38,21 +40,27 @@
                     <span asp-validation-for="CoverImgUrl" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="SubjectId" class="control-label"></label>
+                    <label asp-for="SubjectId" class="control-label">Môn Học</label>
                     <select asp-for="SubjectId" class="form-control" asp-items="ViewBag.SubjectId"></select>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Grade" class="control-label"></label>
+                    <label asp-for="Grade" class="control-label">Lớp</label>
                     <input asp-for="Grade" class="form-control" />
                     <span asp-validation-for="Grade" class="text-danger"></span>
                 </div>
-                <div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-primary" />
-                </div>
+                <center>
+                    <div class="form-group">
+                        <input type="submit" value="Thêm Khóa Học" class="btn btn-primary" />
+                    </div>
+                </center>
+                
             </form>
         </div>
     </div>
-    <a asp-action="Index" class="back-to-list">Back to List</a>
+    <center>
+        <a asp-action="Index" class="back-to-list">Quay Lại</a>
+    </center>
+    
 </div>
 
 @section Scripts {

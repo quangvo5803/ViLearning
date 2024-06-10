@@ -11,13 +11,33 @@ namespace ViLearning.Models
         [Required]
         public string LessonName { get; set; }
 
-        public int NumberOfQuestion { get; set; }
+        
         [Required]
         public int LessonNo { get; set; }
         [Required]
         public string Content { get; set; }
 
         public string? Video { get; set; }
+        [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Số lượng câu hỏi phải có dạng số nguyên dương.")]
+        public int TotalQuestions { get; set; }
+
+        [Required]
+        [Range(0, int.MaxValue, ErrorMessage = "Số lượng câu hỏi nhận biết phải có dạng số nguyên dương.")]
+        public int EasyQuestions { get; set; }
+
+        [Required]
+        [Range(0, int.MaxValue, ErrorMessage = "Số lượng câu hỏi thông hiểu phải có dạng số nguyên dương.")]
+        public int MediumQuestions { get; set; }
+
+        [Required]
+        [Range(0, int.MaxValue, ErrorMessage = "Số lượng câu hỏi vận dụng phải có dạng số nguyên dương.")]
+        public int HardQuestions { get; set; }
+
+        [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Thời gian bài kiểm tra phải có dạng số nguyên dương.")]
+        public int TestDuration { get; set; }  // Duration in minutes
+
         //Foreign key
         public int CourseId { get; set; }
 

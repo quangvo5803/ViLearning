@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Shared;
 using ViLearning.Data;
 using ViLearning.Models;
+using ViLearning.Models.ViewModels;
 using ViLearning.Services.Repository.IRepository;
 using ViLearning.Utility;
 
@@ -63,6 +64,8 @@ namespace ViLearning.Areas.Teacher.Controllers
             ViewData["CourseId"] = new SelectList
                     (_unitOfWork.Course
                     .GetRange(c => c.CourseName.Equals(name)), "CourseId", "CourseName");
+            var course = _unitOfWork.Course.Get(c => c.CourseName.Equals(name));
+            ViewBag.Size = _unitOfWork.Lesson.GetRange(l => l.CourseId == course.CourseId).Count() + 1;
             return View();
         }
 
@@ -73,8 +76,9 @@ namespace ViLearning.Areas.Teacher.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("Teacher/{name}/Lessons/Create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(string name, [Bind("LessonId,LessonName,NumberOfQuestion,LessonNo,Content,Video,CourseId")] Lesson lesson, IFormFile Video)
+        public async Task<IActionResult> Create(string name, [Bind("LessonId,LessonName,LessonNo,Content,Video,TotalQuestions,EasyQuestions,MediumQuestions,HardQuestions,TestDuration,CourseId")] Lesson lesson, IFormFile Video)
         {
+            int courseId = _unitOfWork.Course.Get(c => c.CourseName.Equals(name)).CourseId;
             ModelState.Remove("Comments");
             if (ModelState.IsValid)
             {
@@ -101,11 +105,15 @@ namespace ViLearning.Areas.Teacher.Controllers
                     _unitOfWork.Save();
 
 
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction("Details", "Courses", new { id = courseId});
                 }
                 catch (Exception ex)
                 {
                     StatusMessage = $"Error uploading file: {ex.Message}";
+                    Course course = _unitOfWork.Course.Get(c => c.CourseName.Equals(name));
+                    _unitOfWork.Course.LoadCourse(course);
+                    ViewBag.Size = _unitOfWork.Lesson.GetRange(l => l.CourseId == course.CourseId).Count() + 1;
+
                     ViewData["CourseId"] = new SelectList(_unitOfWork.Course.GetRange(c => c.CourseName.Equals(name)), "CourseId", "CourseName", lesson.CourseId);
                     return View(lesson);
                 }
@@ -115,7 +123,7 @@ namespace ViLearning.Areas.Teacher.Controllers
         }
 
         // GET: Teacher/Lessons/Edit/5
-        [HttpGet("Teacher/{CourseName}/{LessonName}/Edit")]
+        [HttpGet("Teacher/{CourseName}/{LessonName}/Edit/{id}")]
         public async Task<IActionResult> Edit(string CourseName, string LessonName, int? id)
         {
             if (id == null)
@@ -131,13 +139,12 @@ namespace ViLearning.Areas.Teacher.Controllers
             ViewData["CourseId"] = new SelectList(_unitOfWork.Course.GetAll(), "CourseId", "CourseName", lesson.CourseId);
             return View(lesson);
         }
-
         // POST: Teacher/Lessons/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost("Teacher/{CourseName}/{LessonName}/Edit")]
+        [HttpPost("Teacher/{CourseName}/{LessonName}/Edit/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string CourseName, string LessonName, int id, [Bind("LessonId,LessonName,NumberOfQuestion,LessonNo,Content,Video,CourseId")] Lesson lesson, IFormFile Video)
+        public async Task<IActionResult> Edit(string CourseName, string LessonName, int id, [Bind("LessonId,LessonName,LessonNo,Content,Video,TotalQuestions,EasyQuestions,MediumQuestions,HardQuestions,TestDuration,CourseId")] Lesson lesson, IFormFile Video)
         {
             if (id != lesson.LessonId)
             {
@@ -172,7 +179,7 @@ namespace ViLearning.Areas.Teacher.Controllers
                         _unitOfWork.Save();
 
 
-                        return RedirectToAction(nameof(Index));
+                        return RedirectToAction("Details", "Courses", new { id = lesson.CourseId });
                     }
                     catch (Exception ex)
                     {
@@ -191,14 +198,14 @@ namespace ViLearning.Areas.Teacher.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details","Courses",new {id = lesson.Course.CourseId});
             }
             
             return View(lesson);
         }
 
         // GET: Teacher/Lessons/Delete/5
-        [HttpGet("Teacher/{CourseName}/{LessonName}/Delete")]
+        [HttpGet("Teacher/{CourseName}/{LessonName}/Delete/{id}")]
         public async Task<IActionResult> Delete(string CourseName, string LessonName,int? id)
         {
             if (id == null)
@@ -218,7 +225,7 @@ namespace ViLearning.Areas.Teacher.Controllers
         }
 
         // POST: Teacher/Lessons/Delete/5
-        [HttpPost("Teacher/{CourseName}/{LessonName}/Delete"), ActionName("Delete")]
+        [HttpPost("Teacher/{CourseName}/{LessonName}/Delete/{id}"), ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string CourseName, string LessonName, int id)
         {
@@ -229,7 +236,7 @@ namespace ViLearning.Areas.Teacher.Controllers
             }
 
             _unitOfWork.Save();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", "Courses", new { id = lesson.Course.CourseId });
         }
 
         private bool LessonExists(int id)

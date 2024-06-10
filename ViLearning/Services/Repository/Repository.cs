@@ -91,5 +91,6 @@ namespace ViLearning.Services.Repository
         {
             dbSet.RemoveRange(entities);
         }
+
     }
 }
