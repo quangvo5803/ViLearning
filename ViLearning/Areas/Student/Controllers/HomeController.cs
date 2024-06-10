@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using ViLearning.Models;
@@ -11,21 +12,24 @@ namespace ViLearning.Areas.Student.Controllers
     [Area("Student")]
     public class HomeController : Controller
     {
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<HomeController> _logger;
-        public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork)
+        public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
+            _userManager = userManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
-            List<ApplicationUser> teacherList = new List<ApplicationUser>();
             List<ApplicationUser> userList = _unitOfWork.ApplicationUser.GetAll().ToList();
+            List<ApplicationUser> teacherList = new List<ApplicationUser>();
             foreach (ApplicationUser user in userList)
             {
-                if (user.Role == "Teacher")
+                var roles = await _userManager.GetRolesAsync(user);
+                if (roles.Contains("Teacher"))
                 {
                     teacherList.Add(user);
                 }
@@ -52,13 +56,14 @@ namespace ViLearning.Areas.Student.Controllers
             return View(detailViewModel);
         }
         
-        public IActionResult CourseList()
+        public async Task<IActionResult> CourseListAsync()
         {
-            List<ApplicationUser> teacherList = new List<ApplicationUser>();
             List<ApplicationUser> userList = _unitOfWork.ApplicationUser.GetAll().ToList();
+            List<ApplicationUser> teacherList = new List<ApplicationUser>();
             foreach (ApplicationUser user in userList)
             {
-                if (user.Role == "Teacher")
+                var roles = await _userManager.GetRolesAsync(user);
+                if (roles.Contains("Teacher"))
                 {
                     teacherList.Add(user);
                 }
