@@ -122,7 +122,7 @@ namespace ViLearning.Areas.Teacher.Controllers
         // POST: Teacher/Courses/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CourseId,CourseName,Price,Description,CoverImgUrl,SubjectId,Grade")] Course course, IFormFile coverImage)
+        public async Task<IActionResult> Edit(int id, [Bind("CourseId,CourseName,Price,Description,CoverImgUrl,SubjectId,Grade")] Course course, IFormFile? coverImage)
         {
             if (id != course.CourseId)
             {

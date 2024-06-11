@@ -226,3 +226,37 @@ section {
         font-size: 1.5rem;
         color: var(--main-color);
     }
+
+
+.search-form {
+    max-width: 600px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+}
+
+    .search-form input {
+        flex-grow: 1;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    .search-form button {
+        background-color: #28a745;
+        border: none;
+        color: white;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+
+
+/*     .filters {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-right: 20px;
+            background-color: #fff;
+        }
+        .filters label {
+            margin-right: 15px;
+        }*/
