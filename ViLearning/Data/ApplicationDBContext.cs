@@ -31,6 +31,8 @@ namespace ViLearning.Data
                 new Subject { Id = 2, Name = "Ngữ Văn" }
             );
 
+
+
             // Configuration for StudentCertificate
             modelBuilder.Entity<StudentCertificate>()
                 .HasKey(sc => new { sc.CourseCertificateId, sc.UserId });

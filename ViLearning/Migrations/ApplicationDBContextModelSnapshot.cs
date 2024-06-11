@@ -304,7 +304,6 @@ namespace ViLearning.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CoverImgUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
@@ -320,7 +319,6 @@ namespace ViLearning.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("CourseId");
@@ -402,18 +400,37 @@ namespace ViLearning.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LessonId"));
 
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EasyQuestions")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HardQuestions")
                         .HasColumnType("int");
 
                     b.Property<string>("LessonName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("NumberOfQuestion")
+                    b.Property<int>("LessonNo")
                         .HasColumnType("int");
 
-                    b.Property<bool>("statusBoolean")
-                        .HasColumnType("bit");
+                    b.Property<int>("MediumQuestions")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TestDuration")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalQuestions")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Video")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("LessonId");
 
@@ -429,6 +446,9 @@ namespace ViLearning.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("QuestionId"));
+
+                    b.Property<int>("Difficulty")
+                        .HasColumnType("int");
 
                     b.Property<int>("LessonId")
                         .HasColumnType("int");
@@ -448,6 +468,9 @@ namespace ViLearning.Migrations
                     b.Property<string>("QuestionName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("QuestionType")
+                        .HasColumnType("int");
 
                     b.Property<string>("RightAnswer")
                         .IsRequired()
@@ -662,9 +685,7 @@ namespace ViLearning.Migrations
 
                     b.HasOne("ViLearning.Models.ApplicationUser", "ApplicationUser")
                         .WithMany("Courses")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("ApplicationUser");
 

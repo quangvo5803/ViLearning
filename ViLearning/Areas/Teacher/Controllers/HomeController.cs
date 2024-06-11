@@ -19,11 +19,6 @@ namespace ViLearning.Areas.Teacher.Controllers
         {
             return View();
         }
-        public IActionResult Courses()
-        {
-            List<Course> courses = _unitOfWork.Course.GetAll().ToList();
-
-            return View(courses);
-        }
+        
     }
 }

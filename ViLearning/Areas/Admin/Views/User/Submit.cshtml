@@ -1,9 +1,24 @@
 ﻿@model ApplicationUser
-<div class="container text-center mt-5">
-    <img src="@Model.TeacherCertificateImgUrl" alt="Giấy Chứng Nhận" class="certificate-img">
-    <div class="row justify-content-between mt-4" role="group" aria-label="Basic example">
+<div class="container d-flex flex-column align-items-center justify-content-center mt-5">
+    <div class="certificate-wrapper text-center" style="max-width:1500px; max-height:800px;overflow: hidden;">
+        <a class="venobox" data-gall="gallery01" data-fitview="true" href="@Model.TeacherCertificateImgUrl">
+            <img src="@Model.TeacherCertificateImgUrl" alt="Giấy Chứng Nhận" class="certificate-img" style="max-width:100%;max-height:100%; width:auto;height:auto;object-fit:contain">
+        </a>
+    </div>
+    <div class="row justify-content-between mt-4 w-100" role="group" aria-label="Basic example">
         <a class="col-md-3 btn btn-success" asp-controller="User" asp-action="Accept" asp-route-id="@Model.Id">Chấp nhận</a>
         <a class="col-md-3 btn btn-danger" asp-controller="User" asp-action="Reject" asp-route-id="@Model.Id">Từ chối</a>
         <a class="col-md-3 btn btn-secondary" asp-controller="User" asp-action="Index"><i class="bi bi-arrow-return-left pr-1"></i> Trở về danh sách người dùng</a>
     </div>
 </div>
+@section Scripts {
+    <script>
+        new VenoBox({
+            selector: '.venobox',
+            numeration: true,
+            infinigall: true,
+            share: true,
+            spinner: 'rotating-plane',
+        });
+    </script>
+}

@@ -1,0 +1,111 @@
+﻿@model ViLearning.Models.Lesson
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Styles {
+    <style>
+        .lesson-content {
+            max-width: 100%;
+            overflow-wrap: break-word;
+        }
+
+        .video-container {
+            width: 100%;
+            height: auto;
+        }
+        th, td {
+            text-align: center;
+            width: 50%;
+        }
+
+        .btn-primary {
+            border-radius: 10px;
+            background-color: #8e44ad;
+        }
+        .btn-info {
+            border-radius:10px;
+            background-color:#f39c12;
+        }
+        .btn-danger {
+            border-radius: 10px;
+        }
+    </style>
+}
+    <center>
+        <h1 style="padding-top:3rem; padding-bottom:1rem">Bài @Model.LessonNo: @Model.LessonName</h1>
+    </center>
+    
+
+    <div style="width: 1000">
+
+        <hr />
+
+        <div class="row ">
+            <div class="col-sm-15">
+                @Html.Raw(Model.Content)
+            </div>
+        </div>
+        <center>
+        <div class="row mb-3">
+            <div class="col-sm-12">
+                <video width="1000" height="650" controls controlsList="nodownload">
+                    <source src="@Model.Video" type="video/mp4">
+                    <source src="@Model.Video" type="video/ogg">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+        </center>
+
+        <div class="row mb-3">
+            <div class="col-sm-12">
+                <center>
+                    <h4>Bài Kiểm Tra</h4>
+               
+
+                <table class="table">
+                    <tr>
+                        <th>Thành Phần</th>
+                        <th>Lượng</th>
+                    </tr>
+                    <tr>
+                        <td>Câu Hỏi</td>
+                        <td>@Model.TotalQuestions Câu</td>
+                    </tr>
+                    <tr>
+                        <td> Câu Hỏi Nhận Biết</td>
+                        <td>@Model.EasyQuestions Câu</td>
+                    </tr>
+                    <tr>
+                        <td>Câu Hỏi Thông Hiểu</td>
+                        <td>@Model.MediumQuestions Câu</td>
+                    </tr>
+                    <tr>
+                        <td>Câu Hỏi Vận Dụng</td>
+                        <td>@Model.HardQuestions Câu</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Thời gian làm bài </td>
+                        <td>@Model.TestDuration phút</td>
+                    </tr>
+                </table>
+            </center>
+            </div>
+        </div>
+
+       
+    </div>
+    <center>
+        <div class="mt-3">
+            <a  class="btn btn-primary" asp-action="Edit" asp-route-id="@Model?.LessonId" asp-route-CourseName="@Model.Course.CourseName" asp-route-LessonName="@Model.LessonName">Cập Nhật Thông Tin</a>
+            <a class="btn btn-secondary" asp-controller="Courses" asp-action="Details" asp-route-id="@Model.Course.CourseId">Quay Lại</a>
+            <a class="btn btn-info" asp-area="Teacher" asp-controller="Question" asp-action="QuestionManage" asp-route-lessonId="@Model.LessonId">Ngân Hàng Câu Hỏi</a>
+            <hr />
+            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model.LessonId" asp-route-CourseName="@Model.Course.CourseName" asp-route-LessonName="@Model.LessonName">Xóa Bài Học</a>
+        </div>
+    </center>
+    
+

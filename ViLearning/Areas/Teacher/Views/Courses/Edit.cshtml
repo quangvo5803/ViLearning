@@ -1,0 +1,69 @@
+﻿@model ViLearning.Models.Course
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Teacher/create.css" />
+}
+
+<div id="create-course-container">
+    <center>
+        <h1>Thông Tin</h1>
+        <h4>Khóa Học</h4>
+    </center>
+    <hr />
+    <div class="row">
+        <div class="col-md-12">
+            <form asp-action="Edit" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="CourseId" />
+                <div class="form-group">
+                    <label asp-for="CourseName" class="control-label"></label>
+                    <input asp-for="CourseName" class="form-control" />
+                    <span asp-validation-for="CourseName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Price" class="control-label"></label>
+                    <input asp-for="Price" class="form-control" />
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label"></label>
+                    <input asp-for="Description" class="form-control" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CoverImgUrl" class="control-label"></label>
+                    <div class="current-cover-image">
+                        <img src="@Model.CoverImgUrl" alt="Current Cover Image" class="img-thumbnail" />
+                    </div>
+                    <input type="file" name="coverImage" asp-for="CoverImgUrl" class="form-control" />
+                    <span asp-validation-for="CoverImgUrl" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SubjectId" class="control-label">Môn Học</label>
+                    <select asp-for="SubjectId" class="form-control" asp-items="ViewBag.SubjectId"></select>
+                    <span asp-validation-for="SubjectId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Grade" class="control-label">Lớp</label>
+                    <input asp-for="Grade" class="form-control" />
+                    <span asp-validation-for="Grade" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Lưu" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+    <a asp-action="Index" class="back-to-list">Quay Lại</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

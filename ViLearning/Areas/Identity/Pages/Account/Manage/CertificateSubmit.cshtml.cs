@@ -27,6 +27,7 @@ namespace ViLearning.Areas.Identity.Pages.Account.Manage
             _signInManager = signInManager;
             _blobStorageService = blobStorageService;
         }
+        public IList<string> Role { get; set; }
 
         [BindProperty]
         public InputModel Input { get; set; }
@@ -38,6 +39,7 @@ namespace ViLearning.Areas.Identity.Pages.Account.Manage
         {
             [DisplayName("Chứng chỉ giáo viên")]
             public string? TeacherCertificateImgUrl { get; set; }
+            
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -47,10 +49,10 @@ namespace ViLearning.Areas.Identity.Pages.Account.Manage
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
-
+            Role = await _userManager.GetRolesAsync(user);
             Input = new InputModel
             {
-                TeacherCertificateImgUrl = user.TeacherCertificateImgUrl
+                TeacherCertificateImgUrl = user.TeacherCertificateImgUrl,              
             };
 
             return Page();
