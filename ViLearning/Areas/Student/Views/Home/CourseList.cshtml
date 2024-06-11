@@ -16,7 +16,7 @@
         @foreach (var course in Model.Courses)
         {
             <div class="col-sm-4 mb-4">
-            <a asp-action="Details" asp-route-CourseId="@course.CourseId" style="text-decoration:none">
+                <a asp-action="Details" asp-route-CourseId="@course.CourseId" style="text-decoration:none">
                     <div class="card h-100 d-flex flex-column">
                         <img src="@course.CoverImgUrl" class="card-img-top rounded mx-auto d-block" alt="@course.CourseName" style=" height: 300px; width:100%; object-fit:cover">
                         <div class="card-body d-flex flex-column">
@@ -37,11 +37,8 @@
                             <span class="ms-auto price" style="font-size:18px; font-weight:bold;">@course.Price?.ToString("N0") VNĐ</span>
                         </div>
                     </div>
-                </div>
-            </a>
+                </a>
             </div>
-
-
         }
     </div>
 </div>
