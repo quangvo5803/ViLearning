@@ -163,18 +163,12 @@ section {
     .delete-btn i {
         font-size: 1.2rem;
     }
-
-    .delete-btn:hover {
-        background-color: darken(var(--red), 10%);
-        transform: scale(1.05);
+    .delete-btn:hover{
+        background-color:black;
     }
 
     .delete-btn:active {
         transform: scale(0.95);
-    }
-
-    .delete-btn:focus {
-        outline: 2px solid darken(var(--red), 20%);
     }
 
 .box-container {
@@ -214,3 +208,26 @@ section {
         font-size: 1.5rem;
         color: var(--main-color);
     }
+.search-form {
+    max-width: 600px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+}
+
+    .search-form input {
+        flex-grow: 1;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    .search-form button {
+        background-color: #28a745;
+        border: none;
+        color: white;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+
+
+
