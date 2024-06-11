@@ -34,6 +34,18 @@ div, h3, span {
     font-size: 100%!important;
 }
 
+    html::-webkit-scrollbar {
+        width: 1rem;
+        height: .5rem;
+    }
+
+    html::-webkit-scrollbar-track {
+        background-color: transparent;
+    }
+
+    html::-webkit-scrollbar-thumb {
+        background-color: var(--main-color);
+    }
 
 body {
     background-color: var(--light-bg);
@@ -169,6 +181,10 @@ section {
 
     .delete-btn:active {
         transform: scale(0.95);
+    }
+
+    .delete-btn:focus {
+        outline: 2px solid darken(var(--red), 20%);
     }
 
 .box-container {

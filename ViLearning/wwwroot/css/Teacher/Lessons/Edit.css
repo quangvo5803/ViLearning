@@ -100,6 +100,9 @@ body {
     border-radius: 10px;
     border: none;
 }
+.btn-primary:hover {
+        background-color: darken(var(--main-color), 10%);
+}
 h1 {
     padding-top: 2rem;
 }

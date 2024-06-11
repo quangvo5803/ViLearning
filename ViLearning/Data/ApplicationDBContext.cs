@@ -26,7 +26,11 @@ namespace ViLearning.Data
         {
             base.OnModelCreating(modelBuilder);
 
-           
+            modelBuilder.Entity<Subject>().HasData(
+                new Subject { Id = 1, Name = "Toán" },
+                new Subject { Id = 2, Name = "Ngữ Văn" }
+            );
+
 
 
             // Configuration for StudentCertificate
