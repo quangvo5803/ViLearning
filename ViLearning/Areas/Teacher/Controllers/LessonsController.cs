@@ -229,13 +229,14 @@ namespace ViLearning.Areas.Teacher.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string CourseName, string LessonName, int id)
         {
-            var lesson = _unitOfWork.Lesson.Get(l => l.LessonId == id);
+            var lesson = _unitOfWork.Lesson.Get(l => l.LessonId == id, includeProperties:"Course");
             if (lesson != null)
             {
                 _unitOfWork.Lesson.Remove(lesson);
             }
 
             _unitOfWork.Save();
+            
             return RedirectToAction("Details", "Courses", new { id = lesson.Course.CourseId });
         }
 
