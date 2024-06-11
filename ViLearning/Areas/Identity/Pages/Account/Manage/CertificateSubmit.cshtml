@@ -5,12 +5,15 @@
     ViewData["ActivePage"] = ManageNavPages.Index;
 }
 
-<h3>@ViewData["Title"]</h3>
+<h3 class="mt-5">@ViewData["Title"]</h3>
 <div class="row">
     <div class="col-md-3 bg-white rounded-md shadow-md p-7 flex flex-col gap-4">
         <div><a asp-page="/Account/Manage/Index" class="text-decoration-none font-weight-bold">Thông tin cá nhân</a></div>
         <div><a asp-page="/Account/Manage/ChangePassword" class="text-decoration-none font-weight-bold">Thay đổi mật khẩu</a></div>
-        <div><a asp-page="/Account/Manage/CertificateSubmit" class="text-info text-decoration-none font-weight-bold">Nộp chứng chỉ giáo viên</a></div>
+        @if (Model.Role.Contains("Student"))
+        {
+                <div><a asp-page="/Account/Manage/CertificateSubmit" class="text-decoration-none font-weight-bold">Nộp chứng chỉ giáo viên</a></div>
+        }
     </div>
     <div class="col-md-6">
         <form id="profile-form" method="post" enctype="multipart/form-data">

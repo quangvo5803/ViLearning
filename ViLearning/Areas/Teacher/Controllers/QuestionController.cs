@@ -63,8 +63,10 @@ namespace ViLearning.Areas.Teacher.Controllers
         [HttpGet]
         public async Task<IActionResult> Search(QuestionManageVM vm)
         {
-            vm.Questions = _unitOfWork.Question.GetRange(q => q.LessonId == vm.Lesson.LessonId && q.QuestionName.Contains(vm.searchString)).ToList();
-            
+            if (vm.SearchString == null) vm.SearchString = "";
+            vm.Questions = _unitOfWork.Question.GetRange(q => q.LessonId == vm.Question.LessonId && q.QuestionName.Contains(vm.SearchString))
+                .OrderBy(x => x.Difficulty).ThenBy(x => x.LessonId).ToList();
+            vm.Lesson = _unitOfWork.Lesson.Get(l => l.LessonId == vm.Question.LessonId, includeProperties: "Course");
 
             return View("QuestionManage",vm);
         }

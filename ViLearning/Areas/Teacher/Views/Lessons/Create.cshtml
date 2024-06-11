@@ -12,86 +12,89 @@
     var count = ViewBag.Size;
 }
 <body>
-<center>
+    <center>
         <h1>Thông Tin</h1>
 
         <h4>Bài  Học</h4>
- </center>
-        <hr />
-            <div class="row">
+    </center>
+    <hr />
+    <div class="row">
         <div class="col-md-́́8 mx-auto form-container">
-            <form name="questionForm"  asp-action="Create" enctype="multipart/form-data" onsubmit="return validateForm()">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <div class="form-group">
-                            <label asp-for="LessonName" class="control-label">Tên Bài Học</label>
-                            <input asp-for="LessonName" class="form-control " />
-                            <span asp-validation-for="LessonName" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-
-                            <input asp-for="LessonNo" class="form-control" value="@count" hidden/>
-
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="Content" class="control-label">Nội Dung Bài Học</label>
-                            <textarea asp-for="Content" class="form-control "></textarea>
-                            <span asp-validation-for="Content" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="Video" class="control-label">Video Bài Giảng</label>
-                            <input type="file" name="Video" asp-for="Video" class="form-control " />
-                            <span asp-validation-for="Video" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="TotalQuestions" class="control-label">Số Câu Hỏi</label>
-                            <input asp-for="TotalQuestions" name="TotalQuestions" class="form-control " />
-                            <span asp-validation-for="TotalQuestions" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="EasyQuestions" class="control-label">Số Câu Hỏi Nhận Biết</label>
-                            <input asp-for="EasyQuestions" name="EasyQuestions" class="form-control " />
-                            <span asp-validation-for="EasyQuestions" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="MediumQuestions" class="control-label">Số Câu Hỏi Thông Hiểu</label>
-                            <input asp-for="MediumQuestions" name="MediumQuestions" class="form-control " />
-                            <span asp-validation-for="MediumQuestions" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="HardQuestions" class="control-label">Số Câu Hỏi Vận Dụng</label>
-                            <input asp-for="HardQuestions" name="HardQuestions" class="form-control " />
-                            <span asp-validation-for="HardQuestions" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="TestDuration" class="control-label">Thời Gian Làm Bài</label>
-                            <input asp-for="TestDuration" class="form-control " />
-                            <span asp-validation-for="TestDuration" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <select asp-for="CourseId" class="form-control" asp-items="ViewBag.CourseId" hidden></select>
-                        </div>
-                        <center>
-                            <div  class="form-group">
-                                <input style="width:10rem" type="submit" value="Thêm Bài Học" class="btn btn-primary" />
-                            </div>
-                            <div>
-
-                                @if (ViewBag.CourseId != null && ((SelectList)ViewBag.CourseId).Any())
-                                {
-                                    var firstCourse = ((SelectList)ViewBag.CourseId).First();
-                                    <a asp-action="Details" asp-controller="Courses" asp-route-id="@firstCourse.Value">Quay Lại</a>
-                                }
-
-                            </div>
-                        </center>
-                    </form>
+            <form name="questionForm" asp-action="Create" enctype="multipart/form-data" onsubmit="validateForm()">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="LessonName" class="control-label">Tên Bài Học</label>
+                    <input asp-for="LessonName" class="form-control " />
+                    <span asp-validation-for="LessonName" class="text-danger"></span>
                 </div>
-            </div>
+                <div class="form-group">
+
+                    <input asp-for="LessonNo" class="form-control" value="@count" hidden />
+
+                </div>
+                <div class="form-group">
+                    <label asp-for="Content" class="control-label">Nội Dung Bài Học</label>
+                    <textarea asp-for="Content" class="form-control "></textarea>
+                    <span asp-validation-for="Content" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Video" class="control-label">Video Bài Giảng</label>
+                    <input type="file" name="Video" asp-for="Video" class="form-control " />
+                    <span asp-validation-for="Video" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TotalQuestions" class="control-label">Số Câu Hỏi</label>
+                    <input asp-for="TotalQuestions" name="TotalQuestions" class="form-control " />
+                    <span asp-validation-for="TotalQuestions" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="EasyQuestions" class="control-label">Số Câu Hỏi Nhận Biết</label>
+                    <input asp-for="EasyQuestions" name="EasyQuestions" class="form-control " />
+                    <span asp-validation-for="EasyQuestions" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="MediumQuestions" class="control-label">Số Câu Hỏi Thông Hiểu</label>
+                    <input asp-for="MediumQuestions" name="MediumQuestions" class="form-control " />
+                    <span asp-validation-for="MediumQuestions" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="HardQuestions" class="control-label">Số Câu Hỏi Vận Dụng</label>
+                    <input asp-for="HardQuestions" name="HardQuestions" class="form-control " />
+                    <span asp-validation-for="HardQuestions" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TestDuration" class="control-label">Thời Gian Làm Bài</label>
+                    <input asp-for="TestDuration" class="form-control " />
+                    <span asp-validation-for="TestDuration" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+
+                    <select asp-for="CourseId" class="form-control" asp-items="ViewBag.CourseId" hidden></select>
+                </div>
+                <center>
+                    <div class="form-group">
+                        <input style="width:10rem" type="submit" value="Thêm Bài Học" class="btn btn-primary" />
+                    </div>
+                    <div>
+
+                        @if (ViewBag.CourseId != null && ((SelectList)ViewBag.CourseId).Any())
+                        {
+                            var firstCourse = ((SelectList)ViewBag.CourseId).First();
+                            <a asp-action="Details" asp-controller="Courses" asp-route-id="@firstCourse.Value">Quay Lại</a>
+                        }
+
+                    </div>
+                </center>
+            </form>
+        </div>
+    </div>
 
 
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
         <script>
             tinymce.init({
                 selector: 'textarea',
@@ -105,8 +108,8 @@
                 ],
                 ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
             });
-            
-                  
+        </script>
+        <script>
             function validateForm() {
                 // Get form values
                 let totalQuestions = parseInt(document.forms["questionForm"]["TotalQuestions"].value);
@@ -114,18 +117,26 @@
                 let mediumQuestions = parseInt(document.forms["questionForm"]["MediumQuestions"].value);
                 let hardQuestions = parseInt(document.forms["questionForm"]["HardQuestions"].value);
 
-                // Check if the sum of easy, medium, and hard questions equals the total number of questions
-                if (easyQuestions + mediumQuestions + hardQuestions !== totalQuestions) {
-                    alert("Tổng số câu hỏi phải bằng tổng số câu hỏi nhận biết, thông hiểu và vận dụng!");
-                    document.forms["questionForm"]["TotalQuestions"].value = "";
-                    document.forms["questionForm"]["EasyQuestions"].value = "";
-                    document.forms["questionForm"]["MediumQuestions"].value = "";
-                    document.forms["questionForm"]["HardQuestions"].value = "";
+
+                                function validateForm() {
+                            // Get form values
+                            let totalQuestions = parseInt(document.forms["questionForm"]["TotalQuestions"].value);
+                            let easyQuestions = parseInt(document.forms["questionForm"]["EasyQuestions"].value);
+                            let mediumQuestions = parseInt(document.forms["questionForm"]["MediumQuestions"].value);
+                            let hardQuestions = parseInt(document.forms["questionForm"]["HardQuestions"].value);
+
+                            // Check if the sum of easy, medium, and hard questions equals the total number of questions
+                            if (easyQuestions + mediumQuestions + hardQuestions !== totalQuestions) {
+                                alert("Tổng số câu hỏi phải bằng tổng số câu hỏi nhận biết, thông hiểu và vận dụng!");
+                                document.forms["questionForm"]["TotalQuestions"].value = "";
+                                document.forms["questionForm"]["EasyQuestions"].value = "";
+                                document.forms["questionForm"]["MediumQuestions"].value = "";
+                                document.forms["questionForm"]["HardQuestions"].value = "";
                     return false;
-                }
+                            }
                 return true;
 
             }
         </script>
-}
+    }
 </body>

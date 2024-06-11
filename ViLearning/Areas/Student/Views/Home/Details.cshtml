@@ -1,7 +1,7 @@
 ﻿@model CourseDetailsVM
 <div class="course-header">
-    <h1 class="text-white">COURSE DETAILS</h1>
-    <p>Odio et unde deleniti. Deserunt numquam exercitationem. Officiis quo odio sint voluptas.</p>
+    <h1 class="text-white">THÔNG TIN KHÓA HỌC</h1>
+    <p>Kiểm soát tri thức - Hướng tới thành công.</p>
 </div>
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
@@ -20,21 +20,15 @@
                 <div class="chapter">
                     <h4>Nội dung khóa học:</h4>
                     <ul>
+                        @foreach(var lesson in Model.Lessons)
+                        {
                         <a asp-controller="Home" asp-action="Index" class="text-decoration-none">
                         <li>
-                            <span class="lesson-title">Cài đặt môi trường lập trình C</span>
+                                <span class="lesson-title">@lesson.LessonName</span>
                             <span class="lesson-status"><i class="bi bi-circle"></i></span>
                         </li>
                         </a>
-
-                        <li>
-                            <span class="lesson-title">Viết chương trình Hello World đầu tiên trong C</span>
-                            <span class="lesson-status"><i class="bi bi-check-circle-fill"></i></span>
-                        </li>
-                        <li>
-                            <span class="lesson-title">Bài tập C cơ bản: câu lệnh print</span>
-                            <span class="lesson-status"><i class="bi bi-check-circle-fill"></i> </span>
-                        </li>
+                        }
                     </ul>
                 </div>
             </div>
@@ -43,7 +37,7 @@
             <div class="course-details">
                 <div class="d-flex justify-content-between align-items-center">
                     <h5 style="margin:0"> Giáo viên: </h5>
-                    <p>@Model.Course.ApplicationUser.FullName</p>
+                    <p>@(Model.Course.ApplicationUser.FullName == null ? @Model.Course.ApplicationUser.Email : @Model.Course.ApplicationUser.FullName )</p>
                 </div>
             </div>
             <div class="course-details">
@@ -59,7 +53,7 @@
                 </div>
             </div>
             <div class="mt-4">
-                <a class="btn btn-success d-flex justify-content-center">Đăng kí khóa học</a>
+                <a asp-controller="Home" asp-action="Checkout" asp-route-CourseId="@Model.Course.CourseId" class="btn btn-success d-flex justify-content-center">Đăng kí khóa học</a>
             </div>
         </div>
     </div>

@@ -10,9 +10,11 @@ using ViLearning.Models;
 using ViLearning.Services.Repository.IRepository;
 using ViLearning.Utility;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.AspNetCore.Authorization;
 namespace ViLearning.Areas.Teacher.Controllers
 {
     [Area("Teacher")]
+    [Authorize(Roles = SD.Role_User_Teacher)]
     public class CoursesController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -122,7 +124,7 @@ namespace ViLearning.Areas.Teacher.Controllers
         // POST: Teacher/Courses/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CourseId,CourseName,Price,Description,CoverImgUrl,SubjectId,Grade")] Course course, IFormFile coverImage)
+        public async Task<IActionResult> Edit(int id, [Bind("CourseId,CourseName,Price,Description,CoverImgUrl,SubjectId,Grade")] Course course, IFormFile? coverImage)
         {
             if (id != course.CourseId)
             {

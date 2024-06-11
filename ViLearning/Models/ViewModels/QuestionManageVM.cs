@@ -8,6 +8,6 @@
 
         public Lesson Lesson { get; set; }
         
-        public String searchString { get; set; }
+        public String SearchString { get; set; }
     }
 }

@@ -1,0 +1,47 @@
+﻿@model LandingPageVM
+
+<div class="course-header">
+    <h1 class="text-white">DANH SÁCH KHÓA HỌC</h1>
+    <p>Kiểm soát tri thức - Hướng tới thành công.</p>
+</div>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item text-white"><a asp-action="Index">Trang chủ</a></li>
+        <li class="breadcrumb-item active text-white" aria-current="page">Danh sách khóa học</li>
+    </ol>
+</nav>
+<div class="container mt-5">
+    <div class="row" style="margin:0 100px">
+
+        @foreach (var course in Model.Courses)
+        {
+            <div class="col-sm-4 mb-4">
+                <a asp-action="Details" asp-route-CourseId="@course.CourseId" style="text-decoration:none">
+                    <div class="card h-100 d-flex flex-column">
+                        <img src="@course.CoverImgUrl" class="card-img-top rounded mx-auto d-block" alt="@course.CourseName" style=" height: 300px; width:100%; object-fit:cover">
+                        <div class="card-body d-flex flex-column">
+                            <span class="badge badge-success">@course.Subject?.Name</span>
+                            <h5 class="card-title mt-2">@course.CourseName</h5>
+                            <p class="card-text">@course.Description</p>
+                            <div class="mt-auto d-flex justify-content-between align-items-center mt-3">
+                                <div class="d-flex align-items-center">
+                                    <span class="ms-2">Giáo viên: @(course.ApplicationUser.FullName == null ? course.ApplicationUser.Email : course.ApplicationUser.FullName)</span>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <a class="btn btn-success">@course.Subject.Name</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-footer d-flex justify-content-between bg-transparent border-top-0">
+                            <span class="ms-auto price" style="font-size:18px; font-weight:bold;">@course.Price?.ToString("N0") VNĐ</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</div>
+@section Styles {
+    <link rel="stylesheet" href="~/css/Student/CourseList.css">
+}

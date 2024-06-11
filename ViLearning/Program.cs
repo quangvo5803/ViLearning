@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using ViLearning.Models;
 using System.Security.Policy;
 using Microsoft.Data.SqlClient;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,7 +35,10 @@ builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 var azureStorageConnectionString = builder.Configuration.GetSection("AzureStorage:ConnectionString").Value;
 builder.Services.AddSingleton(new BlobStorageService(azureStorageConnectionString));
-
+builder.Services.Configure<KestrelServerOptions>(options =>
+{
+    options.Limits.MaxRequestBodySize = 104857600;
+});
 
 var app = builder.Build();
 
