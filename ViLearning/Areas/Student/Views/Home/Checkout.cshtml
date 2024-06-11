@@ -1,0 +1,53 @@
+﻿@model CourseDetailsVM
+<div class="container">
+    <div class="row m-0">
+        <div class="col-lg-7 pb-5 pe-lg-5">
+            <div class="row">
+                <div class="col-12 p-5">
+                    <img src="@Model.Course.CoverImgUrl"
+                         alt="">
+                </div>
+                <div class="row m-0 bg-light">
+                    <div class="col-md-6 col-6 ps-30 pe-0 my-4">
+                        <p class="text-muted">Tên khóa học</p>
+                        <p class="h5">@Model.Course.CourseName</p>
+                    </div>
+                    <div class="col-md-6 col-6 ps-30 my-4">
+                        <p class="text-muted">Lớp</p>
+                        <p class="h5 m-0">@Model.Course.Grade</p>
+                    </div>
+                    <div class="col-md-6 col-6 ps-30 my-4">
+                        <p class="text-muted">Số bài học</p>
+                        <p class="h5 m-0">@Model.Lessons.Count()</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5 p-0 ps-lg-4">
+            <div class="row m-0">
+                <div class="col-12 px-4">
+                    <div class="d-flex align-items-end mt-4 mb-2">
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <p class="textmuted fw-bold">Giá bán</p>
+                        <div class="d-flex align-text-top ">
+                            <span class="fas fa-dollar-sign mt-1 pe-1 fs-14 "></span><span class="h4">@Model.Course.Price?.ToString("N0") VNĐ</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 px-0">
+                    <div class="row m-0">
+                        <div class="col-12  mb-4 p-0">
+                            <div class="btn btn-primary">
+                                Tiến hành thanh toán<span class="fas fa-arrow-right ps-2"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Styles {
+    <link rel="stylesheet" href="~/css/Student/Checkout.css">
+}

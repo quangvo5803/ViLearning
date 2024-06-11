@@ -29,6 +29,8 @@ namespace ViLearning.Data
            
 
 
+
+
             // Configuration for StudentCertificate
             modelBuilder.Entity<StudentCertificate>()
                 .HasKey(sc => new { sc.CourseCertificateId, sc.UserId });

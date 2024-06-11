@@ -12,6 +12,7 @@
     <script src="https://cdn.tiny.cloud/1/5rptwamjf7aekjmn9yhru338ugqvhvdb5t6lji10j9wl1d88/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
     <link rel="stylesheet" href="~/ViLearning.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="//cdn.datatables.net/2.0.7/css/dataTables.dataTables.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/venobox.min.css"/>
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
@@ -21,7 +22,8 @@
             if (User.IsInRole("Admin"))
             {
                 role = "Admin";
-            } else if (User.IsInRole("Teacher"))
+            }
+            else if (User.IsInRole("Teacher"))
             {
                 role = "Teacher";
             }
@@ -46,7 +48,7 @@
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Quản lí nội dung
+                                    Quản lí
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li class="nav-item">
@@ -56,7 +58,17 @@
                                 </ul>
                             </li>
                         }
-                        else if (User.IsInRole("Student"))
+                       
+                        else if (User.IsInRole("Teacher"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Teacher" asp-controller="Home" asp-action="Index">Trang chủ</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Teacher" asp-controller="Courses" asp-action="Index">Quản lí khóa học</a>
+                            </li>
+                        }
+                        else
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="Student" asp-controller="Home" asp-action="Index">Trang chủ</a>
@@ -71,34 +83,8 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Học tập</a>
                             </li>
                         }
-                        else if (User.IsInRole("Teacher"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Teacher" asp-controller="Home" asp-action="Index">Trang chủ</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Teacher" asp-controller="Courses" asp-action="Index">Quản lí khóa học</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Teacher" asp-controller="Question" asp-action="QuestionManage">Quản lí ngân hàng câu hỏi</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Teacher" asp-controller="Home" asp-action="Privacy">Quản lí bài kiểm tra</a>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Trang chủ</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Student" asp-controller="Home" asp-action="CourseList">Khóa học</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Về chúng tôi</a>
-                            </li>
-                        }
                     </ul>
+                    
                     <partial name="_LoginPartial" />
                 </div>
             </div>
@@ -120,8 +106,7 @@
                             <i class="fas fa-gem me-3"></i>Vi-Learning
                         </h5>
                         <p>
-                            Here you can use rows and columns to organize your footer content. Lorem ipsum
-                            dolor sit amet, consectetur adipisicing elit.
+                            Kiểm soát tri thức - Hướng tới thành công.
                         </p>
                     </div>                    <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
                         <h6 class="text-uppercase fw-bold mb-4">
@@ -138,13 +123,13 @@
                         </p>
                     </div>
                     <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
-                        <h6 class="text-uppercase fw-bold mb-4">Contact</h6>
-                        <p><i class="bi bi-house me-3"></i> New York, NY 10012, US</p>
+                        <h6 class="text-uppercase fw-bold mb-4">Thông tin liên hệ</h6>
+                        <p><i class="bi bi-house me-3"></i> Đà Nẵng, Việt Nam</p>
                         <p>
                             <i class="bi bi-envelope me-3"></i>
-                            info@example.com
+                            vilearning@gmail.com
                         </p>
-                        <p><i class="bi bi-telephone me-3"></i> + 01 234 567 88</p>
+                        <p><i class="bi bi-telephone me-3"></i> 0585.837.306</p>
                     </div>
                 </div>
             </div>
@@ -162,6 +147,7 @@
     <script src="//cdn.datatables.net/2.0.7/js/dataTables.min.js" asp-append-version="true"></script>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/venobox.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
