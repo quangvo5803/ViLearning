@@ -7,15 +7,6 @@ namespace ViLearning.Models
 {
     public class Course
     {
-
-      /*  public enum CourseStatus
-        {
-            Default,
-            Rejected,
-            Pending,
-            Published
-        }*/
-
         [Key]
         public int CourseId { get; set; }
 
