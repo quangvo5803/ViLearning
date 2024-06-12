@@ -34,7 +34,7 @@ namespace ViLearning.Areas.Teacher.Controllers
         }
 
         // GET: Teacher/Courses/Details/5
-        public IActionResult Details(int? id)
+        public IActionResult Details(int? id)   
         {
             if (id == null)
             {
