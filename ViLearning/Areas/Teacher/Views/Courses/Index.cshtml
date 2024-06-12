@@ -13,19 +13,19 @@
     <div class="box-container">
         @foreach (Course course in Model)
         {
-            <div class="box">
+            <div class="box h-100 d-flex flex-column">
 
-                <div class="thumb">
+                <div class="thumb mb-auto">
                     <a asp-action="Details" asp-route-id="@course.CourseId"><img src="@course.CoverImgUrl" alt=""></a>
-                    <div class="middle">
+                    <div class="middle mt-2">
                         <div class="text"><div class="text"><a asp-action="Details" asp-route-id="@course.CourseId"></a></div>View detail</div>
                     </div>
 
                 </div>
-                <h3 class="title">@course.CourseName</h3>
-                <p class="inline-btn">Lớp @course.Grade</p>
-                <a class="text-decoration-none" asp-action="Delete" asp-route-id="@course.CourseId">
-                    <button class="delete-btn"><i class="fas fa-trash-alt"></i>Xóa khóa học</button>
+                <h3 class="title mt-2">@course.CourseName</h3>
+                <p class="inline-btn mt-2">Lớp @course.Grade</p>
+                <a class="text-decoration-none mt-auto" asp-action="Delete" asp-route-id="@course.CourseId">
+                    <button class="delete-btn mt-2"><i class="fas fa-trash-alt"></i>Xóa khóa học</button>
                 </a>
             </div>
         }
