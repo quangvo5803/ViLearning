@@ -80,7 +80,7 @@
                                     <span class="ms-2">Giáo viên: @(course.ApplicationUser.FullName == null ? course.ApplicationUser.Email : course.ApplicationUser.FullName)</span>
                                 </div>
                                 <div class="d-flex align-items-center">
-                                    <a class="btn btn-success">@course.Subject.Name</a>
+                                    <a asp-action="Search" asp-route-query="@course.Subject.Name" class="btn btn-success">@course.Subject.Name</a>
                                 </div>
                             </div>
                         </div>
