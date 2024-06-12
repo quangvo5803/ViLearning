@@ -5,6 +5,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ViLearning.Models
 {
+    public enum CourseStatus
+    {
+        Default,
+        Pending, 
+        Submitted
+    }
     public class Course
     {
         [Key]
@@ -20,6 +26,8 @@ namespace ViLearning.Models
         public string? Description { get; set; }
         [Display(Name = "Ảnh bìa khóa học: ")]
         public string? CoverImgUrl { get; set; }
+
+        public CourseStatus CourseStatus { get; set; } = CourseStatus.Default;
 
 
         //Foreign key
