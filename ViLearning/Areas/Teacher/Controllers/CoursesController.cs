@@ -122,8 +122,8 @@ namespace ViLearning.Areas.Teacher.Controllers
         }
 
         // POST: Teacher/Courses/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+            [HttpPost]
+            [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("CourseId,CourseName,Price,Description,CoverImgUrl,SubjectId,Grade")] Course course, IFormFile? coverImage)
         {
             if (id != course.CourseId)
@@ -158,22 +158,15 @@ namespace ViLearning.Areas.Teacher.Controllers
                             course.CoverImgUrl = await _blobStorageService.UploadFileAsync(containerName, fileName, stream);
                         }
                     }
-                    else
-                    {
-                        // Retrieve the existing course from the database to get the current CoverImgUrl
-                        var existingCourse = _unitOfWork.Course.Get(c => c.CourseId == id);
-                        if (existingCourse != null)
-                        {
-                            course.CoverImgUrl = existingCourse.CoverImgUrl;
-                        }
-                    }
 
                     _unitOfWork.Course.Update(course);
                     _unitOfWork.Save();
                 }
                 catch (Exception ex)
                 {
+
                     Console.WriteLine($"Error updating course: {ex.Message}");
+
                     ModelState.AddModelError(string.Empty, $"Error updating course: {ex.Message}");
                 }
 
@@ -222,15 +215,15 @@ namespace ViLearning.Areas.Teacher.Controllers
         public IActionResult Search(string searchString)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var courses = _unitOfWork.Course.GetAll().Where(c => c.UserId == userId);
+            List<Course> courses = new List<Course>();
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                courses = courses.Where(s => s.CourseName.Contains(searchString));
+                courses = _unitOfWork.Course.GetRange(s => s.CourseName.Contains(searchString) && s.ApplicationUser.Id == userId).ToList();
             }
 
             ViewBag.Subjects = _unitOfWork.Subject.GetAll();
-            return View("Index", courses.ToList());
+            return View("Index", courses);
         }
 
         // GET: Teacher/Courses/Filter
