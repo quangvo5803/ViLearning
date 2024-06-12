@@ -8,6 +8,7 @@ document.getElementById('questionType').addEventListener('change', function () {
     }
 });
 
+
 // Show options if question type is multiple choice for update modal
 document.addEventListener("DOMContentLoaded", function () {
     var questionTypeSelects = document.querySelectorAll(".questionType_update");

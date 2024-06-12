@@ -206,7 +206,6 @@ namespace ViLearning.Areas.Teacher.Controllers
         }
 
         // POST: Teacher/Courses/Delete/5
-
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
@@ -220,11 +219,11 @@ namespace ViLearning.Areas.Teacher.Controllers
         public IActionResult Search(string searchString)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var courses = _unitOfWork.Course.GetAll().Where(c => c.UserId == userId);
+            List<Course> courses = new List<Course>();
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                courses = courses.Where(s => s.CourseName.Contains(searchString));
+                courses = _unitOfWork.Course.GetRange(s => s.CourseName.Contains(searchString) && s.ApplicationUser.Id == userId).ToList();
             }
             var viewModel = new CourseSubjectVM
             {
