@@ -7,6 +7,15 @@ namespace ViLearning.Models
 {
     public class Course
     {
+
+      /*  public enum CourseStatus
+        {
+            Default,
+            Rejected,
+            Pending,
+            Published
+        }*/
+
         [Key]
         public int CourseId { get; set; }
 
@@ -26,6 +35,7 @@ namespace ViLearning.Models
         public int SubjectId { get; set; }
         public string? UserId { get; set; }
         public int Grade {  get; set; }
+        /*public CourseStatus status {  get; set; }*/
         //Relation
         [ForeignKey("SubjectId")]
         [ValidateNever]
