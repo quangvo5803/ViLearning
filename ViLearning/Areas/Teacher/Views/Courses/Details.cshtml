@@ -25,6 +25,7 @@
                     <h3>@Model.CourseName</h3>
                     <p>@Model.Description</p>
                     <a asp-action="Edit" asp-route-id="@Model.CourseId" class="inline-btn">Chỉnh Sửa Khóa Học</a>
+                    <a asp-controller="Question" asp-action="ViewUploadQuestionsFile" asp-route-courseId="@Model.CourseId" class="bg-warning d-block w-50 inline-btn btn-warning">Ngân Hàng Câu Hỏi</a>
                 </div>
             </div>
         </div>
