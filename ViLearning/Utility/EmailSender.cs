@@ -37,7 +37,6 @@ namespace ViLearning.Utility
                     smtpClient.UseDefaultCredentials = false;
                     smtpClient.Credentials = new NetworkCredential(smtpUser, smtpPass);
                     smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
-
                     await smtpClient.SendMailAsync(message);
                 }
             }

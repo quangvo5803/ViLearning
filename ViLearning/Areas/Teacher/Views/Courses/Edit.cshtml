@@ -20,6 +20,7 @@
             <form asp-action="Edit" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="CourseId" />
+                <input type="hidden" asp-for="CoverImgUrl" />
                 <div class="form-group">
                     <label asp-for="CourseName" class="control-label"></label>
                     <input asp-for="CourseName" class="form-control" />
