@@ -11,6 +11,8 @@ using ViLearning.Services.Repository.IRepository;
 using ViLearning.Utility;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.AspNetCore.Authorization;
+using ViLearning.Models.ViewModels;
+using System;
 namespace ViLearning.Areas.Teacher.Controllers
 {
     [Area("Teacher")]
@@ -30,11 +32,18 @@ namespace ViLearning.Areas.Teacher.Controllers
         {
             string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var courses = _unitOfWork.Course.GetAll().Where(c => c.UserId == currentUserId).ToList();
-            return View(courses);
+            var subject = _unitOfWork.Subject.GetAll().ToList();
+
+            var viewModel = new CourseSubjectVM
+            {
+                Course = courses,
+                Subject = subject
+            };
+            return View(viewModel);
         }
 
         // GET: Teacher/Courses/Details/5
-        public IActionResult Details(int? id)
+        public IActionResult Details(int? id)   
         {
             if (id == null)
             {
@@ -48,7 +57,7 @@ namespace ViLearning.Areas.Teacher.Controllers
                 return NotFound();
             }
             _unitOfWork.Course.LoadCourse(course);
-            
+
             return View(course);
         }
 
@@ -85,7 +94,7 @@ namespace ViLearning.Areas.Teacher.Controllers
             if (ModelState.IsValid)
             {
                 _unitOfWork.Course.Add(course);
-                _unitOfWork.Save(); 
+                _unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
             }
             else
@@ -122,8 +131,8 @@ namespace ViLearning.Areas.Teacher.Controllers
         }
 
         // POST: Teacher/Courses/Edit/5
-            [HttpPost]
-            [ValidateAntiForgeryToken]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("CourseId,CourseName,Price,Description,CoverImgUrl,SubjectId,Grade")] Course course, IFormFile? coverImage)
         {
             if (id != course.CourseId)
@@ -178,7 +187,6 @@ namespace ViLearning.Areas.Teacher.Controllers
         }
 
 
-
         // GET: Teacher/Courses/Delete/5
         public IActionResult Delete(int? id)
         {
@@ -202,12 +210,8 @@ namespace ViLearning.Areas.Teacher.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            var course = _unitOfWork.Course.Get(c => c.CourseId == id);
-            if (course != null)
-            {
-                _unitOfWork.Course.Remove(course);
-                _unitOfWork.Save();
-            }
+            _unitOfWork.Course.Delete(id);
+            _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
         }
 
@@ -221,20 +225,25 @@ namespace ViLearning.Areas.Teacher.Controllers
             {
                 courses = _unitOfWork.Course.GetRange(s => s.CourseName.Contains(searchString) && s.ApplicationUser.Id == userId).ToList();
             }
+            var viewModel = new CourseSubjectVM
+            {
+                Course = courses.ToList(),
+                Subject = _unitOfWork.Subject.GetAll().ToList(),
 
-            ViewBag.Subjects = _unitOfWork.Subject.GetAll();
-            return View("Index", courses);
+            };
+
+            return View("Index", viewModel);
         }
 
         // GET: Teacher/Courses/Filter
-        public IActionResult Filter(int? subjectId, double? minPrice, double? maxPrice, string sortOrder)
+        public IActionResult Filter(string? subjectName, double? minPrice, double? maxPrice, string sortOrder, int? grade)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var courses = _unitOfWork.Course.GetAll().Where(c => c.UserId == userId);
 
-            if (subjectId.HasValue && subjectId > 0)
+            if (subjectName != null)
             {
-                courses = courses.Where(c => c.SubjectId == subjectId);
+                courses = courses.Where(c => c.Subject.Name == subjectName);
             }
 
             if (minPrice.HasValue)
@@ -245,6 +254,10 @@ namespace ViLearning.Areas.Teacher.Controllers
             if (maxPrice.HasValue)
             {
                 courses = courses.Where(c => c.Price <= maxPrice);
+            }
+            if (grade.HasValue && grade > 0)
+            {
+                courses = courses.Where(c => c.Grade == grade.Value);
             }
 
             switch (sortOrder)
@@ -259,12 +272,41 @@ namespace ViLearning.Areas.Teacher.Controllers
                     break;
             }
 
-            ViewBag.SelectedSubjectId = subjectId;
-            ViewBag.MinPrice = minPrice;
-            ViewBag.MaxPrice = maxPrice;
-            ViewBag.Subjects = _unitOfWork.Subject.GetAll();
+            var viewModel = new CourseSubjectVM
+            {
+                Course = courses,
+                Subject = _unitOfWork.Subject.GetAll().ToList(),
+                SelectedSubjectName = subjectName,
+                MinPrice = minPrice,
+                MaxPrice = maxPrice,
+                SortOrder = sortOrder,
+                Grade = grade
+            };
 
-            return View("Index", courses.ToList());
+      
+            return View("Index", viewModel);
         }
+
+        [HttpPost]
+        public IActionResult SubmitCourseContent(int courseId)
+        {
+            var course =  _unitOfWork.Course.Get(c => c.CourseId == courseId, includeProperties: "ApplicationUser,Lesson");
+
+            if (course == null)
+            {
+                return NotFound("Khóa học không tồn tại.");
+            }
+           
+            course.CourseStatus = CourseStatus.Pending;
+
+            _unitOfWork.Course.Update(course);
+            _unitOfWork.Save();
+
+
+            TempData["SuccessMessage"] = "Đơn gửi đã được gửi thành công. Admin sẽ xem xét nội dung và phản hồi lại cho bạn sau.";
+
+            return RedirectToAction("Details", new { id = courseId });
+        }
+
     }
 }
