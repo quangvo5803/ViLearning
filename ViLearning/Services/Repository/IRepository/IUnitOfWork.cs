@@ -13,6 +13,7 @@
         public ICourseCertificateRepository CourseCertificate { get; }
         public IFeedbackRepository Feedback { get; }
         public IStudentCertificateRepository StudentCertificate { get; }
+        public IInvoiceRepository Invoice { get; }
         void Save();
     }
 }

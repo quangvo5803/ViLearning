@@ -395,6 +395,36 @@ namespace ViLearning.Migrations
                     b.ToTable("Feedbacks");
                 });
 
+            modelBuilder.Entity("ViLearning.Models.Invoice", b =>
+                {
+                    b.Property<int>("InvoiceID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InvoiceID"));
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("float");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("PurchaseDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("InvoiceID");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Invoices");
+                });
+
             modelBuilder.Entity("ViLearning.Models.Lesson", b =>
                 {
                     b.Property<int>("LessonId")
@@ -522,18 +552,6 @@ namespace ViLearning.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Subjects");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Toán"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Ngữ Văn"
-                        });
                 });
 
             modelBuilder.Entity("ViLearning.Models.TestDetail", b =>
@@ -726,6 +744,25 @@ namespace ViLearning.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("Course");
+                });
+
+            modelBuilder.Entity("ViLearning.Models.Invoice", b =>
+                {
+                    b.HasOne("ViLearning.Models.Course", "Course")
+                        .WithMany()
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ViLearning.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("ApplicationUser");

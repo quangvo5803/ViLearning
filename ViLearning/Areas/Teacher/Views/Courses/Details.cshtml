@@ -1,69 +1,110 @@
 ﻿@model ViLearning.Models.Course
 
 @{
-    ViewData["Title"] = "Details";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+	ViewData["Title"] = "Details";
+	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/Teacher/Lessons.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+	<link rel="stylesheet" href="~/css/Teacher/Lessons.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 }
 <div id="course-details-container" class="course-details-container">
-    <section class="playlist-details">
-        <h1 class="heading">Thông tin khóa học</h1>
-        <div class="playlist-details__row">
-            <div class="playlist-details__column">
-                <div class="playlist-details__thumb">
-                    <img src="@Model.CoverImgUrl" alt="">
-                    <span>@Model.Lesson?.Count() Bài Học</span>
-                </div>
-            </div>
-            <div class="playlist-details__column">
-                
-                <div class="playlist-details__details">
-                    <h3>@Model.CourseName</h3>
-                    <p>@Model.Description</p>
-                    <a asp-action="Edit" asp-route-id="@Model.CourseId" class="inline-btn">Chỉnh Sửa Khóa Học</a>
-                    <a asp-controller="Question" asp-action="ViewUploadQuestionsFile" asp-route-courseId="@Model.CourseId" class="bg-warning d-block w-50 inline-btn btn-warning">Ngân Hàng Câu Hỏi</a>
-                </div>
-            </div>
-        </div>
-    </section>
-    <section class="playlist-videos">
-        <h1 class="heading">Danh sách bài học</h1>
+	<section class="playlist-details">
+		<h1 class="heading">Thông tin khóa học</h1>
+		@if (TempData["SuccessMessage"] != null)
+		{
+			<div class="alert alert-success">
+				@TempData["SuccessMessage"]
+			</div>
+		}
+		<div class="playlist-details__row">
+			<div class="playlist-details__column">
+				<div class="playlist-details__thumb">
+					<img src="@Model.CoverImgUrl" alt="">
+					<span>@Model.Lesson?.Count() Bài Học</span>
+				</div>
+			</div>
+			<div class="playlist-details__column">
 
-        <div class="playlist-videos__box-container">
-            @foreach (Lesson lesson in Model.Lesson.OrderBy(l => l.LessonNo))
-            {
-                <a asp-controller="Lessons" asp-action="Details" asp-route-id="@lesson.LessonId" asp-route-CourseName="@lesson.Course.CourseName" asp-route-LessonName="@lesson.LessonName" class="playlist-videos__box" >
-                    <i class="fas fa-play"></i>
-                    <div class="playlist-videos__image-wrapper">
-                        <img src="@Model.CoverImgUrl" alt="">
-                        <span class="lesson-number">#@lesson.LessonNo</span>
-                    </div>
-                    <h3>@lesson.LessonName</h3>
-                </a>
-            }
-            @if (Model.Lesson.Count() % 3 == 0)
-            {
-                <a style="opacity:0" class="playlist-videos__box">
-                    <i class="fas fa-play"></i>
-                    <div class="playlist-videos__image-wrapper">
-                        <img src="" alt="">
-                        <span class="lesson-number"></span>
-                    </div>
-                    <h3></h3>
-                </a>
-            }
+				<div class="playlist-details__details">
+					<h3>@Model.CourseName</h3>
+					<p>@Model.Description</p>
+					<p>Trạng thái: <strong>@Model.CourseStatus</strong></p>
+					@if (Model.CourseStatus == CourseStatus.Default || Model.CourseStatus == CourseStatus.Rejected)
+					{
+						<a asp-action="Edit" asp-route-id="@Model.CourseId" class="inline-btn">Chỉnh Sửa Khóa Học</a>
+					}
+				</div>
+			</div>
+		</div>
+	</section>
+	<section class="playlist-videos">
+		<h1 class="heading">Danh sách bài học</h1>
 
-            <a asp-controller="Lessons" asp-action="Create" asp-route-name="@Model.CourseName"  class="playlist-videos__box">
-                <div class="box add-course">
-                    <div class="plus-icon">
-                        <i class="fas fa-plus"></i>
-                    </div>
-                </div>
-            </a>         
-        </div>
-    </section>
+		<div class="playlist-videos__box-container">
+			@foreach (Lesson lesson in Model.Lesson.OrderBy(l => l.LessonNo))
+			{
+				<a asp-controller="Lessons" asp-action="Details" asp-route-id="@lesson.LessonId" asp-route-CourseName="@lesson.Course.CourseName" asp-route-LessonName="@lesson.LessonName" class="playlist-videos__box">
+					<i class="fas fa-play"></i>
+					<div class="playlist-videos__image-wrapper">
+						<img src="@Model.CoverImgUrl" alt="">
+						<span class="lesson-number">#@lesson.LessonNo</span>
+					</div>
+					<h3>@lesson.LessonName</h3>
+				</a>
+			}
+			@if (Model.Lesson.Count() % 3 == 0)
+			{
+				<a style="opacity:0" class="playlist-videos__box">
+					<i class="fas fa-play"></i>
+					<div class="playlist-videos__image-wrapper">
+						<img src="" alt="">
+						<span class="lesson-number"></span>
+					</div>
+					<h3></h3>
+				</a>
+			}
+			@if (Model.CourseStatus == CourseStatus.Default || Model.CourseStatus == CourseStatus.Rejected)
+			{
+				<a asp-controller="Lessons" asp-action="Create" asp-route-name="@Model.CourseName" class="playlist-videos__box">
+					<div class="box add-course">
+						<div class="plus-icon">
+							<i class="fas fa-plus"></i>
+						</div>
+					</div>
+				</a>
+			}
+
+		</div>
+	</section>
+
+	<section class="submit-form">
+		<h1 class="heading">Gửi đơn yêu cầu duyệt nội dung của khóa học</h1>
+		@if (Model.CourseStatus == CourseStatus.Published)
+		{
+			<div class="alert alert-info custom-alert">Khóa học của bạn đã được đăng tải.</div>
+		}
+		else if (Model.CourseStatus == CourseStatus.Rejected)
+		{
+			<div class="alert alert-warning custom-alert">Khóa học của bạn đã bị từ chối. Vui lòng xem xét lại nội dung và gửi lại đơn.</div>
+			<form asp-action="SubmitCourseContent" asp-controller="Courses" method="post" class="submit-form__form">
+				<input type="hidden" name="courseId" value="@Model.CourseId" />
+				<button type="submit" class="btn btn-primary">Gửi đơn</button>
+			</form>
+		}
+		else if (Model.CourseStatus == CourseStatus.Pending)
+		{
+			<div class="alert alert-info custom-alert">Khóa học của bạn đang chờ xử lý từ admin.</div>
+		}
+		else
+		{
+			<form asp-action="SubmitCourseContent" asp-controller="Courses" method="post" class="submit-form__form">
+				<input type="hidden" name="courseId" value="@Model.CourseId" />
+				<button type="submit" class="btn btn-custom">
+					Gửi đơn
+				</button>
+			</form>
+		}
+	</section>
 </div>
