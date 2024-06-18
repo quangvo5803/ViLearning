@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="~/ViLearning.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="//cdn.datatables.net/2.0.7/css/dataTables.dataTables.min.css" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/venobox.min.css"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
@@ -54,6 +55,8 @@
                                     <li class="nav-item">
                                         <a class="nav-link text-dark" asp-area="Admin" asp-controller="Subject" asp-action="Index">Môn học</a>
                                         <a class="nav-link text-dark" asp-area="Admin" asp-controller="User" asp-action="Index">Người dùng</a>
+                                        <a class="nav-link text-dark" asp-area="Admin" asp-controller="ManageCourse" asp-action="Index">Khóa học</a>
+
                                     </li>
                                 </ul>
                             </li>
@@ -80,7 +83,7 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Về chúng tôi</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Học tập</a>
+                                <a class="nav-link text-dark" asp-area="Student" asp-controller="Comments" asp-action="Index">Học tập</a>
                             </li>
                         }
                     </ul>

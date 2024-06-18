@@ -1,0 +1,58 @@
+﻿@model IEnumerable<ViLearning.Models.ViewModels.CourseUserVM>
+
+@{
+    ViewData["Title"] = "Quản lý duyệt khóa học";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1 class="heading">Quản lý duyệt khóa học</h1>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+@if (!Model.Any())
+{
+    <p>Không có khóa học nào đang chờ duyệt.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Tên khóa học</th>
+                <th>Email giáo viên</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <a class="text-decoration-none" asp-controller="ReviewCourse" asp-action="Index" asp-route-id="@item.Course.CourseId">@item.Course.CourseName</a>
+                    </td>
+                    <td>@item.ApplicationUser.Email</td>
+                    <td>@item.Course.CourseStatus</td>
+                    <td>
+                        <form asp-action="Review" method="post">
+                            <input type="hidden" name="courseId" value="@item.Course.CourseId" />
+                            <button type="submit" name="action" value="Published" class="btn btn-success">Duyệt</button>
+                            <button type="submit" name="action" value="Rejected" class="btn btn-danger">Từ chối</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

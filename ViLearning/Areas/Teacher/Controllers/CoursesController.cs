@@ -283,12 +283,30 @@ namespace ViLearning.Areas.Teacher.Controllers
                 Grade = grade
             };
 
-            Console.WriteLine($"SelectedSubjectName: {subjectName}");
-            Console.WriteLine($"MinPrice: {minPrice}");
-            Console.WriteLine($"MaxPrice: {maxPrice}");
-            Console.WriteLine($"SortOrder: {sortOrder}");
-            Console.WriteLine($"Grade: {grade}");
+      
             return View("Index", viewModel);
         }
+
+        [HttpPost]
+        public IActionResult SubmitCourseContent(int courseId)
+        {
+            var course =  _unitOfWork.Course.Get(c => c.CourseId == courseId, includeProperties: "ApplicationUser,Lesson");
+
+            if (course == null)
+            {
+                return NotFound("Khóa học không tồn tại.");
+            }
+           
+            course.CourseStatus = CourseStatus.Pending;
+
+            _unitOfWork.Course.Update(course);
+            _unitOfWork.Save();
+
+
+            TempData["SuccessMessage"] = "Đơn gửi đã được gửi thành công. Admin sẽ xem xét nội dung và phản hồi lại cho bạn sau.";
+
+            return RedirectToAction("Details", new { id = courseId });
+        }
+
     }
 }
