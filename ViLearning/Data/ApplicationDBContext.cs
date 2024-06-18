@@ -21,6 +21,7 @@ namespace ViLearning.Data
         public DbSet<Question> Questions { get; set; }
         public DbSet<TestDetail> TestDetails { get; set; }
         public DbSet<Content> Contents { get; set; }
+        public DbSet<Invoice> Invoices { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

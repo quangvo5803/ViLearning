@@ -52,9 +52,19 @@
                     <p>@Model.Lessons.Count()</p>
                 </div>
             </div>
-            <div class="mt-4">
-                <a asp-controller="Home" asp-action="Checkout" asp-route-CourseId="@Model.Course.CourseId" class="btn btn-success d-flex justify-content-center">Đăng kí khóa học</a>
-            </div>
+            @if(Model.Invoice == null)
+            {
+                <div class="mt-4">
+                    <a asp-controller="Checkout" asp-action="Checkout" asp-route-CourseId="@Model.Course.CourseId" class="btn btn-success d-flex justify-content-center">Đăng kí khóa học</a>
+                </div>
+            }
+            else
+            {
+                <div class="mt-4">
+                    <a asp-controller="" asp-action="" asp-route-CourseId="@Model.Course.CourseId" class="btn btn-success d-flex justify-content-center">Vào học ngay</a>
+                </div>
+            }
+            
         </div>
     </div>
 </div>
