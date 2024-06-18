@@ -46,8 +46,8 @@ namespace ViLearning.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
-            [EmailAddress]
+            [Required(ErrorMessage = "Bạn cần phải nhập email")]
+            [EmailAddress(ErrorMessage = "Email không hợp lệ")]
             public string Email { get; set; }
         }
 
@@ -116,7 +116,7 @@ namespace ViLearning.Areas.Identity.Pages.Account
      $"      </tr>\r\n" +
      $"    </table>\r\n");
 
-            ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
+            ModelState.AddModelError(string.Empty, "Đã gửi email xác minh. Vui lòng kiểm tra email của bạn.");
             return Page();
         }
     }

@@ -4,5 +4,7 @@
     {
         public Course Course { get; set; }
         public IEnumerable<Lesson> Lessons { get; set; }
+
+        public Invoice Invoice { get; set; }
     }
 }

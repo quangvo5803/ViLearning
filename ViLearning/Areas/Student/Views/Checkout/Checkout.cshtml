@@ -38,9 +38,11 @@
                 <div class="col-12 px-0">
                     <div class="row m-0">
                         <div class="col-12  mb-4 p-0">
-                            <div class="btn btn-primary">
-                                Tiến hành thanh toán<span class="fas fa-arrow-right ps-2"></span>
-                            </div>
+                            <a asp-action="Payment" asp-controller="Checkout" asp-route-CourseId="@Model.Course.CourseId">
+                                <div class="btn btn-primary">
+                                    Tiến hành thanh toán<span class="fas fa-arrow-right ps-2"></span>
+                                </div>
+                            </a>
                         </div>
                     </div>
                 </div>

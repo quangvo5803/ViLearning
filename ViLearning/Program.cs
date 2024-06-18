@@ -39,7 +39,7 @@ builder.Services.Configure<KestrelServerOptions>(options =>
 {
     options.Limits.MaxRequestBodySize = 104857600;
 });
-
+builder.Services.AddSingleton<IVnPayServicecs, VnPayService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
