@@ -10,7 +10,6 @@ using ViLearning.Utility;
 namespace ViLearning.Areas.Student.Controllers
 {
     [Area("Student")]
-    [Authorize(Roles = SD.Role_User_Student)]
     public class HomeController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
