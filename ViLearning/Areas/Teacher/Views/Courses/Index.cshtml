@@ -58,16 +58,16 @@
             <div class="box-container">
                 @foreach (var course in Model.Course)
                 {
-                    <div class="box">
-                        <div class="thumb">
+                    <div class="box d-flex flex-column" style="height:100%">
+                        <div class="thumb" style="position:relative; flex:1">
                             <a asp-action="Details" asp-route-id="@course.CourseId"><img src="@course.CoverImgUrl" alt=""></a>
                             <div class="middle">
                                 <div class="text"><a asp-action="Details" asp-route-id="@course.CourseId">View detail</a></div>
                             </div>
                         </div>
-                        <h3 class="title">@course.CourseName</h3>
-                        <p class="inline-btn">Lớp @course.Grade</p>
-                        <a class="text-decoration-none" asp-action="Delete" asp-route-id="@course.CourseId">
+                        <h3 class="title mt-auto">@course.CourseName</h3>
+                        <p class="inline-btn mt-auto">Lớp @course.Grade</p>
+                        <a class="text-decoration-none mt-auto" asp-action="Delete" asp-route-id="@course.CourseId">
                             <button class="delete-btn"><i class="fas fa-trash-alt"></i>Xóa khóa học</button>
                         </a>
                     </div>
