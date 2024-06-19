@@ -34,6 +34,8 @@
 					@if (Model.CourseStatus == CourseStatus.Default || Model.CourseStatus == CourseStatus.Rejected)
 					{
 						<a asp-action="Edit" asp-route-id="@Model.CourseId" class="inline-btn">Chỉnh Sửa Khóa Học</a>
+						<a asp-controller="Question" asp-action="ViewUploadQuestionsFile" asp-route-id="@Model.CourseId" class="inline-btn btn"
+   							style="background-color: orange;">Ngân hàng câu hỏi</a>
 					}
 				</div>
 			</div>
