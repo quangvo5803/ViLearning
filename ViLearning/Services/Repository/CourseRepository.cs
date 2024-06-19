@@ -37,5 +37,17 @@ namespace ViLearning.Services.Repository
                 throw;
             }
         }
+
+        public void Delete(int id)
+        {
+            var course = Get(c => c.CourseId == id);
+            if (course != null)
+            {
+                var lessons = _db.Lessons.Where(l => l.CourseId == id);
+                _db.Lessons.RemoveRange(lessons);
+                _db.Courses.Remove(course);
+            }
+        }
+
     }
 }

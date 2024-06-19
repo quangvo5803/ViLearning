@@ -1,0 +1,78 @@
+﻿@model ViLearning.Models.Lesson
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Styles {
+    <style>
+        .lesson-content {
+            max-width: 100%;
+            overflow-wrap: break-word;
+        }
+
+        .video-container {
+            width: 100%;
+            height: auto;
+        }
+
+        th, td {
+            text-align: center;
+            width: 50%;
+        }
+
+        .btn-primary {
+            border-radius: 10px;
+            background-color: #8e44ad;
+        }
+
+        .btn-info {
+            border-radius: 10px;
+            background-color: #f39c12;
+        }
+
+        .btn-danger {
+            border-radius: 10px;
+        }
+    </style>
+}
+<center>
+    <h1 style="padding-top:3rem; padding-bottom:1rem">Bài @Model.LessonNo: @Model.LessonName</h1>
+</center>
+
+
+<div style="width: 1000">
+
+    <hr />
+
+    <div class="row ">
+        <div class="col-sm-15">
+            @Html.Raw(Model.Content)
+        </div>
+    </div>
+    <center>
+        <div class="row mb-3">
+            <div class="col-sm-12">
+                <video width="1000" height="650" controls controlsList="nodownload">
+                    <source src="@Model.Video" type="video/mp4">
+                    <source src="@Model.Video" type="video/ogg">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+    </center>
+
+   
+
+
+</div>
+@* <center>
+    <div class="mt-3">
+       
+        <a class="btn btn-secondary" asp-controller="ReviewCourse" asp-action="LessonDetails" asp-route-id="@Model.Course.CourseId">Quay Lại</a>
+        
+        
+    </div>
+</center> *@
+
+

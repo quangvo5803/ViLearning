@@ -552,18 +552,6 @@ namespace ViLearning.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Subjects");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Toán"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Ngữ Văn"
-                        });
                 });
 
             modelBuilder.Entity("ViLearning.Models.TestDetail", b =>

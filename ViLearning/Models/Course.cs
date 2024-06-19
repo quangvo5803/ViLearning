@@ -8,8 +8,9 @@ namespace ViLearning.Models
     public enum CourseStatus
     {
         Default,
+        Rejected,
         Pending, 
-        Submitted
+        Published
     }
     public class Course
     {
@@ -20,6 +21,7 @@ namespace ViLearning.Models
         [Display(Name = "Tên khóa học: ")]
         public string CourseName { get; set; }
         [Display(Name = "Giá khóa học: ")]
+        [Range(0.01, double.MaxValue, ErrorMessage = "Giá khóa học phải lớn hơn 0.")]
         public double? Price { get; set; }
         [Display(Name = "Mô tả khóa học: ")]
         [Column(TypeName = "ntext")]
@@ -33,7 +35,10 @@ namespace ViLearning.Models
         //Foreign key
         public int SubjectId { get; set; }
         public string? UserId { get; set; }
+        [Required(ErrorMessage = "Grade là bắt buộc.")]
+        [Range(1, 12, ErrorMessage = "Grade phải nằm trong khoảng từ 1 đến 12.")]
         public int Grade {  get; set; }
+        /*public CourseStatus status {  get; set; }*/
         //Relation
         [ForeignKey("SubjectId")]
         [ValidateNever]
