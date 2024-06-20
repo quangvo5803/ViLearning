@@ -27,6 +27,9 @@ namespace ViLearning.Areas.Teacher.Controllers
         public IActionResult ViewUploadQuestionsFile(int courseId)
         {
             ViewData["courseId"] = courseId;
+            Course course = _unitOfWork.Course.Get(c => c.CourseId == courseId);
+            _unitOfWork.Course.LoadCourse(course);
+            ViewData["lessonList"] = course.Lesson.ToList();
             return View("CourseQuestionBank");
         }
 
@@ -61,7 +64,8 @@ namespace ViLearning.Areas.Teacher.Controllers
                         if (parts.Length < 3)
                         {
                             // Handle invalid line format
-                            return BadRequest("Invalid file format.");
+                            TempData["invalid-file-format"] = "File của bạn không đúng định dạng yêu cầu!";
+                            return RedirectToAction("ViewUploadQuestionsFile", new { courseId = courseId });
                         }
                         // Check if lessonNo in the file is valid.
                         var lesson = _unitOfWork.Lesson.Get(l => l.CourseId == courseId && l.LessonNo == int.Parse(parts[0]));
@@ -117,8 +121,8 @@ namespace ViLearning.Areas.Teacher.Controllers
 
             _unitOfWork.Question.AddRange(questions);
             _unitOfWork.Save();
-
-            return RedirectToAction("ViewUploadQuestionsFile", courseId);
+            TempData["upload-file-success"] = "Ngân hàng câu hỏi đã được cập nhật, ấn vào các bài học để xem";
+            return RedirectToAction("ViewUploadQuestionsFile", new { courseId = courseId });
         }
 
         public async Task<IActionResult> QuestionManage(int lessonId)
