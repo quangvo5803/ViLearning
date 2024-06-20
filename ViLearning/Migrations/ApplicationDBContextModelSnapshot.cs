@@ -262,7 +262,7 @@ namespace ViLearning.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("ViLearning.Models.Content", b =>
@@ -288,7 +288,7 @@ namespace ViLearning.Migrations
 
                     b.HasIndex("LessonId");
 
-                    b.ToTable("Contents");
+                    b.ToTable("Contents", (string)null);
                 });
 
             modelBuilder.Entity("ViLearning.Models.Course", b =>
@@ -302,9 +302,6 @@ namespace ViLearning.Migrations
                     b.Property<string>("CourseName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("CourseStatus")
-                        .HasColumnType("int");
 
                     b.Property<string>("CoverImgUrl")
                         .HasColumnType("nvarchar(max)");
@@ -330,7 +327,7 @@ namespace ViLearning.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Courses");
+                    b.ToTable("Courses", (string)null);
                 });
 
             modelBuilder.Entity("ViLearning.Models.CourseCertificate", b =>
@@ -352,7 +349,7 @@ namespace ViLearning.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("CourseCertificates");
+                    b.ToTable("CourseCertificates", (string)null);
                 });
 
             modelBuilder.Entity("ViLearning.Models.Feedback", b =>
@@ -392,7 +389,7 @@ namespace ViLearning.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Feedbacks");
+                    b.ToTable("Feedbacks", (string)null);
                 });
 
             modelBuilder.Entity("ViLearning.Models.Invoice", b =>
@@ -422,7 +419,7 @@ namespace ViLearning.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Invoices");
+                    b.ToTable("Invoices", (string)null);
                 });
 
             modelBuilder.Entity("ViLearning.Models.Lesson", b =>
@@ -469,7 +466,7 @@ namespace ViLearning.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("Lessons");
+                    b.ToTable("Lessons", (string)null);
                 });
 
             modelBuilder.Entity("ViLearning.Models.Question", b =>
@@ -513,7 +510,7 @@ namespace ViLearning.Migrations
 
                     b.HasIndex("LessonId");
 
-                    b.ToTable("Questions");
+                    b.ToTable("Questions", (string)null);
                 });
 
             modelBuilder.Entity("ViLearning.Models.StudentCertificate", b =>
@@ -533,7 +530,7 @@ namespace ViLearning.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("StudentCertificates");
+                    b.ToTable("StudentCertificates", (string)null);
                 });
 
             modelBuilder.Entity("ViLearning.Models.Subject", b =>
@@ -551,7 +548,19 @@ namespace ViLearning.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Subjects");
+                    b.ToTable("Subjects", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Toán"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Ngữ Văn"
+                        });
                 });
 
             modelBuilder.Entity("ViLearning.Models.TestDetail", b =>
@@ -581,7 +590,7 @@ namespace ViLearning.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("TestDetails");
+                    b.ToTable("TestDetails", (string)null);
                 });
 
             modelBuilder.Entity("ViLearning.Models.ApplicationUser", b =>
