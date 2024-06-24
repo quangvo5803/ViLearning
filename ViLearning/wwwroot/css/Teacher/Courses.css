@@ -1,4 +1,6 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700&display=swap');
+﻿css
+Sao chép mã
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700&display=swap');
 
 :root {
     --main-color: #8e44ad;
@@ -12,7 +14,6 @@
 }
 
 * {
-    font-family: 'Nunito', sans-serif;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -51,9 +52,32 @@ body {
         padding-left: 0;
     }
 
+.main-content {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.filter-sidebar {
+    flex: 1;
+    max-width: 250px; /* Reduced width */
+    background-color: var(--white);
+    border-radius: .5rem;
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    height: fit-content; /* Makes sure it takes the content height */
+    border: 1px dashed #8e44ad;
+}
+
+.filter-form .form-group {
+    border-bottom: 1px dashed #8e44ad; /* Added bottom border */
+}
+.courses-content {
+    flex: 3;
+}
+
 .courses .box-container {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr); /* Ensures 3 courses per row */
     gap: 1.5rem;
     justify-content: center;
     align-items: flex-start;
@@ -62,40 +86,15 @@ body {
     .courses .box-container .box {
         border-radius: .5rem;
         background-color: var(--white);
-        padding: 2rem;
+      
     }
-
-
-
-        .courses .box-container .box .tutor img {
-            height: 3rem;
-            width: 5rem;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .courses .box-container .box .tutor h3 {
-            font-size: 1.8rem;
-            color: var(--black);
-            margin-bottom: .2rem;
-        }
-
-
 
         .courses .box-container .box .thumb {
             position: relative;
         }
-
-            .courses .box-container .box .thumb span {
-                position: absolute;
-                top: 1rem;
-                left: 1rem;
-                border-radius: .5rem;
-                padding: .5rem 1.5rem;
-                background-color: rgba(0,0,0,.3);
-                color: #fff;
-                font-size: 1.5rem;
-            }
+        .courses .box-container .box a {
+            color: aliceblue;
+        }
 
             .courses .box-container .box .thumb img {
                 width: 100%;
@@ -107,8 +106,7 @@ body {
         .courses .box-container .box .title {
             font-size: 2rem;
             color: var(--black);
-            padding-bottom: .5rem;
-            padding-top: 1rem;
+            padding: 1rem 0;
         }
 
 .courses .more-btn {
@@ -129,7 +127,6 @@ section {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    -ms-transform: translate(-50%, -50%);
     text-align: center;
 }
 
@@ -148,7 +145,7 @@ section {
     }
 
 .delete-btn {
-    background-color: var(--red);
+    background-color: #f54436;
     color: var(--white);
     border: none;
     border-radius: 50px;
@@ -163,7 +160,7 @@ section {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     margin: 1rem auto 0;
     text-align: center;
-    width: fit-content
+    width: fit-content;
 }
 
     .delete-btn i {
@@ -181,13 +178,6 @@ section {
     .delete-btn:focus {
         outline: 2px solid darken(var(--red), 20%);
     }
-
-.box-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
-    align-items: center; /* Align items vertically center */
-}
 
 .add-course {
     display: flex;
@@ -240,6 +230,3 @@ section {
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
     }
-
-
-

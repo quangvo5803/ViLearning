@@ -8,14 +8,14 @@ namespace ViLearning.Models
     {
         [Key]
         public int CommetId { get; set; }
-        public string CommentContent { get; set; }
+        public string? CommentContent { get; set; }
         public DateTime DateComment { get; set; }
 
         
 
         //Foregin key
-        public int LessonId { get; set; }
-        public string UserId { get; set; }
+        public int? LessonId { get; set; }
+        public string? UserId { get; set; }
         public int? ParentCommentId { get; set; }
 
         //Relation
@@ -28,5 +28,7 @@ namespace ViLearning.Models
         [ForeignKey("ParentCommentId")]
         [ValidateNever]
         public Comment ParentComment { get; set; }
+        // Navigation property
+        public virtual ICollection<Comment> Replies { get; set; } = new List<Comment>();
     }
 }
