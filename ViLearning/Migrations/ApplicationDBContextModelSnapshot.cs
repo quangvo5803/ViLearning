@@ -238,20 +238,18 @@ namespace ViLearning.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CommetId"));
 
                     b.Property<string>("CommentContent")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateComment")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("LessonId")
+                    b.Property<int?>("LessonId")
                         .HasColumnType("int");
 
                     b.Property<int?>("ParentCommentId")
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("CommetId");
@@ -262,7 +260,7 @@ namespace ViLearning.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Comments", (string)null);
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("ViLearning.Models.Content", b =>
@@ -288,7 +286,7 @@ namespace ViLearning.Migrations
 
                     b.HasIndex("LessonId");
 
-                    b.ToTable("Contents", (string)null);
+                    b.ToTable("Contents");
                 });
 
             modelBuilder.Entity("ViLearning.Models.Course", b =>
@@ -302,6 +300,9 @@ namespace ViLearning.Migrations
                     b.Property<string>("CourseName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CourseStatus")
+                        .HasColumnType("int");
 
                     b.Property<string>("CoverImgUrl")
                         .HasColumnType("nvarchar(max)");
@@ -327,7 +328,7 @@ namespace ViLearning.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Courses", (string)null);
+                    b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("ViLearning.Models.CourseCertificate", b =>
@@ -349,7 +350,7 @@ namespace ViLearning.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("CourseCertificates", (string)null);
+                    b.ToTable("CourseCertificates");
                 });
 
             modelBuilder.Entity("ViLearning.Models.Feedback", b =>
@@ -389,7 +390,7 @@ namespace ViLearning.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Feedbacks", (string)null);
+                    b.ToTable("Feedbacks");
                 });
 
             modelBuilder.Entity("ViLearning.Models.Invoice", b =>
@@ -419,7 +420,7 @@ namespace ViLearning.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Invoices", (string)null);
+                    b.ToTable("Invoices");
                 });
 
             modelBuilder.Entity("ViLearning.Models.Lesson", b =>
@@ -466,7 +467,7 @@ namespace ViLearning.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("Lessons", (string)null);
+                    b.ToTable("Lessons");
                 });
 
             modelBuilder.Entity("ViLearning.Models.Question", b =>
@@ -510,7 +511,7 @@ namespace ViLearning.Migrations
 
                     b.HasIndex("LessonId");
 
-                    b.ToTable("Questions", (string)null);
+                    b.ToTable("Questions");
                 });
 
             modelBuilder.Entity("ViLearning.Models.StudentCertificate", b =>
@@ -530,7 +531,7 @@ namespace ViLearning.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("StudentCertificates", (string)null);
+                    b.ToTable("StudentCertificates");
                 });
 
             modelBuilder.Entity("ViLearning.Models.Subject", b =>
@@ -548,19 +549,7 @@ namespace ViLearning.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Subjects", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Toán"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Ngữ Văn"
-                        });
+                    b.ToTable("Subjects");
                 });
 
             modelBuilder.Entity("ViLearning.Models.TestDetail", b =>
@@ -590,7 +579,7 @@ namespace ViLearning.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("TestDetails", (string)null);
+                    b.ToTable("TestDetails");
                 });
 
             modelBuilder.Entity("ViLearning.Models.ApplicationUser", b =>
@@ -674,18 +663,15 @@ namespace ViLearning.Migrations
                     b.HasOne("ViLearning.Models.Lesson", "Lesson")
                         .WithMany("Comments")
                         .HasForeignKey("LessonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("ViLearning.Models.Comment", "ParentComment")
-                        .WithMany()
+                        .WithMany("Replies")
                         .HasForeignKey("ParentCommentId");
 
                     b.HasOne("ViLearning.Models.ApplicationUser", "ApplicationUser")
                         .WithMany("Comments")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("ApplicationUser");
 
@@ -841,6 +827,11 @@ namespace ViLearning.Migrations
                     b.Navigation("ApplicationUser");
 
                     b.Navigation("Lesson");
+                });
+
+            modelBuilder.Entity("ViLearning.Models.Comment", b =>
+                {
+                    b.Navigation("Replies");
                 });
 
             modelBuilder.Entity("ViLearning.Models.Course", b =>
