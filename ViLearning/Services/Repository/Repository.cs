@@ -68,6 +68,8 @@ namespace ViLearning.Services.Repository
             }
             return query.ToList();
         }
+
+
         public void Remove(T entity)
         {
             dbSet.Remove(entity);

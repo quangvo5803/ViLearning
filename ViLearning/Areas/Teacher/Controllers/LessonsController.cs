@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Timers;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -36,9 +37,9 @@ namespace ViLearning.Areas.Teacher.Controllers
         public async Task<IActionResult> Index()
         {
 
-            var applicationDBContext = _unitOfWork.Lesson.GetAll(includeProperties: "Course");
+            var applicationDBContext = _unitOfWork.Lesson.GetAll(includeProperties:"Course");
             /*var applicationDBContext = _context.Lessons.Include(l => l.Course);*/
-            return View(applicationDBContext);
+            return View( applicationDBContext);
         }
 
         // GET: Teacher/Lessons/Details/5
@@ -49,7 +50,7 @@ namespace ViLearning.Areas.Teacher.Controllers
             {
                 return NotFound();
             }
-            var lesson = _unitOfWork.Lesson.Get(m => m.LessonId == id, includeProperties: "Course");
+            var lesson = _unitOfWork.Lesson.Get(m => m.LessonId == id,includeProperties:"Course");
             if (lesson == null)
             {
                 return NotFound();
@@ -78,7 +79,7 @@ namespace ViLearning.Areas.Teacher.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("Teacher/{name}/Lessons/Create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(string name, [Bind("LessonId,LessonName,LessonNo,Content,Video,TotalQuestions,EasyQuestions,MediumQuestions,HardQuestions,TestDuration,CourseId")] Lesson lesson, IFormFile Video)
+        public async Task<IActionResult> Create(string name, [Bind("LessonId,LessonName,LessonNo,Content,Video,TotalQuestions,EasyQuestions,MediumQuestions,HardQuestions,TestDuration,CourseId")] Lesson lesson, IFormFile? Video)
         {
             int courseId = _unitOfWork.Course.Get(c => c.CourseName.Equals(name)).CourseId;
             ModelState.Remove("Comments");
@@ -86,28 +87,38 @@ namespace ViLearning.Areas.Teacher.Controllers
             {
                 try
                 {
+                    string fileName;
                     string containerName = "lesson-video";
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(Video.FileName);
+                    if (Video != null)
+                    {
+                        fileName = Guid.NewGuid().ToString() + Path.GetExtension(Video.FileName);
+                        if (!string.IsNullOrEmpty(lesson.Video))
+                        {
+                            Uri oldUri = new Uri(lesson.Video);
+                            string oldFileName = Path.GetFileName(oldUri.LocalPath);
+                            await _blobStorageService.DeleteFileAsync(containerName, oldFileName);
+                        }
+
+                        // Upload new file to Azure Blob Storage
+                        using (var stream = Video.OpenReadStream())
+                        {
+                            lesson.Video = await _blobStorageService.UploadFileAsync(containerName, fileName, stream);
+                        }
+
+                        _unitOfWork.Lesson.Add(lesson);
+                        _unitOfWork.Save();
+
+
+                        return RedirectToAction("Details", "Courses", new { id = courseId });
+                    } else
+                    {
+                        _unitOfWork.Lesson.Add(lesson);
+                        _unitOfWork.Save();
+                        return RedirectToAction("Details", "Courses", new { id = courseId });
+                    }
 
                     // Check and delete old file from Azure Blob Storage
-                    if (!string.IsNullOrEmpty(lesson.Video))
-                    {
-                        Uri oldUri = new Uri(lesson.Video);
-                        string oldFileName = Path.GetFileName(oldUri.LocalPath);
-                        await _blobStorageService.DeleteFileAsync(containerName, oldFileName);
-                    }
-
-                    // Upload new file to Azure Blob Storage
-                    using (var stream = Video.OpenReadStream())
-                    {
-                        lesson.Video = await _blobStorageService.UploadFileAsync(containerName, fileName, stream);
-                    }
-
-                    _unitOfWork.Lesson.Add(lesson);
-                    _unitOfWork.Save();
-
-
-                    return RedirectToAction("Details", "Courses", new { id = courseId });
+                    
                 }
                 catch (Exception ex)
                 {
@@ -146,7 +157,7 @@ namespace ViLearning.Areas.Teacher.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("Teacher/{CourseName}/{LessonName}/Edit/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string CourseName, string LessonName, int id, [Bind("LessonId,LessonName,LessonNo,Content,Video,TotalQuestions,EasyQuestions,MediumQuestions,HardQuestions,TestDuration,CourseId")] Lesson lesson, IFormFile Video)
+        public async Task<IActionResult> Edit(string CourseName, string LessonName, int id, [Bind("LessonId,LessonName,LessonNo,Content,Video,TotalQuestions,EasyQuestions,MediumQuestions,HardQuestions,TestDuration,CourseId")] Lesson lesson, IFormFile? Video)
         {
             if (id != lesson.LessonId)
             {
@@ -159,29 +170,36 @@ namespace ViLearning.Areas.Teacher.Controllers
                 try
                 {
                     try
-                    {
+                    {   
                         string containerName = "lesson-video";
-                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(Video.FileName);
-
-                        // Check and delete old file from Azure Blob Storage
-                        if (!string.IsNullOrEmpty(lesson.Video))
+                        string fileName;
+                        if (Video != null)
                         {
-                            Uri oldUri = new Uri(lesson.Video);
-                            string oldFileName = Path.GetFileName(oldUri.LocalPath);
-                            await _blobStorageService.DeleteFileAsync(containerName, oldFileName);
-                        }
+                            fileName  = Guid.NewGuid().ToString() + Path.GetExtension(Video.FileName);
+                            // Check and delete old file from Azure Blob Storage
+                            if (!string.IsNullOrEmpty(lesson.Video))
+                            {
+                                Uri oldUri = new Uri(lesson.Video);
+                                string oldFileName = Path.GetFileName(oldUri.LocalPath);
+                                await _blobStorageService.DeleteFileAsync(containerName, oldFileName);
+                            }
 
-                        // Upload new file to Azure Blob Storage
-                        using (var stream = Video.OpenReadStream())
+                            // Upload new file to Azure Blob Storage
+                            using (var stream = Video.OpenReadStream())
+                            {
+                                lesson.Video = await _blobStorageService.UploadFileAsync(containerName, fileName, stream);
+                            }
+                        } else
                         {
-                            lesson.Video = await _blobStorageService.UploadFileAsync(containerName, fileName, stream);
+                            lesson.Video = _unitOfWork.Lesson.Get( l => l.LessonId.Equals(lesson.LessonId)).Video;
+                            
                         }
-
                         _unitOfWork.Lesson.Update(lesson);
                         _unitOfWork.Save();
 
 
                         return RedirectToAction("Details", "Courses", new { id = lesson.CourseId });
+
                     }
                     catch (Exception ex)
                     {
@@ -200,7 +218,6 @@ namespace ViLearning.Areas.Teacher.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("Details", "Courses", new { id = lesson.Course.CourseId });
             }
 
             return View(lesson);
@@ -208,7 +225,7 @@ namespace ViLearning.Areas.Teacher.Controllers
 
         // GET: Teacher/Lessons/Delete/5
         [HttpGet("Teacher/{CourseName}/{LessonName}/Delete/{id}")]
-        public async Task<IActionResult> Delete(string CourseName, string LessonName, int? id)
+        public async Task<IActionResult> Delete(string CourseName, string LessonName,int? id)
         {
             if (id == null)
             {
@@ -231,13 +248,14 @@ namespace ViLearning.Areas.Teacher.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string CourseName, string LessonName, int id)
         {
-            var lesson = _unitOfWork.Lesson.Get(l => l.LessonId == id,includeProperties:"Course");
+            var lesson = _unitOfWork.Lesson.Get(l => l.LessonId == id, includeProperties:"Course");
             if (lesson != null)
             {
                 _unitOfWork.Lesson.Remove(lesson);
             }
 
             _unitOfWork.Save();
+            
             return RedirectToAction("Details", "Courses", new { id = lesson.Course.CourseId });
         }
 

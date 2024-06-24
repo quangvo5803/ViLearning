@@ -30,8 +30,9 @@ html {
     font-size: 100%;
     overflow-x: hidden;
 }
+
 div, h3, span {
-    font-size: 100%!important;
+    font-size: 100% !important;
 }
 
 body {
@@ -49,9 +50,10 @@ body {
     body.active {
         padding-left: 0;
     }
+
 .courses .box-container {
     display: grid;
-    grid-template-columns:  1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 1.5rem;
     justify-content: center;
     align-items: flex-start;
@@ -63,61 +65,63 @@ body {
         padding: 2rem;
     }
 
-        
 
-.courses .box-container .box .tutor img {
-    height: 3rem;
-    width: 5rem;
-    border-radius: 50%;
-    object-fit: cover;
-}
 
-.courses .box-container .box .tutor h3 {
-    font-size: 1.8rem;
-    color: var(--black);
-    margin-bottom: .2rem;
-}
+        .courses .box-container .box .tutor img {
+            height: 3rem;
+            width: 5rem;
+            border-radius: 50%;
+            object-fit: cover;
+        }
 
-            
+        .courses .box-container .box .tutor h3 {
+            font-size: 1.8rem;
+            color: var(--black);
+            margin-bottom: .2rem;
+        }
 
-.courses .box-container .box .thumb {
-    position: relative;
-}
 
-    .courses .box-container .box .thumb span {
-        position: absolute;
-        top: 1rem;
-        left: 1rem;
-        border-radius: .5rem;
-        padding: .5rem 1.5rem;
-        background-color: rgba(0,0,0,.3);
-        color: #fff;
-        font-size: 1.5rem;
-    }
 
-    .courses .box-container .box .thumb img {
-        width: 100%;
-        height: 20rem;
-        object-fit: cover;
-        border-radius: .5rem;
-    }
+        .courses .box-container .box .thumb {
+            position: relative;
+        }
 
-.courses .box-container .box .title {
-    font-size: 2rem;
-    color: var(--black);
-    padding-bottom: .5rem;
-    padding-top: 1rem;
-}
+            .courses .box-container .box .thumb span {
+                position: absolute;
+                top: 1rem;
+                left: 1rem;
+                border-radius: .5rem;
+                padding: .5rem 1.5rem;
+                background-color: rgba(0,0,0,.3);
+                color: #fff;
+                font-size: 1.5rem;
+            }
+
+            .courses .box-container .box .thumb img {
+                width: 100%;
+                height: 20rem;
+                object-fit: cover;
+                border-radius: .5rem;
+            }
+
+        .courses .box-container .box .title {
+            font-size: 2rem;
+            color: var(--black);
+            padding-bottom: .5rem;
+            padding-top: 1rem;
+        }
 
 .courses .more-btn {
     text-align: center;
     margin-top: 2rem;
 }
+
 section {
     padding: 2rem;
     margin: 0 auto;
     max-width: 1500px;
 }
+
 .middle {
     transition: .3s ease;
     opacity: 0;
@@ -128,18 +132,21 @@ section {
     -ms-transform: translate(-50%, -50%);
     text-align: center;
 }
+
 .thumb {
     opacity: 1;
     transition: .3s ease;
     backface-visibility: hidden;
 }
-.thumb:hover .image {
-    opacity: 0.3;
-}
 
-.thumb:hover .middle {
-    opacity: 1;
-}
+    .thumb:hover .image {
+        opacity: 0.3;
+    }
+
+    .thumb:hover .middle {
+        opacity: 1;
+    }
+
 .delete-btn {
     background-color: var(--red);
     color: var(--white);
@@ -162,8 +169,9 @@ section {
     .delete-btn i {
         font-size: 1.2rem;
     }
-    .delete-btn:hover{
-        background-color:black;
+
+    .delete-btn:hover {
+        background-color: black;
     }
 
     .delete-btn:active {
@@ -202,7 +210,7 @@ section {
     }
 
     .add-course .plus-icon {
-        font-size: 7rem!important; /* Dramatically increased size */
+        font-size: 7rem !important; /* Dramatically increased size */
         color: var(--main-color);
     }
 
@@ -211,6 +219,7 @@ section {
         font-size: 1.5rem;
         color: var(--main-color);
     }
+
 .search-form {
     max-width: 600px;
     margin: auto;

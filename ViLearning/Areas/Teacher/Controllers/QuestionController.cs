@@ -32,8 +32,6 @@ namespace ViLearning.Areas.Teacher.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(QuestionManageVM vm)
         {
-            if (vm.Question.QuestionType == QuestionType.Essay) 
-                vm.Question.RightAnswer = "";
             _unitOfWork.Question.Add(vm.Question);
             _unitOfWork.Save();
             int lessonId = vm.Question.LessonId;
@@ -44,8 +42,6 @@ namespace ViLearning.Areas.Teacher.Controllers
         [HttpPost]
         public async Task<IActionResult> Update(QuestionManageVM vm)
         {
-            if (vm.Question.QuestionType == QuestionType.Essay) 
-                vm.Question.RightAnswer = "";
             _unitOfWork.Question.Update(vm.Question);
             _unitOfWork.Save();
             int lessonId = vm.Question.LessonId;

@@ -24,7 +24,7 @@ namespace ViLearning.Utility
                 smtpClient.Host = "smtp.gmail.com";
                 smtpClient.EnableSsl = true;
                 smtpClient.UseDefaultCredentials = false;
-                smtpClient.Credentials = new NetworkCredential("binlun582003@gmail.com", "hytqopmivbmwsmnr");
+                smtpClient.Credentials = new NetworkCredential("binlun582003@gmail.com", "ffyotqzccijrvckz");
                 smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
 
                 await smtpClient.SendMailAsync(message);
