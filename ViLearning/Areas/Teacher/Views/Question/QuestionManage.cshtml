@@ -51,16 +51,25 @@
                             <td class="text-center list_difficulty">@Model.Questions[i].Difficulty</td>
                             <td>
                                 <p>@Model.Questions[i].QuestionName</p>
-                                <button class="btn btn-light btn-sm btn-primary float-right" 
+                                <button class="btn btn-light btn-sm btn-primary float-right"
                                         type="button" data-bs-toggle="collapse" data-bs-target="#answers-@Model.Questions[i].QuestionId">
                                     Hiển thị đáp án
                                 </button>
-                                <div class="answer-list collapse" id="answers-@Model.Questions[i].QuestionId">
-                                    <input type="checkbox" name="options" value="A" @(Model.Questions[i].RightAnswer == "A" ? "checked" : "")> A. @Model.Questions[i].OptionA <br />
-                                    <input type="checkbox" name="options" value="B" @(Model.Questions[i].RightAnswer == "B" ? "checked" : "")> B. @Model.Questions[i].OptionB <br />
-                                    <input type="checkbox" name="options" value="C" @(Model.Questions[i].RightAnswer == "C" ? "checked" : "")> C. @Model.Questions[i].OptionC <br />
-                                    <input type="checkbox" name="options" value="D" @(Model.Questions[i].RightAnswer == "D" ? "checked" : "")> D. @Model.Questions[i].OptionD <br />
-                                </div>
+                                @if (@Model.Questions[i].QuestionType == QuestionType.MultipleChoice)
+                                {
+                                    <div class="answer-list collapse" id="answers-@Model.Questions[i].QuestionId">
+                                        <input type="checkbox" name="options" value="A" @(Model.Questions[i].RightAnswer == "A" ? "checked" : "")> A. @Model.Questions[i].OptionA <br />
+                                        <input type="checkbox" name="options" value="B" @(Model.Questions[i].RightAnswer == "B" ? "checked" : "")> B. @Model.Questions[i].OptionB <br />
+                                        <input type="checkbox" name="options" value="C" @(Model.Questions[i].RightAnswer == "C" ? "checked" : "")> C. @Model.Questions[i].OptionC <br />
+                                        <input type="checkbox" name="options" value="D" @(Model.Questions[i].RightAnswer == "D" ? "checked" : "")> D. @Model.Questions[i].OptionD <br />
+                                    </div>
+                                } else
+                                {
+                                    <div class="answer-list collapse" id="answers-@Model.Questions[i].QuestionId">
+                                        <p>@Model.Questions[i].RightAnswer</p>
+                                    </div>
+                                }
+
                             </td>
                             <td class="text-center" width="50px">
                                 <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#updateQuestionModal@(Model.Questions[i].QuestionId)">

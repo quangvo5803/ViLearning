@@ -36,9 +36,9 @@ namespace ViLearning.Areas.Teacher.Controllers
         public async Task<IActionResult> Index()
         {
 
-            var applicationDBContext = _unitOfWork.Lesson.GetAll(includeProperties: "Course");
+            var applicationDBContext = _unitOfWork.Lesson.GetAll(includeProperties:"Course");
             /*var applicationDBContext = _context.Lessons.Include(l => l.Course);*/
-            return View(applicationDBContext);
+            return View( applicationDBContext);
         }
 
         // GET: Teacher/Lessons/Details/5
@@ -49,7 +49,7 @@ namespace ViLearning.Areas.Teacher.Controllers
             {
                 return NotFound();
             }
-            var lesson = _unitOfWork.Lesson.Get(m => m.LessonId == id, includeProperties: "Course");
+            var lesson = _unitOfWork.Lesson.Get(m => m.LessonId == id,includeProperties:"Course");
             if (lesson == null)
             {
                 return NotFound();
@@ -107,7 +107,7 @@ namespace ViLearning.Areas.Teacher.Controllers
                     _unitOfWork.Save();
 
 
-                    return RedirectToAction("Details", "Courses", new { id = courseId });
+                    return RedirectToAction("Details", "Courses", new { id = courseId});
                 }
                 catch (Exception ex)
                 {
@@ -200,7 +200,7 @@ namespace ViLearning.Areas.Teacher.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("Details", "Courses", new { id = lesson.Course.CourseId });
+                return RedirectToAction("Details","Courses",new {id = lesson.Course.CourseId});
             }
 
             return View(lesson);
@@ -208,7 +208,7 @@ namespace ViLearning.Areas.Teacher.Controllers
 
         // GET: Teacher/Lessons/Delete/5
         [HttpGet("Teacher/{CourseName}/{LessonName}/Delete/{id}")]
-        public async Task<IActionResult> Delete(string CourseName, string LessonName, int? id)
+        public async Task<IActionResult> Delete(string CourseName, string LessonName,int? id)
         {
             if (id == null)
             {
@@ -231,13 +231,14 @@ namespace ViLearning.Areas.Teacher.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string CourseName, string LessonName, int id)
         {
-            var lesson = _unitOfWork.Lesson.Get(l => l.LessonId == id,includeProperties:"Course");
+            var lesson = _unitOfWork.Lesson.Get(l => l.LessonId == id, includeProperties:"Course");
             if (lesson != null)
             {
                 _unitOfWork.Lesson.Remove(lesson);
             }
 
             _unitOfWork.Save();
+            
             return RedirectToAction("Details", "Courses", new { id = lesson.Course.CourseId });
         }
 

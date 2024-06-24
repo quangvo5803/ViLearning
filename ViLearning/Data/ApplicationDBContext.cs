@@ -21,15 +21,14 @@ namespace ViLearning.Data
         public DbSet<Question> Questions { get; set; }
         public DbSet<TestDetail> TestDetails { get; set; }
         public DbSet<Content> Contents { get; set; }
+        public DbSet<Invoice> Invoices { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Subject>().HasData(
-                new Subject { Id = 1, Name = "Toán" },
-                new Subject { Id = 2, Name = "Ngữ Văn" }
-            );
+           
+
 
 
 

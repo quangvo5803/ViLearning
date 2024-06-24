@@ -43,19 +43,27 @@ namespace ViLearning.Areas.Student.Controllers
             return View(viewModel);
         }
 
-        public IActionResult Details(int CourseId)
+        public async Task<IActionResult> Details(int CourseId)
         {
-            var lessonOfCourse = _unitOfWork.Lesson.GetRange(c=>c.Course.CourseId == CourseId,includeProperties:"Course");
+            var lessonOfCourse = _unitOfWork.Lesson.GetRange(c => c.Course.CourseId == CourseId, includeProperties: "Course");
             List<Lesson> lessons = _unitOfWork.Lesson.GetAll().ToList();
             Course course = _unitOfWork.Course.Get(c => c.CourseId == CourseId, includeProperties: "Subject,ApplicationUser");
+            var user = await _userManager.GetUserAsync(User);
+            string userId = "";
+            if (user != null)
+            {
+                userId = user.Id;
+            }
+
             var detailViewModel = new CourseDetailsVM
             {
                 Course = course,
-                Lessons = lessonOfCourse
+                Lessons = lessonOfCourse,
+                Invoice = _unitOfWork.Invoice.Get(i => i.UserId == userId && i.CourseId == CourseId)
             };
             return View(detailViewModel);
         }
-        
+
         public async Task<IActionResult> CourseListAsync()
         {
             List<ApplicationUser> userList = _unitOfWork.ApplicationUser.GetAll().ToList();
@@ -77,7 +85,7 @@ namespace ViLearning.Areas.Student.Controllers
             return View(viewModel);
         }
 
-        public IActionResult Search(string query) 
+        public IActionResult Search(string query)
         {
             List<ApplicationUser> teacherList = new List<ApplicationUser>();
             List<ApplicationUser> userList = _unitOfWork.ApplicationUser.GetAll().ToList();
@@ -100,18 +108,7 @@ namespace ViLearning.Areas.Student.Controllers
             return View(viewModel);
         }
 
-        [Authorize]
-        public IActionResult Checkout(int CourseId)
-        { 
-            var course = _unitOfWork.Course.Get(c=>c.CourseId==CourseId);
-            var lessonOfCourse = _unitOfWork.Lesson.GetRange(c => c.Course.CourseId == CourseId, includeProperties: "Course");
-            var detailViewModel = new CourseDetailsVM
-            {
-                Course = course,
-                Lessons = lessonOfCourse
-            };
-            return View(detailViewModel);
-        }
+
         public IActionResult Privacy()
         {
             return View();
@@ -121,6 +118,15 @@ namespace ViLearning.Areas.Student.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Study()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var userId = user.Id;
+            var invoice = _unitOfWork.Invoice.GetRange(i => i.UserId == userId, includeProperties: "Course,Course.ApplicationUser,Course.Subject");
+            return View(invoice);
         }
     }
 }
