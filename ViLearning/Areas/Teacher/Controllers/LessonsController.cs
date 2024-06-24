@@ -109,6 +109,7 @@ namespace ViLearning.Areas.Teacher.Controllers
                         _unitOfWork.Save();
 
 
+<<<<<<< Teacher
                         return RedirectToAction("Details", "Courses", new { id = courseId });
                     } else
                     {
@@ -119,6 +120,9 @@ namespace ViLearning.Areas.Teacher.Controllers
 
                     // Check and delete old file from Azure Blob Storage
                     
+=======
+                    return RedirectToAction("Details", "Courses", new { id = courseId});
+>>>>>>> master
                 }
                 catch (Exception ex)
                 {
@@ -218,6 +222,10 @@ namespace ViLearning.Areas.Teacher.Controllers
                         throw;
                     }
                 }
+<<<<<<< Teacher
+=======
+                return RedirectToAction("Details","Courses",new {id = lesson.Course.CourseId});
+>>>>>>> master
             }
 
             return View(lesson);
