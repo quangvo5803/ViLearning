@@ -10,6 +10,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Text.Encodings.Web;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
@@ -124,7 +125,7 @@ namespace ViLearning.Areas.Identity.Pages.Account
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-            if (ModelState.IsValid)
+                if (ModelState.IsValid)
             {
                 var user = CreateUser();
 
@@ -196,10 +197,28 @@ namespace ViLearning.Areas.Identity.Pages.Account
                 }
                 foreach (var error in result.Errors)
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    if (error.Code == "DuplicateUserName")
+                    {
+                        TempData["error"] = "Email đã tồn tại";
+                    }
+                    else
+                    {
+                        if (error.Description == "Passwords must have at least one non alphanumeric character.")
+                        {
+                            error.Description = "Mật khẩu cần có ít nhất một ký tự đặc biệt.";
+                        }
+                        if (error.Description == "Passwords must have at least one digit ('0'-'9').")
+                        {
+                            error.Description = "Mật khẩu cần có ít nhất một chữ số.";
+                        }
+                        if (error.Description == "Passwords must have at least one uppercase ('A'-'Z').")
+                        {
+                            error.Description = "Mật khẩu cần có ít nhất một chữ cái in hoa.";
+                        }
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
                 }
             }
-
             // If we got this far, something failed, redisplay form
             return Page();
         }
