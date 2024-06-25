@@ -107,9 +107,6 @@ namespace ViLearning.Areas.Teacher.Controllers
 
                         _unitOfWork.Lesson.Add(lesson);
                         _unitOfWork.Save();
-
-
-
                         return RedirectToAction("Details", "Courses", new { id = courseId });
                     } else
                     {
@@ -117,9 +114,6 @@ namespace ViLearning.Areas.Teacher.Controllers
                         _unitOfWork.Save();
                         return RedirectToAction("Details", "Courses", new { id = courseId });
                     }
-
-                    // Check and delete old file from Azure Blob Storage
-                    
 
                 }
                 catch (Exception ex)
@@ -172,12 +166,12 @@ namespace ViLearning.Areas.Teacher.Controllers
                 try
                 {
                     try
-                    {   
+                    {
                         string containerName = "lesson-video";
                         string fileName;
                         if (Video != null)
                         {
-                            fileName  = Guid.NewGuid().ToString() + Path.GetExtension(Video.FileName);
+                            fileName = Guid.NewGuid().ToString() + Path.GetExtension(Video.FileName);
                             // Check and delete old file from Azure Blob Storage
                             if (!string.IsNullOrEmpty(lesson.Video))
                             {
@@ -191,10 +185,11 @@ namespace ViLearning.Areas.Teacher.Controllers
                             {
                                 lesson.Video = await _blobStorageService.UploadFileAsync(containerName, fileName, stream);
                             }
-                        } else
+                        }
+                        else
                         {
-                            lesson.Video = _unitOfWork.Lesson.Get( l => l.LessonId.Equals(lesson.LessonId)).Video;
-                            
+                            lesson.Video = _unitOfWork.Lesson.Get(l => l.LessonId.Equals(lesson.LessonId)).Video;
+
                         }
                         _unitOfWork.Lesson.Update(lesson);
                         _unitOfWork.Save();
@@ -220,7 +215,6 @@ namespace ViLearning.Areas.Teacher.Controllers
                         throw;
                     }
                 }
-
             }
 
             return View(lesson);
