@@ -11,6 +11,7 @@ using ViLearning.Models;
 using System.Security.Policy;
 using Microsoft.Data.SqlClient;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.AspNetCore.Http.Features;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,7 +38,21 @@ var azureStorageConnectionString = builder.Configuration.GetSection("AzureStorag
 builder.Services.AddSingleton(new BlobStorageService(azureStorageConnectionString));
 builder.Services.Configure<KestrelServerOptions>(options =>
 {
-    options.Limits.MaxRequestBodySize = 104857600;
+    options.Limits.MaxRequestBodySize = 2028*1024*1024;
+});
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        builder =>
+        {
+            builder.WithOrigins("https://localhost:7283")
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
+});
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 2028 * 1024 * 1024;
 });
 builder.Services.AddSingleton<IVnPayServicecs, VnPayService>();
 var app = builder.Build();
@@ -54,6 +69,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseCors("AllowSpecificOrigin");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapRazorPages();
