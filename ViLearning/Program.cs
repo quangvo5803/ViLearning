@@ -54,6 +54,7 @@ builder.Services.Configure<FormOptions>(options =>
 {
     options.MultipartBodyLengthLimit = 2028 * 1024 * 1024;
 });
+builder.Services.AddSingleton<IVnPayServicecs, VnPayService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
