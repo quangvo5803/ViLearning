@@ -10,6 +10,14 @@ using ViLearning.Models;
 using ViLearning.Services.Repository;
 using ViLearning.Services.Repository.IRepository;
 using ViLearning.Utility;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using ViLearning.Models;
+using System.Security.Policy;
+using Microsoft.Data.SqlClient;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.AspNetCore.Http.Features;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,7 +63,21 @@ builder.Services.AddSingleton(new BlobStorageService(azureStorageConnectionStrin
 // Configure Kestrel Server
 builder.Services.Configure<KestrelServerOptions>(options =>
 {
-    options.Limits.MaxRequestBodySize = 104857600; // 100 MB
+    options.Limits.MaxRequestBodySize = 2028*1024*1024;
+});
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        builder =>
+        {
+            builder.WithOrigins("https://localhost:7283")
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
+});
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 2028 * 1024 * 1024;
 });
 
 builder.Services.AddSingleton<IVnPayServicecs, VnPayService>();
@@ -73,6 +95,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseCors("AllowSpecificOrigin");
 app.UseAuthentication();
 app.UseAuthorization();
 
