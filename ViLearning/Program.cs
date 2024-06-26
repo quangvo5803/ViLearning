@@ -1,22 +1,14 @@
-using Microsoft.AspNetCore.Authentication.Google;
+
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using ViLearning.Data;
 using ViLearning.Models;
 using ViLearning.Services.Repository;
 using ViLearning.Services.Repository.IRepository;
 using ViLearning.Utility;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using ViLearning.Models;
-using System.Security.Policy;
-using Microsoft.Data.SqlClient;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.Http.Features;
 
 var builder = WebApplication.CreateBuilder(args);
