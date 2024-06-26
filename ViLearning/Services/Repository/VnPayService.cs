@@ -23,7 +23,7 @@ namespace ViLearning.Services.Repository
             vnpay.AddRequestData("vnp_CurrCode", _config["VnPay:CurrCode"]);
             vnpay.AddRequestData("vnp_IpAddr", Utils.GetIpAddress(context));
             vnpay.AddRequestData("vnp_Locale", _config["VnPay:Locale"]);
-            vnpay.AddRequestData("vnp_OrderInfo",model.Course.CourseId.ToString());
+            vnpay.AddRequestData("vnp_OrderInfo","Thanh toán cho khóa học: " + model.Course.CourseId.ToString() +"."+ model.Course.CourseName);
             vnpay.AddRequestData("vnp_OrderType", "other");
             vnpay.AddRequestData("vnp_ReturnUrl", _config["VnPay:PaymentBackReturnUrl"]);
             vnpay.AddRequestData("vnp_TxnRef", tick);
@@ -58,7 +58,7 @@ namespace ViLearning.Services.Repository
             return new VnPaymentResponseModel { 
                 Success = true,
                 PaymentMethod = "VnPay",
-                OrderDescription = vnp_OrderInfo,
+                OrderDescription = vnp_OrderInfo.Split(new string[] { "Thanh toán cho khóa học: " }, StringSplitOptions.None)[1].Split('.')[0],
                 OrderId = vnp_OrderId.ToString(),
                 TransactionId = vnp_TransactionId.ToString(),
                 Token = vnp_SecureHash,
