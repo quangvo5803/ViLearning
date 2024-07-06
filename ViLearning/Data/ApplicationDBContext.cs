@@ -79,13 +79,19 @@ namespace ViLearning.Data
                 .HasMany(c => c.Lesson)
                 .WithOne(l => l.Course)
                 .HasForeignKey(l => l.CourseId)
-                .OnDelete(DeleteBehavior.Restrict); // Prevent cascading deletes from Course to Lessons
+                .OnDelete(DeleteBehavior.Cascade); // Prevent cascading deletes from Course to Lessons
 
             modelBuilder.Entity<Lesson>()
                 .HasMany(l => l.Comments)
                 .WithOne(c => c.Lesson)
                 .HasForeignKey(c => c.LessonId)
                 .OnDelete(DeleteBehavior.Cascade); // Allow cascading deletes from Lesson to Comments
-        }
+
+			modelBuilder.Entity<Lesson>()
+			    .HasOne(l => l.Course)
+			    .WithMany(c => c.Lesson)
+			    .HasForeignKey(l => l.CourseId)
+			    .OnDelete(DeleteBehavior.Cascade);
+		}
     }
 }
