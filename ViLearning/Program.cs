@@ -11,6 +11,8 @@ using ViLearning.Models;
 using System.Security.Policy;
 using Microsoft.Data.SqlClient;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using ViLearning.Hubs;
+using ViLearning.Hubs.ChatHub;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +42,7 @@ builder.Services.Configure<KestrelServerOptions>(options =>
     options.Limits.MaxRequestBodySize = 104857600;
 });
 builder.Services.AddSingleton<IVnPayServicecs, VnPayService>();
+builder.Services.AddSignalR();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -60,6 +63,7 @@ app.MapRazorPages();
 app.MapControllerRoute(
     name: "default",
     pattern: "{area=Student}/{controller=Home}/{action=Index}/{id?}");
+app.MapHub<ChatHub>("/chatHub");
 
 using (var scope = app.Services.CreateScope()) 
 {
