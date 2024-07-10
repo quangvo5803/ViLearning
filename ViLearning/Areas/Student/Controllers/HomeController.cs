@@ -125,7 +125,11 @@ namespace ViLearning.Areas.Student.Controllers
         public async Task<IActionResult> Study()
         {
             var user = await _userManager.GetUserAsync(User);
-            var userId = user.Id;
+            string userId = "";
+            if (user == null)
+            {
+                userId = user.Id;
+            }
             var invoice = _unitOfWork.Invoice.GetRange(i => i.UserId == userId, includeProperties: "Course,Course.ApplicationUser,Course.Subject");
             return View(invoice);
         }

@@ -96,14 +96,6 @@ namespace ViLearning.Areas.Teacher.Controllers
                     var videoId = Guid.NewGuid().ToString();
 
                     //Save video to temp file
-                    /*var tempFilePath = Path.GetTempFileName();
-                    using  (var sourceStream = Video.OpenReadStream())
-                    {
-                        using (var destinationStream = new FileStream(tempFilePath, FileMode.Create, FileAccess.ReadWrite))
-                        {
-                             await sourceStream.CopyToAsync(destinationStream);
-                        }
-                    } */
 
                     var uploadPath = Path.Combine(_hostingEnvironment.ContentRootPath, "wwwroot", "uploads");
                     if (!Directory.Exists(uploadPath))
@@ -118,12 +110,7 @@ namespace ViLearning.Areas.Teacher.Controllers
                         Directory.CreateDirectory(Path.Combine(uploadPath, "hls", Video.FileName));
 
 
-
-                    // define ffmpeg path and arguments
-                    var ffmpegPath = "C:/Program Files (x86)/Ffmpeg/ffmpeg.exe";
                     var outputDirectory = Path.Combine(uploadPath, "hls");
-                    /*var outputDirectory = Path.Combine(Path.GetTempPath(), videoId);
-                    Directory.CreateDirectory(outputDirectory);*/
                     var outputPattern = Path.Combine(outputDirectory, "slice_%03d.ts");
                     var playlistFile = Path.Combine(outputDirectory, "playlist.m3u8");
 
@@ -167,6 +154,7 @@ namespace ViLearning.Areas.Teacher.Controllers
                         }
                     }
 
+
                     //Clean temp files 
                     //System.IO.File.Delete(tempFilePath);
                     System.IO.File.Delete(filePath);
@@ -177,41 +165,7 @@ namespace ViLearning.Areas.Teacher.Controllers
                     _unitOfWork.Lesson.Add(lesson);
                     _unitOfWork.Save();
                     return RedirectToAction("Details", "Courses", new { id = courseId });
-                    /*string containerName = "lesson-video";
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(Video.FileName);
 
-                    // Check and delete old file from Azure Blob Storage
-                    if (!string.IsNullOrEmpty(lesson.Video))
-                    {
-                        fileName = Guid.NewGuid().ToString() + Path.GetExtension(Video.FileName);
-                        if (!string.IsNullOrEmpty(lesson.Video))
-                        {
-                            Uri oldUri = new Uri(lesson.Video);
-                            string oldFileName = Path.GetFileName(oldUri.LocalPath);
-                            await _blobStorageService.DeleteFileAsync(containerName, oldFileName);
-                        }
-
-                        // Upload new file to Azure Blob Storage
-                        using (var stream = Video.OpenReadStream())
-                        {
-                            lesson.Video = await _blobStorageService.UploadFileAsync(containerName, fileName, stream);
-                        }
-
-                        _unitOfWork.Lesson.Add(lesson);
-                        _unitOfWork.Save();
-                        return RedirectToAction("Details", "Courses", new { id = courseId });
-                    } else
-                    {
-                        _unitOfWork.Lesson.Add(lesson);
-                        _unitOfWork.Save();
-                        return RedirectToAction("Details", "Courses", new { id = courseId });
-                    }
-
-                    _unitOfWork.Lesson.Add(lesson);
-                    _unitOfWork.Save();
-
-
-                    return RedirectToAction("Details", "Courses", new { id = courseId });*/
                 }
                 catch (Exception ex)
                 {
