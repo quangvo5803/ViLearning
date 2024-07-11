@@ -10,5 +10,7 @@
 
         public List<TestDetail> TestHistory { get; set; }
 
+        public List<Lesson> ListLesson { get; set; }
+
     }
 }

@@ -146,7 +146,7 @@ body, html {
 }
 
 .overlay-content {
-    width: 40%;
+    width: 100%;
     max-width: 600px; 
     padding: 20px;
     background-color: #fff; 

@@ -33,10 +33,16 @@ namespace ViLearning.Areas.Student.Controllers
             List<Lesson>? lessons = await _unitOfWork.Lesson.GetLessonByCourseId(courseId);
             var lesson = lessons?.Where(l => l.LessonNo == lessonNo).FirstOrDefault();
             var lessonId = _unitOfWork.Lesson.Get(l => l.CourseId == courseId && l.LessonNo == lessonNo).LessonId;
+            var tests = _unitOfWork.TestDetail.GetRange(t => t.LessonId == lessonId);
+            foreach(Lesson l in lessons)
+            {
+                _unitOfWork.Lesson.LoadTest(l);
+            }
             LearningMaterial lm = new LearningMaterial()
             {
                 Course = course,
                 Lesson = lesson,
+                ListLesson = lessons,
                 TestHistory = testController.TestHistory(lessonId, userId),
                 TestRanking = testController.TestRanking(lessonId)
             };

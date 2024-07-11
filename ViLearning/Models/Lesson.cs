@@ -49,5 +49,8 @@ namespace ViLearning.Models
         //Navigation property
         public virtual ICollection<Comment>? Comments { get;}
         public virtual ICollection<Question>? Questions { get;}
+
+        public virtual ICollection<TestDetail>? Tests { get; set; }
+
     }
 }
