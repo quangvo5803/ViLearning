@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Security.Claims;
 using ViLearning.Models;
 using ViLearning.Models.ViewModels;
 using ViLearning.Services.Repository.IRepository;
@@ -126,6 +127,7 @@ namespace ViLearning.Areas.Student.Controllers
             var user = await _userManager.GetUserAsync(User);
             var userId = user.Id;
             var invoice = _unitOfWork.Invoice.GetRange(i => i.UserId == userId, includeProperties: "Course,Course.ApplicationUser,Course.Subject");
+            ViewData["userId"] = userId;
             return View(invoice);
         }
     }

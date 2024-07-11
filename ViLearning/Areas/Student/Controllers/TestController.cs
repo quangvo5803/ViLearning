@@ -124,7 +124,7 @@ namespace ViLearning.Areas.Student.Controllers
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             List<TestDetail> testDetails = _unitOfWork.TestDetail.GetRange(t => t.LessonId == lessonId,
                 includeProperties: "ApplicationUser,Lesson")
-                .OrderByDescending(t => t.Mark).ThenByDescending(t => t.Duration).ThenBy(t => t.StartTime).ToList();
+                .OrderByDescending(t => t.Mark).ThenBy(t => t.Duration).ThenBy(t => t.StartTime).ToList();
             return View("TestRanking", testDetails);
         }
     }

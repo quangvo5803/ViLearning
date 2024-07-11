@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.SignalR;
+using System.Security.Claims;
 using ViLearning.Models;
 
 namespace ViLearning.Hubs.ChatHub
@@ -10,9 +12,10 @@ namespace ViLearning.Hubs.ChatHub
             Clients.User(receiver.Id).SendAsync("ReceiveMessage", sender, message, DateTime.Now);
         }*/
 
-        public async Task SendMessage(string user, string message)
+        public async Task SendMessage(string userId, string message)
         {
-            await Clients.All.SendAsync("ReceiveMessage", user, message, DateTime.Now);
+            var sendAt = DateTime.Now.ToString("HH:mm | MMM d");
+            await Clients.All.SendAsync("ReceiveMessage",userId, message, sendAt);
         }
     }
 }

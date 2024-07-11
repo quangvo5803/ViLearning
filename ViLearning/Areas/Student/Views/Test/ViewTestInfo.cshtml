@@ -17,13 +17,13 @@
         <h5 class="text-center my-3">Review Test</h5>
         <div class="info-item text-center">Time to Complete: <span id="timeToComplete">@Model.TestDuration min</span></div>
         <div class="info-item text-center">Number of Questions: <span id="numberOfQuestions">@Model.TotalQuestions questions</span></div>
-        <a class="text-center start-btn" 
-                asp-area="Student" 
+        <a class="text-center start-btn mt-5 mb-5"
+           asp-area="Student" 
                 asp-controller="Test" 
                 asp-action="DoTest" 
                 asp-route-lessonId="@Model.LessonId" 
                 asp-route-startTime="@DateTime.Now">
-            <button class="btn btn-success btn-start mt-5 mb-5">Start</button>
+            <button class="btn btn-success btn-start">Start</button>
         </a>
     </div>
 </div>
