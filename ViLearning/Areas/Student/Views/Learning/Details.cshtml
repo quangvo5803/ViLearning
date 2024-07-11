@@ -65,7 +65,7 @@
                             <div class="lesson-item" style="text-emphasis-color:white; text-decoration:none">
                                 <a asp-controller="Learning" asp-action="Details" asp-route-courseId="@Model.Course.CourseId" asp-route-lessonNo="@lesson.LessonNo" style="color: #212529;display: block; height: inherit; width:inherit; line-height: 3.5rem; text-decoration:none">
                                     <span class="lesson-status">●</span>
-                                    <span class="lesson-name" data-bs-toggle="tooltip" data-bs-placement="top" title="@lesson.LessonName">adsfadsfasdfasdfasdfadsfsdfsdfsdfdsfsfsdfdsdsvvvvvvvvvvvvvdsfsdfsdf</span>
+                                    <span class="lesson-name" data-bs-toggle="tooltip" data-bs-placement="top" title="@lesson.LessonName">@lesson.LessonName</span>
                                 </a>
                             </div>
                         }
