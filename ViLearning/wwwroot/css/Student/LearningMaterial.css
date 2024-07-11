@@ -52,8 +52,8 @@ body, html {
     overflow-y: auto;
     height: 100vh;
     flex: 1;
-    min-width: 50px;
-    width: calc(100% - 305px);
+    max-width:80%;
+    width: calc(100% - 300px);
 }
 
 
@@ -62,7 +62,9 @@ body, html {
     padding: 0;
     border-left: 1px solid #ddd;
     position: relative;
+    max-width:100%;
 }
+
 
     .lesson-item:hover {
         background-color: RGB(241 240 238);
