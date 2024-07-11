@@ -1,6 +1,10 @@
 ﻿.chatbox {
     max-width: 400px;
     margin: auto;
+    position:fixed;
+    right: 0;
+    bottom:0;
+    z-index:12000;
 }
 
 img {
