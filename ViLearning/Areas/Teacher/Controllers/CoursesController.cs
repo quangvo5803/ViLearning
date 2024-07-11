@@ -169,13 +169,13 @@ namespace ViLearning.Areas.Teacher.Controllers
                     }
 
                     _unitOfWork.Course.Update(course);
-                    _unitOfWork.Save();
+                    _unitOfWork.Save(); 
                 }
                 catch (Exception ex)
                 {
-
+                    
                     Console.WriteLine($"Error updating course: {ex.Message}");
-
+                   
                     ModelState.AddModelError(string.Empty, $"Error updating course: {ex.Message}");
                 }
 
@@ -219,11 +219,11 @@ namespace ViLearning.Areas.Teacher.Controllers
         public IActionResult Search(string searchString)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            List<Course> courses = new List<Course>();
+            var courses = _unitOfWork.Course.GetAll().Where(c => c.UserId == userId);
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                courses = _unitOfWork.Course.GetRange(s => s.CourseName.Contains(searchString) && s.ApplicationUser.Id == userId).ToList();
+                courses = courses.Where(s => s.CourseName.Contains(searchString));
             }
             var viewModel = new CourseSubjectVM
             {
