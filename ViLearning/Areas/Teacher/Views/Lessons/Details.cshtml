@@ -50,10 +50,10 @@
         <center>
         <div class="row mb-3">
             <div class="col-sm-12">
-                <video width="1000" height="650" controls controlsList="nodownload">
-                    <source src="@Model.Video" type="video/mp4">
+                <video width="1000" height="650" controls id="video">
+                    @* <source src="@ViewContext.HttpContext.Request.Path /videoStream/@Model.Video" type="video/mp4">
                     <source src="@Model.Video" type="video/ogg">
-                    Your browser does not support the video tag.
+                    Your browser does not support the video tag. *@
                 </video>
             </div>
         </div>
@@ -102,10 +102,30 @@
         <div class="mt-3">
             <a  class="btn btn-primary" asp-action="Edit" asp-route-id="@Model?.LessonId" asp-route-CourseName="@Model.Course.CourseName" asp-route-LessonName="@Model.LessonName">Cập Nhật Thông Tin</a>
             <a class="btn btn-secondary" asp-controller="Courses" asp-action="Details" asp-route-id="@Model.Course.CourseId">Quay Lại</a>
-            <a class="btn btn-info" asp-area="Teacher" asp-controller="Question" asp-action="QuestionManage" asp-route-lessonId="@Model.LessonId">Ngân Hàng Câu Hỏi</a>
+            <a class="btn btn-info" asp-area="Teacher" asp-controller="Question" asp-action="QuestionManage" asp-route-lessonId="@Model.LessonId">Câu Hỏi Của Bài Học</a>
             <hr />
             <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model.LessonId" asp-route-CourseName="@Model.Course.CourseName" asp-route-LessonName="@Model.LessonName">Xóa Bài Học</a>
         </div>
     </center>
     
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const playlistUrl = "@Model.Video" ;
 
+        if (Hls.isSupported()) {
+            const video = document.getElementById('video');
+            const hls = new Hls();
+            hls.loadSource(playlistUrl);
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                video.play();
+            });
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = playlistUrl;
+            video.addEventListener('loadedmetadata', () => {
+                video.play();
+            });
+        }
+    });
+</script>

@@ -1,0 +1,82 @@
+﻿body {
+}
+
+input[type="radio"] {
+    cursor: pointer;
+}
+
+.clock:before,
+.count:after {
+    content: '';
+    position: absolute;
+}
+
+.clock-wrap {
+    width: 120px;
+    height: 120px;
+    margin-right: 25px;
+    position: relative;
+    border-radius: 25px;
+    background-color: #fff;
+    box-shadow: 0 0 15px rgba(0,0,0,.15);
+}
+
+.clock {
+    top: 50%;
+    left: 50%;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    position: absolute;
+    margin-top: -45px;
+    margin-left: -45px;
+    background-color: #c8fff1;
+}
+
+    .clock:before {
+        top: 50%;
+        left: 50%;
+        width: 60px;
+        height: 60px;
+        margin-top: -30px;
+        margin-left: -30px;
+        border-radius: inherit;
+        background-color: #28a745;
+        box-shadow: 0 0 15px rgba(0,0,0,.15), 0 0 3px rgba(255,255,255,.75) inset;
+        /*border:1px solid rgba(255,255,255,.1);*/
+    }
+
+.count {
+    width: 100%;
+    color: #fff;
+    height: 100%;
+    padding: 25px;
+    font-size: 18px;
+    font-weight: 500;
+    position: absolute;
+    text-align: center;
+}
+
+    .count:after {
+        width: 100%;
+        display: block;
+        font-size: 16px;
+        font-weight: 300;
+        line-height: 18px;
+        text-align: center;
+        position: relative;
+    }
+
+    .count.sec:after {
+        content: 'sec'
+    }
+
+    .count.min:after {
+        content: 'min'
+    }
+
+.answer-list-error {
+    border: 2px solid red; /* Đổi màu viền thành đỏ */
+    padding: 10px; /* Thêm padding để làm nổi bật */
+    background-color: #ffeeee; /* Đổi màu nền thành màu hồng nhạt */
+}

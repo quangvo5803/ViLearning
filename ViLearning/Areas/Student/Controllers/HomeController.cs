@@ -36,7 +36,7 @@ namespace ViLearning.Areas.Student.Controllers
             }
             var viewModel = new LandingPageVM
             {
-                Courses = _unitOfWork.Course.GetAll(includeProperties: "Subject,ApplicationUser").ToList(),
+                Courses = _unitOfWork.Course.GetRange(c=> c.CourseStatus == CourseStatus.Published,includeProperties: "Subject,ApplicationUser").ToList(),
                 UserList = userList,
                 TeacherList = teacherList
             };
@@ -45,20 +45,25 @@ namespace ViLearning.Areas.Student.Controllers
 
         public async Task<IActionResult> Details(int CourseId)
         {
-            var lessonOfCourse = _unitOfWork.Lesson.GetRange(c=>c.Course.CourseId == CourseId,includeProperties:"Course");
+            var lessonOfCourse = _unitOfWork.Lesson.GetRange(c => c.Course.CourseId == CourseId, includeProperties: "Course");
             List<Lesson> lessons = _unitOfWork.Lesson.GetAll().ToList();
             Course course = _unitOfWork.Course.Get(c => c.CourseId == CourseId, includeProperties: "Subject,ApplicationUser");
             var user = await _userManager.GetUserAsync(User);
-            var userId = user.Id;
+            string userId = "";
+            if (user != null)
+            {
+                userId = user.Id;
+            }
+
             var detailViewModel = new CourseDetailsVM
             {
                 Course = course,
                 Lessons = lessonOfCourse,
                 Invoice = _unitOfWork.Invoice.Get(i => i.UserId == userId && i.CourseId == CourseId)
-        };
+            };
             return View(detailViewModel);
         }
-        
+
         public async Task<IActionResult> CourseListAsync()
         {
             List<ApplicationUser> userList = _unitOfWork.ApplicationUser.GetAll().ToList();
@@ -73,14 +78,14 @@ namespace ViLearning.Areas.Student.Controllers
             }
             var viewModel = new LandingPageVM
             {
-                Courses = _unitOfWork.Course.GetAll(includeProperties: "Subject,ApplicationUser").ToList(),
+                Courses = _unitOfWork.Course.GetRange(c => c.CourseStatus == CourseStatus.Published,includeProperties: "Subject,ApplicationUser").ToList(),
                 UserList = userList,
                 TeacherList = teacherList
             };
             return View(viewModel);
         }
 
-        public IActionResult Search(string query) 
+        public IActionResult Search(string query)
         {
             List<ApplicationUser> teacherList = new List<ApplicationUser>();
             List<ApplicationUser> userList = _unitOfWork.ApplicationUser.GetAll().ToList();
@@ -96,14 +101,15 @@ namespace ViLearning.Areas.Student.Controllers
                 Courses = _unitOfWork.Course.GetRange(c => c.CourseName.Contains(query)
                                                             || c.Subject.Name.Contains(query)
                                                             || c.Description.Contains(query)
-                                                            || c.ApplicationUser.FullName.Contains(query), includeProperties: "Subject,ApplicationUser"),
+                                                            || c.ApplicationUser.FullName.Contains(query)
+                                                            && c.CourseStatus == CourseStatus.Published, includeProperties: "Subject,ApplicationUser"),
                 UserList = userList,
                 TeacherList = teacherList
             };
             return View(viewModel);
         }
 
-        
+
         public IActionResult Privacy()
         {
             return View();
@@ -119,9 +125,20 @@ namespace ViLearning.Areas.Student.Controllers
         public async Task<IActionResult> Study()
         {
             var user = await _userManager.GetUserAsync(User);
-            var userId = user.Id;
-            var invoice = _unitOfWork.Invoice.GetRange(i => i.UserId == userId,includeProperties: "Course,Course.ApplicationUser,Course.Subject");
+            string userId = "";
+            if (user == null)
+            {
+                userId = user.Id;
+            }
+            var invoice = _unitOfWork.Invoice.GetRange(i => i.UserId == userId, includeProperties: "Course,Course.ApplicationUser,Course.Subject");
             return View(invoice);
+        }
+
+        [Authorize] 
+        public async Task<IActionResult> Accomplishment()
+        {
+
+            return View();
         }
     }
 }

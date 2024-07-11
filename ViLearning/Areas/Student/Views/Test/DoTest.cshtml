@@ -1,0 +1,51 @@
+﻿@model DoTestVM
+
+@{
+    ViewData["Title"] = "Lesson Review Test";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Student/DoTest.css">
+}
+
+<nav class="navbar sticky-top navbar-light bg-light">
+    <div class="mx-3">
+        <h5>@Model.Lesson.LessonNo .@Model.Lesson.LessonName</h5>
+		<p>Review Test • <span class="test-duration">@Model.Lesson.TestDuration</span> min <span>• @Model.Lesson.TotalQuestions total questions</span> </p>
+    </div>
+    <div>
+        <div class="clock-wrap">
+            <div class="clock pro-0">
+                <span class="count">0</span>
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="">
+    <div class="card text-dark bg-light border-success mb-3">
+        <div class="card-body p-4">
+            <form method="post" id="TestForm" asp-action="SubmitTest">
+				<input type="hidden" asp-for="@Model.Lesson.LessonId" name="Lesson.LessonId" value="@Model.Lesson.LessonId" />
+				<input type="hidden" asp-for="@Model.TestDetail.StartTime" name="TestDetail.StartTime" value="@Model.TestDetail.StartTime"/>
+				@for (int i = 0; i < Model.Questions.Count; i++)
+				{
+					<div class="fs-4">
+						<p class="mx-2 my-2 fw-bold">@(i + 1). @Model.Questions[i].QuestionName</p>
+						<div class="answer-list mx-5" id="answers-@Model.Questions[i].QuestionId">
+							<input type="radio" asp-for="@Model.TestDetail.TestResult[@Model.Questions[i].QuestionId]" name="TestDetail.TestResult[@Model.Questions[i].QuestionId]" value="A"> A. @Model.Questions[i].OptionA <br />
+							<input type="radio" asp-for="@Model.TestDetail.TestResult[@Model.Questions[i].QuestionId]" name="TestDetail.TestResult[@Model.Questions[i].QuestionId]" value="B"> B. @Model.Questions[i].OptionB <br />
+							<input type="radio" asp-for="@Model.TestDetail.TestResult[@Model.Questions[i].QuestionId]" name="TestDetail.TestResult[@Model.Questions[i].QuestionId]" value="C"> C. @Model.Questions[i].OptionC <br />
+							<input type="radio" asp-for="@Model.TestDetail.TestResult[@Model.Questions[i].QuestionId]" name="TestDetail.TestResult[@Model.Questions[i].QuestionId]" value="D"> D. @Model.Questions[i].OptionD <br />
+						</div>
+					</div>
+				}
+                <div class="alert alert-danger d-none" id="testform_error-message">Please select an option for each question.</div>
+				<div class="text-center mt-5"><button type="submit" class="btn btn-success">Submit</button></div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/Student/DoTest.js"></script>
+}

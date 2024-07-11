@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Linq.Expressions;
 using ViLearning.Data;
+using ViLearning.Models;
 using ViLearning.Services.Repository.IRepository;
 
 namespace ViLearning.Services.Repository
@@ -26,6 +28,10 @@ namespace ViLearning.Services.Repository
             IQueryable<T> query = dbSet;
             query = query.Where(filter);
             return query.FirstOrDefault();
+        }
+        public void AddRange(IEnumerable<T> entities)
+        {
+            dbSet.AddRange(entities);
         }
 
         public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null)

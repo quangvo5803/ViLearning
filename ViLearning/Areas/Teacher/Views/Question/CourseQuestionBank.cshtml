@@ -1,0 +1,144 @@
+﻿@{
+    ViewData["Title"] = "Upload Questions";
+    var items = ViewData["lessonList"] as List<Lesson>;
+}
+
+@section Styles {
+<style>
+        .lesson-no {
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        .lesson-name {
+            color: #343a40;
+        }
+
+        .list ul {
+            position: relative;
+        }
+
+        .list ul li {
+            position: relative;
+            left: 0;
+            color: #fce4ec;
+            list-style: none;
+            margin: 4px 0;
+            border-left: 2px solid #28a745;
+            transition: 0.5s;
+            cursor: pointer;
+        }
+
+        .list ul li:hover {
+            left: 10px;
+        }
+
+        .list ul li span {
+            position: relative;
+            padding: 8px;
+            padding-left: 12px;
+            display: inline-block;
+            z-index: 1;
+            transition: 0.5s;
+        }
+
+        .list ul li:hover span {
+            color: white;
+        }
+
+        .list ul li:before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #28a745;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: 0.5s;
+        }
+
+        .list ul li:hover:before {
+            transform: scaleX(1);
+        }
+</style>
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            Upload Question File <i type="button" id="info-popover" data-bs-html="true" class="btn bi bi-info-circle" data-toggle="popover" data-bs-placement="bottom"
+                                    title="<h5>Thêm câu hỏi hàng loạt</h5>"
+                                    data-bs-content="Đây là cách để bạn có thể thêm câu hỏi hàng loạt vào ngân hàng câu hỏi của khóa học.<br>
+                                              Hãy thêm file văn bản chứa các câu hỏi theo định dạng quy định của chúng tôi (nằm ở bên phải phần thêm file)."></i>
+        </h3>
+    </div>
+    <div class="card-body row">
+        <form class="col-md-6" method="post" enctype="multipart/form-data" id="uploadQuestionsForm" asp-area="Teacher" asp-controller="Question" asp-action="UploadQuestions">
+            <div class="form-group">
+                <input type="hidden" class="form-control" name="courseId" value="@ViewData["courseId"]"/>
+                <label for="file">Upload Questions File</label>
+                <input type="file" class="form-control" id="file" name="file" required>
+            </div>
+            <div id="UploadFile_ErrorMessage" class="alert alert-danger d-none error-message">Please select a file to upload.</div>
+            <button type="submit" class="btn btn-primary">Upload</button>
+            @if (TempData["invalid-file-format"] != null)
+            {
+                <div class="alert alert-danger" role="alert">
+                    @TempData["invalid-file-format"]
+                </div>
+            }
+            @if (TempData["upload-file-success"] != null)
+            {
+                <div class="alert alert-success" role="alert">
+                    @TempData["upload-file-success"]
+                </div>
+            }
+        </form>
+        <div class="col-md-6">
+            <h3>File Format</h3>
+            <a class="question-file-format" data-gall="gallery01" href="~/images/question-file-format.png"><img width="600px" height="auto" src="~/images/question-file-format.png"></a>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-4 list">
+    <h2 class="mb-4">Danh sách các bài học</h2>
+    @if (items != null && items.Any())
+    {
+        <ul class="list-group list-group-flush">
+            @foreach (var item in items)
+            {
+                <li class="list-group-item d-flex justify-content-md-start align-items-center fs-4">
+                    <a class="text-decoration-none" asp-area="Teacher" asp-controller="Question" asp-action="QuestionManage" asp-route-lessonId="@item.LessonId">
+                        <span class="lesson-no me-3">@item.LessonNo.</span>
+                        <span class="lesson-name">@item.LessonName</span>
+                    </a>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>Không có bài học nào được tìm thấy.</p>
+    }
+</div>
+
+
+
+
+@section Scripts {
+    <script>
+        $(function () {
+            $('[data-toggle="popover"]').popover()
+        })
+
+        new VenoBox({
+            selector: '.question-file-format',
+            numeration: true,
+            infinigall: true,
+            share: true,
+            spinner: 'rotating-plane'
+        });
+    </script>
+
+}
