@@ -54,6 +54,49 @@
             </form>
         </aside>
 
+    <div class="main-content">
+        <aside class="filter-sidebar">
+            <form asp-action="Filter" method="get" class="filter-form">
+                <div class="form-group">
+                    <label for="subjectId">Chủ đề</label>
+                    <select name="subjectName" class="form-control" id="subjectId">
+                        <option value="">Tất cả</option>
+                        @foreach (var subject in Model.Subject)
+                        {
+                            <option value="@subject.Name" >@subject.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="minPrice">Giá tối thiểu</label>
+                    <input type="number" name="minPrice" class="form-control" id="minPrice" value="@Model.MinPrice" />
+                </div>
+                <div class="form-group">
+                    <label for="maxPrice">Giá tối đa</label>
+                    <input type="number" name="maxPrice" class="form-control" id="maxPrice" value="@Model.MaxPrice" />
+                </div>
+                <div class="form-group">
+                    <label for="grade">Lớp</label>
+                    <select name="grade" class="form-control" id="grade">
+                        <option value="">Tất cả</option>
+                        @for (int i = 1; i <= 12; i++)
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="sortOrder">Sắp xếp</label>
+                    <select name="sortOrder" class="form-control" id="sortOrder">
+                        <option value="">Mặc định</option>
+                        <option value="asc" >Giá tăng dần</option>
+                        <option value="desc">Giá giảm dần</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-green">Lọc</button>
+            </form>
+        </aside>
+
         <div class="courses-content">
             <div class="box-container">
                 @foreach (var course in Model.Course)
