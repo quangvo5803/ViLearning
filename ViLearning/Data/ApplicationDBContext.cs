@@ -22,6 +22,8 @@ namespace ViLearning.Data
         public DbSet<TestDetail> TestDetails { get; set; }
         public DbSet<Content> Contents { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
+        public DbSet<Conversation> Conversations { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -92,6 +94,42 @@ namespace ViLearning.Data
 			    .WithMany(c => c.Lesson)
 			    .HasForeignKey(l => l.CourseId)
 			    .OnDelete(DeleteBehavior.Cascade);
-		}
+
+            modelBuilder.Entity<Conversation>()
+                .HasMany(c => c.Messages)
+                .WithOne(m => m.Conversation)
+                .HasForeignKey(m => m.ConversationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Message>()
+                .HasOne(m => m.Sender)
+                .WithMany()
+                .HasForeignKey(m => m.SenderId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Conversation>()
+                .HasOne(c => c.User1)
+                .WithMany()
+                .HasForeignKey(c => c.User1Id)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Conversation>()
+                .HasOne(c => c.User2)
+                .WithMany()
+                .HasForeignKey(c => c.User2Id)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Message>()
+                .HasOne(m => m.Conversation)
+                .WithMany(c => c.Messages)
+                .HasForeignKey(m => m.ConversationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Conversation>()
+                .HasOne(c => c.LastMessage)
+                .WithMany()
+                .HasForeignKey(c => c.LastMessageId)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
     }
 }
