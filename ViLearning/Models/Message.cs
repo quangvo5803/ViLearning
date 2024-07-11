@@ -10,16 +10,18 @@ namespace ViLearning.Models
         [Key]
         public int MessageId { get; set; }
         public string SenderId { get; set; }
-        public string ReceiverId { get; set; }
         public string MessageText { get; set; }
         public DateTime Timestamp { get; set; }
+        public int ConversationId { get; set; }
 
         //Relation
         [ForeignKey("SenderId")]
         [ValidateNever]
         public ApplicationUser Sender { get; set; }
-        [ForeignKey("ReceiverId")]
+
+        [ForeignKey("ConversationId")]
         [ValidateNever]
-        public ApplicationUser Receiver { get; set; }
+        public Conversation Conversation { get; set; }
+
     }
 }

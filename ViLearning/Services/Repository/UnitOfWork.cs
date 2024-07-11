@@ -18,6 +18,8 @@ namespace ViLearning.Services.Repository
         public IStudentCertificateRepository StudentCertificate { get; private set; }
 
         public IInvoiceRepository Invoice { get; private set; }
+        public IConversationRepository Conversation { get; private set; }
+        public IMessageRepository Message { get; private set; }
 
 
         private ApplicationDBContext _db;
@@ -37,6 +39,8 @@ namespace ViLearning.Services.Repository
             Question = new QuestionRepository(_db);
             StudentCertificate = new StudentCertificateRepository(_db);
             Invoice = new InvoiceRepository(_db);
+            Conversation = new ConversationRepository(_db);
+            Message = new MessageRepository(_db);
         }
 
         public void Save()

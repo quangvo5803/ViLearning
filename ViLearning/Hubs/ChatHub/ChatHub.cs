@@ -7,9 +7,10 @@ namespace ViLearning.Hubs.ChatHub
 {
     public class ChatHub : Hub
     {
-        /*public async Task SendMessage(ApplicationUser receiver, ApplicationUser sender, string message)
+        /*public async Task SendMessage(string receiverId, string senderId, string message)
         {
-            Clients.User(receiver.Id).SendAsync("ReceiveMessage", sender, message, DateTime.Now);
+            var sendAt = DateTime.Now.ToString("HH:mm | MMM d");
+            Clients.User(receiverId).SendAsync("ReceiveMessage", senderId, message, sendAt);
         }*/
 
         public async Task SendMessage(string userId, string message)
