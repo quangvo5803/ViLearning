@@ -137,6 +137,9 @@
         const overlayComment = document.getElementById('overlayComment');
         const overlayRanking = document.getElementById('overlayRanking');
         const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('main-content');
+        const lessonList = document.getElementById('lesson-list');
+        const resizer = document.getElementById('resizer');
 
         if (Hls.isSupported()) {
             const video = document.getElementById('video');
@@ -184,6 +187,28 @@
             console.error('One or more elements not found.');
         }
         
+        let isResizing = false;
+        let lastDownX = 0;
+
+        resizer.addEventListener('mousedown', function (e) {
+            isResizing = true;
+            lastDownX = e.clientX;
+        });
+
+        document.addEventListener('mousemove', function (e) {
+            if (!isResizing) return;
+
+            const offsetRight = document.body.offsetWidth - (e.clientX - document.body.getBoundingClientRect().left);
+            mainContent.style.width = offsetRight + 'px';
+            lessonList.style.width = (document.body.offsetWidth - offsetRight) + 'px';
+        });
+
+        document.addEventListener('mouseup', function (e) {
+            isResizing = false;
+        });
+    } else {
+        console.error('One or more elements not found.');
+    }
     });
     
 </script>

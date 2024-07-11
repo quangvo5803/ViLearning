@@ -127,6 +127,10 @@ body, html {
 .current-lesson {
     background-color: RGB(255 244 215);
 }
+.resizer {
+    cursor:col-resize;
+    width:5px;
+}
 .overlay-section {
     display: none;
     position: fixed;
