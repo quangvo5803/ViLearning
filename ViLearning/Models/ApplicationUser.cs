@@ -24,6 +24,8 @@ namespace ViLearning.Models
         [NotMapped]
         public string RoleID { get; set; }
 
+        public double Balance { get; set; } = 0;
+
         //Navigation property
         public virtual ICollection<Course>? Courses { get; set; } 
         public virtual ICollection<Feedback>? Feedbacks { get; set; }

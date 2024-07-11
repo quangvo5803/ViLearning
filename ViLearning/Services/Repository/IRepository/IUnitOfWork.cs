@@ -14,6 +14,7 @@
         public IFeedbackRepository Feedback { get; }
         public IStudentCertificateRepository StudentCertificate { get; }
         public IInvoiceRepository Invoice { get; }
+        public IWithdrawRequestRepositoy WithdrawRequest {  get; }
         void Save();
     }
 }

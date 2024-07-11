@@ -13,21 +13,44 @@ namespace ViLearning.Services.Repository
         }
         public string CreatePaymentUrl(HttpContext context, VnPaymentRequestModel model)
         {
-            var tick = DateTime.Now.Ticks.ToString();
-            var vnpay = new VNPayLibrary();
-            vnpay.AddRequestData("vnp_Version", _config["VnPay:Version"]);
-            vnpay.AddRequestData("vnp_Command", _config["VnPay:Command"]);
-            vnpay.AddRequestData("vnp_TmnCode", _config["VnPay:TmnCode"]);
-            vnpay.AddRequestData("vnp_Amount", (model.Amount * 100).ToString());
-            vnpay.AddRequestData("vnp_CreateDate", model.CreateDate.ToString("yyyyMMddHHmmss"));
-            vnpay.AddRequestData("vnp_CurrCode", _config["VnPay:CurrCode"]);
-            vnpay.AddRequestData("vnp_IpAddr", Utils.GetIpAddress(context));
-            vnpay.AddRequestData("vnp_Locale", _config["VnPay:Locale"]);
-            vnpay.AddRequestData("vnp_OrderInfo","Thanh toán cho khóa học: " + model.Course.CourseId.ToString() +"."+ model.Course.CourseName);
-            vnpay.AddRequestData("vnp_OrderType", "other");
-            vnpay.AddRequestData("vnp_ReturnUrl", _config["VnPay:PaymentBackReturnUrl"]);
-            vnpay.AddRequestData("vnp_TxnRef", tick);
-            var paymentUrl = vnpay.CreateRequestUrl(_config["VnPay:BaseUrl"], _config["VnPay:HashSecret"]);
+            string paymentUrl = "";
+            if (model.Description.StartsWith("Thanh toán đơn hàng"))
+            {
+                var tick = DateTime.Now.Ticks.ToString();
+                var vnpay = new VNPayLibrary();
+                vnpay.AddRequestData("vnp_Version", _config["VnPay:Version"]);
+                vnpay.AddRequestData("vnp_Command", _config["VnPay:Command"]);
+                vnpay.AddRequestData("vnp_TmnCode", _config["VnPay:TmnCode"]);
+                vnpay.AddRequestData("vnp_Amount", (model.Amount * 100).ToString());
+                vnpay.AddRequestData("vnp_CreateDate", model.CreateDate.ToString("yyyyMMddHHmmss"));
+                vnpay.AddRequestData("vnp_CurrCode", _config["VnPay:CurrCode"]);
+                vnpay.AddRequestData("vnp_IpAddr", Utils.GetIpAddress(context));
+                vnpay.AddRequestData("vnp_Locale", _config["VnPay:Locale"]);
+                vnpay.AddRequestData("vnp_OrderInfo", "Thanh toán cho khóa học: " + model.Course.CourseId.ToString() + "." + model.Course.CourseName);
+                vnpay.AddRequestData("vnp_OrderType", "other");
+                vnpay.AddRequestData("vnp_ReturnUrl", _config["VnPay:PaymentBackReturnUrl"]);
+                vnpay.AddRequestData("vnp_TxnRef", tick);
+                paymentUrl = vnpay.CreateRequestUrl(_config["VnPay:BaseUrl"], _config["VnPay:HashSecret"]);
+            }
+            else
+            {
+                var tick = DateTime.Now.Ticks.ToString();
+                var vnpay = new VNPayLibrary();
+                vnpay.AddRequestData("vnp_Version", _config["VnPay:Version"]);
+                vnpay.AddRequestData("vnp_Command", _config["VnPay:Command"]);
+                vnpay.AddRequestData("vnp_TmnCode", _config["VnPay:TmnCode"]);
+                vnpay.AddRequestData("vnp_Amount", (model.Amount * 100).ToString());
+                vnpay.AddRequestData("vnp_CreateDate", model.CreateDate.ToString("yyyyMMddHHmmss"));
+                vnpay.AddRequestData("vnp_CurrCode", _config["VnPay:CurrCode"]);
+                vnpay.AddRequestData("vnp_IpAddr", Utils.GetIpAddress(context));
+                vnpay.AddRequestData("vnp_Locale", _config["VnPay:Locale"]);
+                vnpay.AddRequestData("vnp_OrderInfo", "Xử lí yêu cầu cho giáo viên: " + model.WithdrawRequest.WithdrawRequestID);
+                vnpay.AddRequestData("vnp_OrderType", "other");
+                vnpay.AddRequestData("vnp_ReturnUrl", _config["VnPay:WithdrawBackReturnUrl"]);
+                vnpay.AddRequestData("vnp_TxnRef", tick);
+                paymentUrl = vnpay.CreateRequestUrl(_config["VnPay:BaseUrl"], _config["VnPay:HashSecret"]);
+            }
+            
             return paymentUrl;
         }
 
@@ -55,10 +78,19 @@ namespace ViLearning.Services.Repository
                     Success = false
                 };
             }
+            string orderDescription = string.Empty;
+            if (vnp_OrderInfo.StartsWith("Thanh toán cho khóa học: "))
+            {
+                orderDescription = vnp_OrderInfo.Split(new string[] { "Thanh toán cho khóa học: " }, StringSplitOptions.None)[1].Split('.')[0];
+            }
+            else if (vnp_OrderInfo.StartsWith("Xử lí yêu cầu cho giáo viên: "))
+            {
+                orderDescription = vnp_OrderInfo.Split(new string[] { "Xử lí yêu cầu cho giáo viên: " }, StringSplitOptions.None)[1];
+            }
             return new VnPaymentResponseModel { 
                 Success = true,
                 PaymentMethod = "VnPay",
-                OrderDescription = vnp_OrderInfo.Split(new string[] { "Thanh toán cho khóa học: " }, StringSplitOptions.None)[1].Split('.')[0],
+                OrderDescription = orderDescription,
                 OrderId = vnp_OrderId.ToString(),
                 TransactionId = vnp_TransactionId.ToString(),
                 Token = vnp_SecureHash,

@@ -1,10 +1,9 @@
-﻿@model List<ApplicationUser>
-
+﻿@model List<WithdrawRequest>
 <div class="card shadow border-0 mt-4">
     <div class="card-header bg-secondary bg-gradient ml-0 py-0">
         <div class="row">
             <div class="col-12 text-center">
-                <h2 class="text-white py-2">Danh sách người dùng</h2>
+                <h2 class="text-dark py-2">Danh sách yêu cầu rút tiền</h2>
             </div>
         </div>
     </div>
@@ -12,17 +11,15 @@
         <table id="tblData" class="table table-bordered table-striped" width="100%">
             <thead>
                 <tr>
-                    <th>Email</th>
-                    <th>Họ và tên</th>
-                    <th>Ngày sinh(MM/dd/yyyy)</th>
-                    <th>Vai trò</th>
-                    <th>Trạng thái tín chỉ</th>
-                    <th></th>
+                    <th>Email của giáo viên</th>               
+                    <th>Ngày yêu cầu</th>
+                    <th>Số tiền rút</th>
+                    <th>Hành động</th>
                 </tr>
             </thead>
         </table>
     </div>
 </div>
-@section Scripts{
-    <script src="~/js/user.js"></script>
+@section Scripts {
+    <script src="~/js/withdraw.js"></script>
 }

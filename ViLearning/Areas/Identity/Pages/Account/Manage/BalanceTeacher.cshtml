@@ -1,0 +1,65 @@
+﻿@page
+@model BalanceTeacherModel
+@{
+    ViewData["Title"] = "Thông tin các nhân";
+    ViewData["ActivePage"] = ManageNavPages.Index;
+}
+<h3 class="mt-5">@ViewData["Title"]</h3>
+@* <partial name="_StatusMessage" for="StatusMessage" /> *@
+<div class="row">
+    <div class="col-md-3 bg-white rounded-md shadow-md p-7 flex flex-col gap-4">
+        <div><a asp-page="/Account/Manage/Index" class="text-decoration-none font-weight-bold">Thông tin cá nhân</a></div>
+        <div><a asp-page="/Account/Manage/ChangePassword" class="text-decoration-none font-weight-bold">Thay đổi mật khẩu</a></div>
+        @if (Model.Role.Contains("Student"))
+        {
+            <div><a asp-page="/Account/Manage/CertificateSubmit" class="text-decoration-none font-weight-bold">Nộp chứng chỉ giáo viên</a></div>
+        }
+        @if (Model.Role.Contains("Teacher"))
+        {
+            <div><a asp-page="/Account/Manage/BalanceTeacher" class="text-info text-decoration-none font-weight-bold">Số dư</a></div>
+        }
+    </div>
+    <div class="col-md-6">
+        <form method="post">
+            <div class="form-group">
+                <label class="form-label">Số dư hiện tại: @Model.Balance.ToString("N0") VNĐ</label>
+            </div>
+            <div class="form-group">
+                <input asp-for="Input.Withdraw" class="form-control" placeholder="Nhập số dư muốn rút" />
+                <span asp-validation-for="Input.Withdraw" class="text-danger"></span>
+            </div>
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Yêu cầu rút tiền</button>
+        </form>
+
+        <h4 class="mt-5">Danh sách yêu cầu rút tiền</h4>
+
+        @if (Model.WithdrawRequests != null && Model.WithdrawRequests.Any())
+        {
+            <table class="table table-bordered table-striped mt-3">
+                <thead>
+                    <tr>
+                        <th>Ngày yêu cầu</th>
+                        <th>Số tiền</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var request in Model.WithdrawRequests)
+                    {
+                        <tr>
+                            <td>@request.RequestDay.ToString("dd/MM/yyyy")</td>
+                            <td>@request.RequestMoney.ToString("N0") VNĐ</td>
+                            <td>@(request.Status ? "Đã hoàn thành" + @request.CompleteDay?.ToString("dd/MM/yyyy") : "Đang xử lí")</td>
+                            <td></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

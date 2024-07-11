@@ -133,6 +133,7 @@ namespace ViLearning.Areas.Identity.Pages.Account
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 user.TeacherCertificate = false;
+                user.Balance = 0;
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
