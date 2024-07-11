@@ -126,7 +126,7 @@ namespace ViLearning.Areas.Student.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             string userId = "";
-            if (user == null)
+            if (user != null)
             {
                 userId = user.Id;
             }
