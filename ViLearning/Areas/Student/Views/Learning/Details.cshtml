@@ -129,8 +129,37 @@
         </div>
         <div id="overlayHistory" class="overlay-section">
             <div class="overlay-content">
+                <!-- Add your test history section content here -->
+                <h1>Test History</h1>
 
-                <!-- Add your ranking section content here -->
+                @if (Model.TestHistory.Count > 0)
+                {
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Thời gian nộp</th>
+                                <th>Điểm số</th>
+                                <th>Thời gian làm bài</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var testDetail in Model.TestHistory)
+                            {
+                                <tr>
+                                    <td>@(Model.TestHistory.IndexOf(testDetail) + 1)</td>
+                                    <td>@(testDetail.StartTime + testDetail.Duration)</td>
+                                    <td>@testDetail.Mark</td>
+                                    <td>@testDetail.Duration.ToString(@"hh\:mm\:ss")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p>Không có dữ liệu lịch sử làm test.</p>
+                }
             </div>
         </div>
 
