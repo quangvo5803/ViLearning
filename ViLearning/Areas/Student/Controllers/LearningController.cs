@@ -16,7 +16,7 @@ namespace ViLearning.Areas.Student.Controllers
 	public class LearningController : Controller
 	{
 		private readonly IUnitOfWork _unitOfWork;
-		private readonly List<string> _bannedWords = new List<string> { "fuck", "999", "888" };
+		private readonly List<string> _bannedWords = new List<string> { "fake", "999", "888" };
 
         public LearningController(IUnitOfWork unitOfWork)
         {

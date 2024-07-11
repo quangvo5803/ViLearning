@@ -1,30 +1,32 @@
-﻿@using System.Security.Claims
-@model LearningMaterial
+﻿@model LearningMaterial
 @{
-	Layout = null;
+    Layout = null;
 }
 
-    
+
 <head>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-	<link rel="stylesheet" href="~/css/Student/LearningMaterial.css">
-	<script src="https://kit.fontawesome.com/db43418352.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/Student/LearningMaterial.css">
+    <script src="https://kit.fontawesome.com/db43418352.js" crossorigin="anonymous"></script>
 </head>
 
 <body style="overflow-y: hidden">
-	<div class="d-flex flex-column min-vh-100" id="content" style="width:100vw; overflow-x:hidden">
-		<header class="header">
-			<a class="back-icon" asp-controller="Home" asp-action="Details" asp-route-CourseId="@Model.Course.CourseId"><i class="fa-solid fa-chevron-left"></i></a>
-			<div class="course-title">@Model.Course.CourseName</div>
-		</header>
+    <div class="d-flex flex-column min-vh-100" id="content" style="width:100vw; overflow-x:hidden">
+        <header class="header">
+            <a class="back-icon" asp-controller="Home" asp-action="Details" asp-route-CourseId="@Model.Course.CourseId"><i class="fa-solid fa-chevron-left"></i></a>
+            <div class="course-title">@Model.Course.CourseName</div>
+        </header>
 
-        <div class="container-fluid flex-grow-1"  style="position:relative">
-            <div  class=" row flex-nowrap" style="position:absolute; height:100%; min-width:100%">
+        <div class="container-fluid flex-grow-1" style="position:relative">
+            <div class=" row flex-nowrap" style="position:absolute; height:100%; min-width:100%">
                 <aside class="sidebar col-auto" id="sidebar">
                     <a class="menu-item" id="learn-icon" style="color:white">
                         <i class="fa-brands fa-leanpub tt" data-bs-toggle="tooltip" data-bs-placement="top" title="Learning Material"></i>
                     </a>
-                    <a class="menu-item" id="comment-icon" style="color:white">
+                    @* <a class="menu-item" id="comment-icon" style="color:white" asp-controller="Comments" asp-action="LessonDetails" asp-route-CourseName="@Model.Course.CourseName" asp-route-LessonName="@Model.Lesson.LessonName" asp-route-id="@Model.Lesson.LessonId" >
+                        <i class="fa-regular fa-comments tt" data-bs-toggle="tooltip" data-bs-placement="top" title="Discuss"></i>
+                    </a> *@
+                    <a class="menu-item" id="comment-icon" style="color:white" asp-controller="Comments" asp-action="LessonDetails" asp-route-CourseName="@Model.Course.CourseName" asp-route-LessonName="@Model.Lesson.LessonName" asp-route-id="@Model.Lesson.LessonId">
                         <i class="fa-regular fa-comments tt" data-bs-toggle="tooltip" data-bs-placement="top" title="Discuss"></i>
                     </a>
                     <a class="menu-item" id="test-icon" asp-action="ViewTestInfo" asp-route-lessonId="@Model.Lesson.LessonId" asp-controller="Test" style="color:white">
@@ -36,7 +38,7 @@
                     <a class="menu-item" id="history-icon" style="color:white">
                         <i class="fa-solid fa-clock-rotate-left" data-bs-toggle="tooltip" data-bs-placement="top" title="Test History"></i>
                     </a>
-                   
+
                 </aside>
 
                 <main id="main-content" class="main-content col" style="height: 100%">
@@ -67,8 +69,9 @@
                                 <a asp-controller="Learning" asp-action="Details" asp-route-courseId="@Model.Course.CourseId" asp-route-lessonNo="@lesson.LessonNo" style="color: #212529;display: block; height: inherit; width:inherit; line-height: 3.5rem; text-decoration:none">
                                     @if (lesson.Tests == null)
                                     {
-                                        
-                                    } else
+
+                                    }
+                                    else
                                     {
                                         double max = -1;
                                         foreach (TestDetail test in lesson.Tests)
@@ -78,7 +81,8 @@
                                         if (max >= 8)
                                         {
                                             <span class="lesson-status">●</span>
-                                        } else
+                                        }
+                                        else
                                         {
                                             <span class="lesson-status" style="color:red">●</span>
                                         }
@@ -121,7 +125,7 @@
         </div>
         <div id="overlayComment" class="overlay-section">
             <div class="overlay-content">
-                
+
                 <!-- Add your comment section content here -->
             </div>
         </div>
@@ -200,18 +204,24 @@
             </div>
         </div>
 
-        <footer class="footer" style="position: sticky; bottom: 0"> 
-            @if (Model.Lesson.LessonNo == 1) {
-                <a class="nav-button" style="text-decoration:none" disabled ="disabled"><i class="fa-solid fa-angle-left"></i> Previous</a>
-            } else {
+        <footer class="footer" style="position: sticky; bottom: 0">
+            @if (Model.Lesson.LessonNo == 1)
+            {
+                <a class="nav-button" style="text-decoration:none" disabled="disabled"><i class="fa-solid fa-angle-left"></i> Previous</a>
+            }
+            else
+            {
                 <a asp-controller="Learning" asp-action="Details" asp-route-courseId="@Model.Course.CourseId" asp-route-lessonNo="@(Model.Lesson.LessonNo - 1)" class="nav-button" style="text-decoration:none" disabled="disabled"><i class="fa-solid fa-angle-left"></i> Previous</a>
             }
-            @if (Model.Lesson.LessonNo == Model.Course.Lesson.Count()) {
-                <a  class="nav-button" style="text-decoration:none" disabled ="disabled">Next <i class="fa-solid fa-angle-right"></i></a>
-            } else {
+            @if (Model.Lesson.LessonNo == Model.Course.Lesson.Count())
+            {
+                <a class="nav-button" style="text-decoration:none" disabled="disabled">Next <i class="fa-solid fa-angle-right"></i></a>
+            }
+            else
+            {
                 <a asp-controller="Learning" asp-action="Details" asp-route-courseId="@Model.Course.CourseId" asp-route-lessonNo="@(Model.Lesson.LessonNo + 1)" class="nav-button" style="text-decoration:none">Next <i class="fa-solid fa-angle-right"></i></a>
             }
-            
+
             <div class="chat-icon"><i class="fa-solid fa-headset"></i></div>
         </footer>
     </div>
@@ -232,7 +242,7 @@
             });
         });
 
-        
+
     </script>
 }
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
@@ -266,7 +276,7 @@
             });
         }
         if (learnLink && commentLink && rankingLink && overlayComment && overlayRanking && sidebar) {
-            commentLink.addEventListener('click', function (event) {
+            @* commentLink.addEventListener('click', function (event) {
                 event.preventDefault();
                 if (overlayComment.style.display === 'block') {
                     overlayComment.style.display = 'none';
@@ -276,7 +286,7 @@
                     overlayRanking.style.display = 'none'; // Hide the other overlay
                     overlayHistory.style.display = 'none';
                 }
-            });
+            }); *@
 
             rankingLink.addEventListener('click', function (event) {
                 event.preventDefault();
@@ -309,7 +319,7 @@
         } else {
             console.error('One or more elements not found.');
         }
-        
+
 
         //resizer
         var isResizing = false;
@@ -339,7 +349,7 @@
                 document.removeEventListener('mouseup', onMouseUp);
             }
         }
-    
+
     });
-    
+
 </script>
