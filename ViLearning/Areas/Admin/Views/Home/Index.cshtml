@@ -1,1 +1,193 @@
-﻿<h1>Admin page</h1>
+﻿<div class="row">
+    <div class="text-center col-md-4 mb-5" style="align-items:center">
+        <h3 class="mt-5"><a class="nav-link text-dark" asp-area="Admin" asp-controller="User" asp-action="Index">Quản lí Người Dùng</a></h3>
+        <div class="mt-2" id="totalUsers"></div>
+        <canvas class="mt-2" id="userChart" width="150" height="150"></canvas>
+    </div>
+    <div class="text-center col-md-4 mb-5">
+        <h3 class="mt-5"><a class="nav-link text-dark" asp-area="Admin" asp-controller="ManagerTeacherWithdraw" asp-action="Index">Doanh thu </a></h3>
+        <div class="mt-2" id="totalRevenue"></div>
+        <canvas class="mt-2" id="profitChart" width="150" height="150"></canvas>
+    </div>
+    <div class="text-center col-md-4 mb-5" style="align-items:center">
+        <h3 class="mt-5"><a class="nav-link text-dark" asp-area="Admin" asp-controller="ManageCourse" asp-action="Index">Quản lí khóa học</a></h3>
+        <div class="mt-2" id="totalCourse"></div>
+        <canvas class="mt-2" id="courseChart" width="150" height="150"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    //User chart
+    function formatCurrency(value) {
+        return value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+    }
+    async function fetchUserCounts() {
+        const response = await fetch('/Admin/Home/GetUserCounts');
+        const data = await response.json();
+        return data;
+    }
+
+    async function renderUserChart() {
+        const data = await fetchUserCounts();
+
+        const ctx = document.getElementById('userChart').getContext('2d');
+        const labels = ['Học sinh', 'Giáo viên'];
+        const values = [data.students, data.teachers];
+        const totalUsers = values.reduce((a, b) => a + b, 0);
+
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Number of Users',
+                    data: values,
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)'
+                    ],
+                    hoverOffset: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                return tooltipItem.label + ': ' + tooltipItem.raw;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        document.getElementById('totalUsers').innerText = `Số người dùng: ${totalUsers}`;
+    }
+    //Profit chart
+    async function fetchMonthlyProfit() {
+        const response = await fetch('/Admin/Home/GetMonthlyProfit');
+        const data = await response.json();
+        return data;
+    }
+
+    async function renderProfitChart() {
+        const data = await fetchMonthlyProfit();
+
+        const ctx = document.getElementById('profitChart').getContext('2d');
+        const labels = data.months; // Array of month names
+        const profits = data.profits; // Array of profits for each month
+        const revenues = data.revenues; // Array of revenues for each month
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Lợi nhuận',
+                    data: profits,
+                    backgroundColor: 'rgb(54, 162, 235)',
+                    hoverOffset: 2
+                },
+                {
+                    label: 'Doanh thu',
+                    data: revenues,
+                    backgroundColor: 'rgb(75, 192, 192)',
+                    hoverOffset: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                return tooltipItem.dataset.label + ': ' + tooltipItem.raw;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true
+                    },
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        const totalProfit = revenues.reduce((a, b) => a + b, 0);
+        document.getElementById('totalRevenue').innerText = `Tổng lợi nhuận: ${formatCurrency(totalProfit)}`;
+    }
+    //Course chart
+    async function fetchCourseCounts() {
+        const response = await fetch('/Admin/Home/GetCourse');
+        const data = await response.json();
+        return data;
+    }
+
+    async function renderCourseChart() {
+        const data = await fetchCourseCounts();
+
+        const ctx = document.getElementById('courseChart').getContext('2d');
+        const labels = ['Đang đợi duyệt', 'Đã duyệt'];
+        const values = [data.pendingCourse, data.approvedCourse];
+        const totalCourse = values.reduce((a, b) => a + b, 0);
+
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Number of course',
+                    data: values,
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)'
+                    ],
+                    hoverOffset: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                return tooltipItem.label + ': ' + tooltipItem.raw;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        document.getElementById('totalCourse').innerText = `Tổng số khóa học: ${totalCourse}`;
+    }
+
+    renderCourseChart();
+    renderUserChart();
+    renderProfitChart();
+</script>
+<style>
+    .container{
+        max-width:1920px;
+    }
+    #userChart, #profitChart,#courseChart {
+        width: 400px !important;
+        height: 400px !important;
+        margin: auto
+    }
+
+</style>

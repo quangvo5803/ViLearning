@@ -1,4 +1,5 @@
 ﻿using ViLearning.Data;
+using ViLearning.Models;
 using ViLearning.Services.Repository.IRepository;
 
 namespace ViLearning.Services.Repository
@@ -19,6 +20,8 @@ namespace ViLearning.Services.Repository
 
         public IInvoiceRepository Invoice { get; private set; }
 
+        public IWithdrawRequestRepositoy WithdrawRequest {  get; private set; }
+
 
         private ApplicationDBContext _db;
 
@@ -37,6 +40,7 @@ namespace ViLearning.Services.Repository
             Question = new QuestionRepository(_db);
             StudentCertificate = new StudentCertificateRepository(_db);
             Invoice = new InvoiceRepository(_db);
+            WithdrawRequest = new WithdrawRequestRepositoy(_db);
         }
 
         public void Save()

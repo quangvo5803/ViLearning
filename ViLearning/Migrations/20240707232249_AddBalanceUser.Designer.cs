@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ViLearning.Data;
 
@@ -11,9 +12,11 @@ using ViLearning.Data;
 namespace ViLearning.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240707232249_AddBalanceUser")]
+    partial class AddBalanceUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -582,37 +585,6 @@ namespace ViLearning.Migrations
                     b.ToTable("TestDetails");
                 });
 
-            modelBuilder.Entity("ViLearning.Models.WithdrawRequest", b =>
-                {
-                    b.Property<int>("WithdrawRequestID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WithdrawRequestID"));
-
-                    b.Property<DateTime?>("CompleteDay")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("RequestDay")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double>("RequestMoney")
-                        .HasColumnType("float");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("WithdrawRequestID");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("WithdrawRequests");
-                });
-
             modelBuilder.Entity("ViLearning.Models.ApplicationUser", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
@@ -863,17 +835,6 @@ namespace ViLearning.Migrations
                     b.Navigation("ApplicationUser");
 
                     b.Navigation("Lesson");
-                });
-
-            modelBuilder.Entity("ViLearning.Models.WithdrawRequest", b =>
-                {
-                    b.HasOne("ViLearning.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ApplicationUser");
                 });
 
             modelBuilder.Entity("ViLearning.Models.Comment", b =>

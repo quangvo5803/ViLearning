@@ -22,16 +22,17 @@ namespace ViLearning.Data
         public DbSet<TestDetail> TestDetails { get; set; }
         public DbSet<Content> Contents { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
+        public DbSet<WithdrawRequest> WithdrawRequests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-           
 
 
 
 
+            
             // Configuration for StudentCertificate
             modelBuilder.Entity<StudentCertificate>()
                 .HasKey(sc => new { sc.CourseCertificateId, sc.UserId });
@@ -86,6 +87,9 @@ namespace ViLearning.Data
                 .WithOne(c => c.Lesson)
                 .HasForeignKey(c => c.LessonId)
                 .OnDelete(DeleteBehavior.Cascade); // Allow cascading deletes from Lesson to Comments
+            modelBuilder.Entity<ApplicationUser>()
+                .Property(u => u.Balance)
+                .HasDefaultValue(0);
         }
     }
 }
