@@ -11,65 +11,67 @@
 	</ol>
 </nav>
 <div class="container mt-5">
-    <div class="row course-info justify-content-center ">
-        <div class="col-sm-7">
-            <div style="width: 800px; height: 400px; background-image: url('@Model.Course.CoverImgUrl'); background-size: cover; background-position: center;"></div>
-            <h3 class="mt-5">@Model.Course.CourseName</h3>
-            <hr />
-            <p>@Model.Course.Description</p>
-            <div class="course-lessons">
-                <div class="chapter">
-                    <h4>Nội dung khóa học:</h4>
-                    <ul>
-                        @foreach(var lesson in Model.Lessons)
-                        {
-                        <a asp-controller="Home" asp-action="Index" class="text-decoration-none">
-                        <li>
-                                <span class="lesson-title">@lesson.LessonName</span>
-                            <span class="lesson-status"><i class="bi bi-circle"></i></span>
-                        </li>
-                        </a>
-                        }
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="course-details">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h5 style="margin:0"> Giáo viên: </h5>
-                    <p>@(Model.Course.ApplicationUser.FullName == null ? @Model.Course.ApplicationUser.Email : @Model.Course.ApplicationUser.FullName )</p>
-                </div>
-            </div>
-            <div class="course-details">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h5>Giá: </h5>
-                    <p>@Model.Course.Price?.ToString("N0") VNĐ</p>
-                </div>
-            </div>
-            <div class="course-details">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h5>Số bài học: </h5>
-                    <p>@Model.Lessons.Count()</p>
-                </div>
-            </div>
-            @if(Model.Invoice == null)
-            {
-                <div class="mt-4">
-                    <a asp-controller="Checkout" asp-action="Checkout" asp-route-CourseId="@Model.Course.CourseId" class="btn btn-success d-flex justify-content-center">Đăng kí khóa học</a>
-                </div>
-            }
-            else
-            {
-                <div class="mt-4">
-                    <a asp-controller="Learning" asp-action="Details" asp-route-courseId="@Model.Course.CourseId" asp-route-lessonNo="1" class="btn btn-success d-flex justify-content-center">Vào học ngay</a>
-                </div>
-            }
-            
-        </div>
-    </div>
+	<div class="row course-info justify-content-center ">
+		<div class="col-sm-7">
+			<div style="width: 800px; height: 400px; background-image: url('@Model.Course.CoverImgUrl'); background-size: cover; background-position: center;"></div>
+			<h3 class="mt-5">@Model.Course.CourseName</h3>
+			<hr />
+			<p>@Model.Course.Description</p>
+			<div class="course-lessons">
+				<div class="chapter">
+					<h4>Nội dung khóa học:</h4>
+					<ul>
+						@foreach (var lesson in Model.Lessons)
+						{
+							<a asp-controller="Home" asp-action="Index" class="text-decoration-none">
+							<li>
+								<span class="lesson-title">@lesson.LessonName</span>
+								<span class="lesson-status"><i class="bi bi-circle"></i></span>
+							</li>
+							</a>
+						}
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="course-details">
+				<div class="d-flex justify-content-between align-items-center">
+					<h5 style="margin:0"> Giáo viên: </h5>
+					<p>@(Model.Course.ApplicationUser.FullName == null ? @Model.Course.ApplicationUser.Email : @Model.Course.ApplicationUser.FullName)</p>
+				</div>
+			</div>
+			<div class="course-details">
+				<div class="d-flex justify-content-between align-items-center">
+					<h5>Giá: </h5>
+					<p>@Model.Course.Price?.ToString("N0") VNĐ</p>
+				</div>
+			</div>
+			<div class="course-details">
+				<div class="d-flex justify-content-between align-items-center">
+					<h5>Số bài học: </h5>
+					<p>@Model.Lessons.Count()</p>
+				</div>
+			</div>
+			@if (Model.Invoice == null)
+			{
+				<div class="mt-4">
+					<a asp-controller="Checkout" asp-action="Checkout" asp-route-CourseId="@Model.Course.CourseId" class="btn btn-success d-flex justify-content-center">Đăng kí khóa học</a>
+				</div>
+			}
+			else
+			{
+
+				<div class="mt-4">
+					<a asp-controller="Learning" asp-action="Details" asp-route-courseId="@Model.Course.CourseId" asp-route-lessonNo="1" class="btn btn-success d-flex justify-content-center">Vào học ngay</a>
+				</div>
+
+			}
+
+		</div>
+	</div>
 </div>
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/Student/CourseDetails.css">
+	<link rel="stylesheet" href="~/css/Student/CourseDetails.css">
 }

@@ -1,131 +1,124 @@
-﻿@model LearningMaterial
+﻿@using System.Security.Claims
+@model LearningMaterial
 @{
-    Layout = null;
+	Layout = null;
 }
 <head>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="~/css/Student/LearningMaterial.css">
-    <script src="https://kit.fontawesome.com/db43418352.js" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="~/css/Student/LearningMaterial.css">
+	<script src="https://kit.fontawesome.com/db43418352.js" crossorigin="anonymous"></script>
 </head>
 
 <body style="overflow-y: hidden">
-    <div class="d-flex flex-column min-vh-100" id="content" style="width:100vw; overflow-x:hidden">
-        <header class="header">
-            <a class="back-icon" asp-controller="Home" asp-action="Details" asp-route-CourseId="@Model.Course.CourseId"><i class="fa-solid fa-chevron-left"></i></a>
-            <div class="course-title">@Model.Course.CourseName</div>
-        </header>
+	<div class="d-flex flex-column min-vh-100" id="content" style="width:100vw; overflow-x:hidden">
+		<header class="header">
+			<a class="back-icon" asp-controller="Home" asp-action="Details" asp-route-CourseId="@Model.Course.CourseId"><i class="fa-solid fa-chevron-left"></i></a>
+			<div class="course-title">@Model.Course.CourseName</div>
+		</header>
 
-        <div class="container-fluid flex-grow-1" >
-            <div class="row flex-nowrap" style="height:inherit">
-                <aside class="sidebar col-auto">
-                    <div class="menu-item" id="learn-icon">
-                        <i class="fa-brands fa-leanpub tt" data-bs-toggle="tooltip" data-bs-placement="top" title="Learning Material"></i>
-                    </div>
-                    <div class="menu-item" id="comment-icon">
-                        <i class="fa-regular fa-comments tt" data-bs-toggle="tooltip" data-bs-placement="top" title="Discuss"></i>
-                    </div>
-                    <div class="menu-item" id="test-icon">
-                        <i class="fa-solid fa-file-circle-question tt" data-bs-toggle="tooltip" data-bs-placement="top" title="Do Test"></i>
-                    </div>
-                    <div class="menu-item" id="ranking-icon">
-                        <i class="fa-solid fa-ranking-star tt" data-bs-toggle="tooltip" data-bs-placement="top" title="Ranking"></i>
-                    </div>
-                </aside>
+		<div class="container-fluid flex-grow-1">
+			<div class="row flex-nowrap" style="height:inherit">
+				<aside class="sidebar col-auto">
+					<div class="menu-item" id="learn-icon">
+						<i class="fa-brands fa-leanpub tt" data-bs-toggle="tooltip" data-bs-placement="top" title="Learning Material"></i>
+					</div>
+					<div class="menu-item" id="comment-icon">
+						<a asp-controller="Comments" asp-action="LessonDetails" asp-route-CourseName="@Model.Course.CourseName" asp-route-LessonName="@Model.Lesson.LessonName" asp-route-id="@Model.Lesson.LessonId" class="text-decoration-none">
+							
+						<i class="fa-regular fa-comments tt" data-bs-toggle="tooltip" data-bs-placement="top" title="Discuss"></i>
+						</a>
+					</div>
+					<div class="menu-item" id="test-icon">
+						<i class="fa-solid fa-file-circle-question tt" data-bs-toggle="tooltip" data-bs-placement="top" title="Do Test"></i>
+					</div>
+					<div class="menu-item" id="ranking-icon">
+						<i class="fa-solid fa-ranking-star tt" data-bs-toggle="tooltip" data-bs-placement="top" title="Ranking"></i>
+					</div>
+				</aside>
 
-                <main class="main-content col" style="height: 82vh">
-                    <div class="row">
-                        <div class="col">
-                            @Html.Raw(Model.Lesson.Content)
-                        </div>
-                    </div>
-                    <center>
-                        <div class="row mb-3">
-                            <div class="col">
-                                <video width="900" height="600" controls id="video">
-                                    @* <source src="@ViewContext.HttpContext.Request.Path /videoStream/@Model.Video" type="video/mp4">
-                                    <source src="@Model.Video" type="video/ogg">
-                                    Your browser does not support the video tag. *@
-                                </video>
-                            </div>
-                        </div>
-                    </center>
-                </main>
+				<main class="main-content col" id="main-content" style="height: 82vh">
+					<!-- Learning Material Section -->
+					<div id="learning-material-section">
+						<div class="row">
+							<div class="col">
+								@Html.Raw(Model.Lesson.Content)
+							</div>
+						</div>
+						<center>
+							<div class="row mb-3">
+								<div class="col">
+									<video width="900" height="600" controls id="video">
+										@* <source src="@ViewContext.HttpContext.Request.Path /videoStream/@Model.Video" type="video/mp4">
+										<source src="@Model.Video" type="video/ogg">
+										Your browser does not support the video tag. *@
+									</video>
+								</div>
+							</div>
+						</center>
+					</div>
 
-                <aside class="lesson-list col-3">
-                    @foreach (Lesson lesson in Model.Course.Lesson)
-                    {
-                        @if (lesson.LessonId != Model.Lesson.LessonId)
-                        {
-                            <div class="lesson-item" style="text-emphasis-color:white; text-decoration:none">
-                                <a asp-controller="Learning" asp-action="Details" asp-route-courseId="@Model.Course.CourseId" asp-route-lessonNo="@lesson.LessonNo" style="color: #212529;display: block; height: inherit; width:inherit; line-height: 3.5rem; text-decoration:none">
-                                    <span class="lesson-name" data-bs-toggle="tooltip" data-bs-placement="top" title="@lesson.LessonName">@lesson.LessonName</span>
-                                    <span class="lesson-status">●</span>
-                                </a>
-                                
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="lesson-item" style="background-color:RGB(255 244 215)">
-                                <a asp-controller="Learning" asp-action="Details" asp-route-courseId="@Model.Course.CourseId" asp-route-lessonNo="@lesson.LessonNo" style="color: #212529;display: block; height: inherit; width:inherit; line-height: 3.5rem; text-decoration:none">
-                                    <span class="lesson-name" data-bs-toggle="tooltip" data-bs-placement="top" title="@lesson.LessonName">@lesson.LessonName</span>
-                                    <span class="lesson-status">●</span>
-                                </a>
-                            </div>
-                        }
-                    }
-                </aside>
-            </div>
-        </div>
+					
+				</main>
 
-        <footer class="footer" style="position: sticky; bottom: 0"> 
-            @if (Model.Lesson.LessonNo == 1) {
-                <a class="nav-button" style="text-decoration:none" disabled ="disabled"><i class="fa-solid fa-angle-left"></i> Previous</a>
-            } else {
-                <a asp-controller="Learning" asp-action="Details" asp-route-courseId="@Model.Course.CourseId" asp-route-lessonNo="@(Model.Lesson.LessonNo - 1)" class="nav-button" style="text-decoration:none" disabled="disabled"><i class="fa-solid fa-angle-left"></i> Previous</a>
-            }
-            @if (Model.Lesson.LessonNo == Model.Course.Lesson.Count()) {
-                <a  class="nav-button" style="text-decoration:none" disabled ="disabled">Next <i class="fa-solid fa-angle-right"></i></a>
-            } else {
-                <a asp-controller="Learning" asp-action="Details" asp-route-courseId="@Model.Course.CourseId" asp-route-lessonNo="@(Model.Lesson.LessonNo + 1)" class="nav-button" style="text-decoration:none">Next <i class="fa-solid fa-angle-right"></i></a>
-            }
-            
-            <div class="chat-icon"><i class="fa-solid fa-headset"></i></div>
-        </footer>
-    </div>
+				<aside class="lesson-list col-3">
+					@foreach (Lesson lesson in Model.Course.Lesson)
+					{
+						@if (lesson.LessonId != Model.Lesson.LessonId)
+						{
+							<div class="lesson-item" style="text-emphasis-color:white; text-decoration:none">
+								<a asp-controller="Learning" asp-action="Details" asp-route-courseId="@Model.Course.CourseId" asp-route-lessonNo="@lesson.LessonNo" style="color: #212529;display: block; height: inherit; width:inherit; line-height: 3.5rem; text-decoration:none">
+									<span class="lesson-name" data-bs-toggle="tooltip" data-bs-placement="top" title="@lesson.LessonName">@lesson.LessonName</span>
+									<span class="lesson-status">●</span>
+								</a>
+							</div>
+						}
+						else
+						{
+							<div class="lesson-item" style="background-color:RGB(255 244 215)">
+								<a asp-controller="Learning" asp-action="Details" asp-route-courseId="@Model.Course.CourseId" asp-route-lessonNo="@lesson.LessonNo" style="color: #212529;display: block; height: inherit; width:inherit; line-height: 3.5rem; text-decoration:none">
+									<span class="lesson-name" data-bs-toggle="tooltip" data-bs-placement="top" title="@lesson.LessonName">@lesson.LessonName</span>
+									<span class="lesson-status">●</span>
+								</a>
+							</div>
+						}
+					}
+				</aside>
+			</div>
+		</div>
+
+		<footer class="footer" style="position: sticky; bottom: 0">
+			@if (Model.Lesson.LessonNo == 1)
+			{
+				<a class="nav-button" style="text-decoration:none" disabled="disabled"><i class="fa-solid fa-angle-left"></i> Previous</a>
+			}
+			else
+			{
+				<a asp-controller="Learning" asp-action="Details" asp-route-courseId="@Model.Course.CourseId" asp-route-lessonNo="@(Model.Lesson.LessonNo - 1)" class="nav-button" style="text-decoration:none"><i class="fa-solid fa-angle-left"></i> Previous</a>
+			}
+			@if (Model.Lesson.LessonNo == Model.Course.Lesson.Count())
+			{
+				<a class="nav-button" style="text-decoration:none" disabled="disabled">Next <i class="fa-solid fa-angle-right"></i></a>
+			}
+			else
+			{
+				<a asp-controller="Learning" asp-action="Details" asp-route-courseId="@Model.Course.CourseId" asp-route-lessonNo="@(Model.Lesson.LessonNo + 1)" class="nav-button" style="text-decoration:none">Next <i class="fa-solid fa-angle-right"></i></a>
+			}
+			<div class="chat-icon"><i class="fa-solid fa-headset"></i></div>
+		</footer>
+	</div>
 </body>
 
 @section Scripts {
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
-            });
-        });
-    </script>
-}
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', (event) => {
-        const playlistUrl = "@Model.Lesson.Video";
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+			var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+				return new bootstrap.Tooltip(tooltipTriggerEl);
+			});
+		});
+	</script>
 
-        if (Hls.isSupported()) {
-            const video = document.getElementById('video');
-            const hls = new Hls();
-            hls.loadSource(playlistUrl);
-            hls.attachMedia(video);
-            hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                video.play();
-            });
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            video.src = playlistUrl;
-            video.addEventListener('loadedmetadata', () => {
-                video.play();
-            });
-        }
-    });
-</script>
+}

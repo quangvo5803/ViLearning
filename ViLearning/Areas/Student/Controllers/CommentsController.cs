@@ -14,37 +14,14 @@ namespace ViLearning.Areas.Student.Controllers
     public class CommentsController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly List<string> _bannedWords = new List<string> { "fuck", "999", "888" };
+        private readonly List<string> _bannedWords = new List<string> { "fake", "999", "888" };
 
         public CommentsController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
-        [HttpGet]
-        public IActionResult Index()
-        {
-            var courses = _unitOfWork.Course.GetAll().Where(c => c.CourseStatus == CourseStatus.Published);
-            return View(courses);
-        }
-
-        public IActionResult IndexCourse(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var course = _unitOfWork.Course.Get(c => c.CourseId == id, includeProperties: "ApplicationUser,Subject");
-
-            if (course == null)
-            {
-                return NotFound();
-            }
-            _unitOfWork.Course.LoadCourse(course);
-
-            return View(course);
-        }
+  
 
         [HttpGet]
         public async Task<IActionResult> LessonDetails(string CourseName, string LessonName, int? id)
@@ -70,14 +47,10 @@ namespace ViLearning.Areas.Student.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddComment([FromBody] CommentLesson model)
+        public IActionResult AddComment([FromBody] CommentLesson? model)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (!ModelState.IsValid)
-            {
-                return Json(new { success = false, error = "Model state is invalid" });
-            }
 
             if (ContainsBannedWords(model.Comment.CommentContent))
             {
