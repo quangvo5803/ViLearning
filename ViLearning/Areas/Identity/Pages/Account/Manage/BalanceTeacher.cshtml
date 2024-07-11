@@ -49,7 +49,7 @@
                         <tr>
                             <td>@request.RequestDay.ToString("dd/MM/yyyy")</td>
                             <td>@request.RequestMoney.ToString("N0") VNĐ</td>
-                            <td>@(request.Status ? "Đã hoàn thành" + @request.CompleteDay?.ToString("dd/MM/yyyy") : "Đang xử lí")</td>
+                            <td>@(request.Status ? "Đã hoàn thành " + @request.CompleteDay?.ToString("dd/MM/yyyy") : "Đang xử lí")</td>
                             <td></td>
                         </tr>
                     }

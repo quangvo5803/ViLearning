@@ -1,17 +1,15 @@
 ﻿<div class="row">
-    <div class="text-center col-md-6 mb-5" style="align-items:center">
+    <div class="text-center col-md-4 mb-5" style="align-items:center">
         <h3 class="mt-5"><a class="nav-link text-dark" asp-area="Admin" asp-controller="User" asp-action="Index">Quản lí Người Dùng</a></h3>
         <div class="mt-2" id="totalUsers"></div>
         <canvas class="mt-2" id="userChart" width="150" height="150"></canvas>
     </div>
-    <div class="text-center col-md-6 mb-5">
+    <div class="text-center col-md-4 mb-5">
         <h3 class="mt-5"><a class="nav-link text-dark" asp-area="Admin" asp-controller="ManagerTeacherWithdraw" asp-action="Index">Doanh thu </a></h3>
         <div class="mt-2" id="totalRevenue"></div>
         <canvas class="mt-2" id="profitChart" width="150" height="150"></canvas>
     </div>
-</div>
-<div class="row mt-5">
-    <div class="text-center col-md-6 mb-5" style="align-items:center">
+    <div class="text-center col-md-4 mb-5" style="align-items:center">
         <h3 class="mt-5"><a class="nav-link text-dark" asp-area="Admin" asp-controller="ManageCourse" asp-action="Index">Quản lí khóa học</a></h3>
         <div class="mt-2" id="totalCourse"></div>
         <canvas class="mt-2" id="courseChart" width="150" height="150"></canvas>
@@ -187,8 +185,8 @@
         max-width:1920px;
     }
     #userChart, #profitChart,#courseChart {
-        width: 500px !important;
-        height: 500px !important;
+        width: 400px !important;
+        height: 400px !important;
         margin: auto
     }
 
