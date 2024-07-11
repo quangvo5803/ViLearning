@@ -3,7 +3,14 @@
     public class LearningMaterial
     {
         public Course Course { get; set; }
-        public Lesson? Lesson { get; set; }
-        public  Comment  Comment { get; set; }
+        
+        public Lesson Lesson { get; set; }
+
+        public List<TestDetail> TestRanking { get; set; }
+
+        public List<TestDetail> TestHistory { get; set; }
+
+        public List<Lesson> ListLesson { get; set; }
+
     }
 }

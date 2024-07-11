@@ -1,0 +1,124 @@
+﻿@model TestDetail
+
+@{
+    ViewData["Title"] = "Test Result";
+}
+
+@section Styles {
+    <style>
+        .clock-wrap {
+            width: 120px;
+            height: 120px;
+            margin-right: 25px;
+            position: relative;
+            border-radius: 25px;
+            background-color: #fff;
+            box-shadow: 0 0 15px rgba(0,0,0,.15);
+        }
+
+        .time-used {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 1px;
+            text-align: center;
+        }
+
+        .correct-answer {
+            background-color: lightgreen;
+        }
+
+        .wrong-answer {
+            background-color: lightcoral;
+        }
+
+        .right-answer {
+            background-color: lightblue;
+        }
+    </style>
+}
+
+<nav class="navbar sticky-top navbar-light bg-light">
+    <div class="mx-3">
+        <h5>@Model.Lesson.LessonNo .@Model.Lesson.LessonName</h5>
+        <p>Review Test • <span class="test-duration">@Model.Lesson.TestDuration</span> min <span>• @Model.Lesson.TotalQuestions total questions</span> </p>
+        <h3>Your score: @Model.Mark / @Model.Lesson.TotalQuestions</h3>
+    </div>
+    <div>
+        <div class="clock-wrap">
+            <h5 class="time-used">Time:<br /> @Model.Duration.ToString(@"hh\:mm\:ss")</h5>
+        </div>
+    </div>
+</nav>
+<div class="">
+    <div class="card text-dark bg-light border-success mb-3">
+        <div class="card-body p-4">
+            @if (Model.Questions.Count > 0)
+            {
+                @foreach (var question in Model.Questions)
+                {
+                    var selectedAnswer = Model.TestResult[question.QuestionId];
+                    var isCorrect = Model.QuestionsIsCorrect[question.QuestionId];
+
+                    <div class="question-item">
+                        <p><strong>Question @(Model.Questions.ToList().IndexOf(question) + 1): @question.QuestionName</strong></p>
+                        <div class="options-list">
+                            @foreach (var option in new[] { "A", "B", "C", "D" })
+                            {
+                                var optionText = (string)question.GetType().GetProperty($"Option{option}").GetValue(question);
+                                var isSelected = selectedAnswer == option;
+                                var isRightAnswer = question.RightAnswer == option;
+                                var cssClass = "";
+                                if (Model.Mark >= Model.Lesson.TotalQuestions * 0.8)
+                                {
+                                    cssClass = isSelected ? (isCorrect ? "correct-answer" : "wrong-answer") : (isRightAnswer ? "right-answer" : "");
+                                }
+                                else
+                                {
+                                    cssClass = isSelected ? (isCorrect ? "correct-answer" : "wrong-answer") : "";
+                                }
+
+
+                                <div class="option-item @cssClass">
+                                    <input class="form-check-input" type="radio" name="Question_@question.QuestionId" value="@option" disabled="disabled" @(isSelected ? "checked" : "")>
+                                    <label class="form-check-label" for="Question_@question.QuestionId@option">
+                                        <strong>@option</strong>. @optionText
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            }
+            
+            <div class="text-center">
+            @if (Model.Mark >= Model.Lesson.TotalQuestions*0.8)
+            {
+                <a class="text-center start-btn"
+                       asp-controller="Learning" 
+                       asp-action="Details" 
+                       asp-route-courseId="@Model.Lesson.CourseId" 
+                       asp-route-lessonNo="@(Model.Lesson.LessonNo + 1)">
+                    <button class="btn btn-success mt-5 mb-5">NEXT LESSON</button>
+                </a>
+            }
+            else
+            {
+                <a class="text-center start-btn"
+                   asp-area="Student"
+                   asp-controller="Test"
+                   asp-action="DoTest"
+                   asp-route-lessonId="@Model.LessonId"
+                   asp-route-startTime="@DateTime.Now">
+                    <button class="btn btn-warning mt-5 mb-5">DO AGAIN</button>
+                </a>
+            }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+}

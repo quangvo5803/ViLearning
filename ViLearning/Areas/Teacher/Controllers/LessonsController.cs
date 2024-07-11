@@ -41,9 +41,7 @@ namespace ViLearning.Areas.Teacher.Controllers
         // GET: Teacher/Lessons
         public async Task<IActionResult> Index()
         {
-
             var applicationDBContext = _unitOfWork.Lesson.GetAll(includeProperties:"Course");
-            /*var applicationDBContext = _context.Lessons.Include(l => l.Course);*/
             return View( applicationDBContext);
         }
 
@@ -60,7 +58,6 @@ namespace ViLearning.Areas.Teacher.Controllers
             {
                 return NotFound();
             }
-
             return View(lesson);
         }
 
@@ -126,20 +123,7 @@ namespace ViLearning.Areas.Teacher.Controllers
                     proc1.WindowStyle = ProcessWindowStyle.Hidden;
                     proc1.CreateNoWindow = true;
                     Process.Start(proc1);
-                    /*var process = new Process
-                    {
-                        StartInfo = new ProcessStartInfo
-                        {
-                            FileName = "ffmpeg",
-                            Arguments = ffmpegArgs,
-                            RedirectStandardOutput = true,
-                            RedirectStandardError = true,
-                            UseShellExecute = false,
-                            CreateNoWindow = false
-                        }
-                    };
-                    process.Start();
-                    process.WaitForExit();*/
+                    
 
 
                     //upload hls segments and playlist to Blob storage

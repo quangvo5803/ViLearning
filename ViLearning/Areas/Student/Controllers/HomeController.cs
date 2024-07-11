@@ -133,5 +133,12 @@ namespace ViLearning.Areas.Student.Controllers
             var invoice = _unitOfWork.Invoice.GetRange(i => i.UserId == userId, includeProperties: "Course,Course.ApplicationUser,Course.Subject");
             return View(invoice);
         }
+
+        [Authorize] 
+        public async Task<IActionResult> Accomplishment()
+        {
+
+            return View();
+        }
     }
 }

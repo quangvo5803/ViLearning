@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ViLearning.Data;
 
@@ -11,9 +12,11 @@ using ViLearning.Data;
 namespace ViLearning.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240703162006_Add_Attribute_to_TestDetail")]
+    partial class Add_Attribute_to_TestDetail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -370,9 +373,6 @@ namespace ViLearning.Migrations
                     b.Property<int?>("CourseId1")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("FeedBackContent")
                         .HasColumnType("nvarchar(max)");
 
@@ -380,6 +380,7 @@ namespace ViLearning.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("FeedBackId");
@@ -571,6 +572,9 @@ namespace ViLearning.Migrations
                     b.Property<double>("Mark")
                         .HasColumnType("float");
 
+                    b.Property<int>("NumberQuestion")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
 
@@ -743,7 +747,8 @@ namespace ViLearning.Migrations
                     b.HasOne("ViLearning.Models.ApplicationUser", "ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("ApplicationUser");
 

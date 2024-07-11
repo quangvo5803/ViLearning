@@ -1,0 +1,29 @@
+﻿@model Lesson
+
+@{
+    ViewData["Title"] = "Test Info";
+}
+
+<div class="container">
+    <a class="text-decoration-none text-dark btn btn-secondary mt-3" asp-area="Student" asp-controller="Lessons" asp-action="Details"
+       asp-route-Id="@Model.LessonId">
+        <i class="bi bi-arrow-return-left mx-2"></i>Trở về bài học
+    </a>
+    <div class="header d-flex justify-content-start align-items-end">
+        <h4>@Model.Course.CourseName</h4>
+    </div>
+    <div class="row mx-2"><h5>Bài @Model.LessonNo. @Model.LessonName</h5></div>
+    <div class="test-info card d-flex mt-5" data-lessonId="@Model.LessonId">
+        <h5 class="text-center my-3">Review Test</h5>
+        <div class="info-item text-center">Time to Complete: <span id="timeToComplete">@Model.TestDuration min</span></div>
+        <div class="info-item text-center">Number of Questions: <span id="numberOfQuestions">@Model.TotalQuestions questions</span></div>
+        <a class="text-center start-btn" 
+                asp-area="Student" 
+                asp-controller="Test" 
+                asp-action="DoTest" 
+                asp-route-lessonId="@Model.LessonId" 
+                asp-route-startTime="@DateTime.Now">
+            <button class="btn btn-success btn-start mt-5 mb-5">Start</button>
+        </a>
+    </div>
+</div>
