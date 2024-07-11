@@ -11,6 +11,10 @@ using ViLearning.Models;
 using System.Security.Policy;
 using Microsoft.Data.SqlClient;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using ViLearning.Hubs;
+using ViLearning.Hubs.ChatHub;
+using Newtonsoft.Json.Serialization;
+using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http.Features;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +24,13 @@ builder.Services.AddAuthentication().AddGoogle(options =>
     options.ClientId = builder.Configuration.GetSection("GoogleKeys:ClientID").Value;
     options.ClientSecret = builder.Configuration.GetSection("GoogleKeys:ClientSecret").Value;
 });
+// Add services to the container.
+builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
+{
+    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+    options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+});
+
 
 
 // Add services to the container.
@@ -55,6 +66,7 @@ builder.Services.Configure<FormOptions>(options =>
     options.MultipartBodyLengthLimit = 2028 * 1024 * 1024;
 });
 builder.Services.AddSingleton<IVnPayServicecs, VnPayService>();
+builder.Services.AddSignalR();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -76,6 +88,7 @@ app.MapRazorPages();
 app.MapControllerRoute(
     name: "default",
     pattern: "{area=Student}/{controller=Home}/{action=Index}/{id?}");
+app.MapHub<ChatHub>("/chatHub");
 
 using (var scope = app.Services.CreateScope()) 
 {

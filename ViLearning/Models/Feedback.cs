@@ -13,9 +13,9 @@ namespace ViLearning.Models
         [Display(Name = "Đánh giá: ")]
         public string? FeedBackContent { get; set; }
         //Foreign key
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
         public int CourseId { get; set; }
-
+        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
 
         //Relation
         [ForeignKey("UserId")]

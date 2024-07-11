@@ -1,0 +1,32 @@
+﻿@model IEnumerable<ViLearning.Models.Course>
+
+@{
+    ViewData["Title"] = "Danh sách khóa học";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Danh sách khóa học đã xuất bản</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Tên khóa học</th>
+            <th>Mô tả</th>
+            <th>Xem chi tiết</th>
+           
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var course in Model)
+        {
+            <tr>
+                <td>@course.CourseName</td>
+                <td>@course.Description</td>
+                <td>
+                    <a asp-controller="Comments" asp-action="IndexCourse" asp-route-id="@course.CourseId">@course.CourseName</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

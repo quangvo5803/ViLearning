@@ -3,10 +3,11 @@
     Layout = null;
 }
 
-    
+
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="~/css/Student/LearningMaterial.css">
+    <link rel="stylesheet" href="~/css/Student/Chat.css">
     <script src="https://kit.fontawesome.com/db43418352.js" crossorigin="anonymous"></script>
 </head>
 
@@ -17,13 +18,16 @@
             <div class="course-title">@Model.Course.CourseName</div>
         </header>
 
-        <div class="container-fluid flex-grow-1"  style="position:relative">
-            <div  class=" row flex-nowrap" style="position:absolute; height:100%; min-width:100%">
+        <div class="container-fluid flex-grow-1" style="position:relative">
+            <div class=" row flex-nowrap" style="position:absolute; height:100%; min-width:100%">
                 <aside class="sidebar col-auto" id="sidebar">
                     <a class="menu-item" id="learn-icon" style="color:white">
                         <i class="fa-brands fa-leanpub tt" data-bs-toggle="tooltip" data-bs-placement="top" title="Learning Material"></i>
                     </a>
-                    <a class="menu-item" id="comment-icon" style="color:white">
+                    @* <a class="menu-item" id="comment-icon" style="color:white" asp-controller="Comments" asp-action="LessonDetails" asp-route-CourseName="@Model.Course.CourseName" asp-route-LessonName="@Model.Lesson.LessonName" asp-route-id="@Model.Lesson.LessonId" >
+                        <i class="fa-regular fa-comments tt" data-bs-toggle="tooltip" data-bs-placement="top" title="Discuss"></i>
+                    </a> *@
+                    <a class="menu-item" id="comment-icon" style="color:white" asp-controller="Comments" asp-action="LessonDetails" asp-route-CourseName="@Model.Course.CourseName" asp-route-LessonName="@Model.Lesson.LessonName" asp-route-id="@Model.Lesson.LessonId">
                         <i class="fa-regular fa-comments tt" data-bs-toggle="tooltip" data-bs-placement="top" title="Discuss"></i>
                     </a>
                     <a class="menu-item" id="test-icon" asp-action="ViewTestInfo" asp-route-lessonId="@Model.Lesson.LessonId" asp-controller="Test" style="color:white">
@@ -35,7 +39,7 @@
                     <a class="menu-item" id="history-icon" style="color:white">
                         <i class="fa-solid fa-clock-rotate-left" data-bs-toggle="tooltip" data-bs-placement="top" title="Test History"></i>
                     </a>
-                   
+
                 </aside>
 
                 <main id="main-content" class="main-content col" style="height: 100%">
@@ -66,8 +70,9 @@
                                 <a asp-controller="Learning" asp-action="Details" asp-route-courseId="@Model.Course.CourseId" asp-route-lessonNo="@lesson.LessonNo" style="color: #212529;display: block; height: inherit; width:inherit; line-height: 3.5rem; text-decoration:none">
                                     @if (lesson.Tests == null)
                                     {
-                                        
-                                    } else
+
+                                    }
+                                    else
                                     {
                                         double max = -1;
                                         foreach (TestDetail test in lesson.Tests)
@@ -77,7 +82,8 @@
                                         if (max >= 8)
                                         {
                                             <span class="lesson-status">●</span>
-                                        } else
+                                        }
+                                        else
                                         {
                                             <span class="lesson-status" style="color:red">●</span>
                                         }
@@ -120,7 +126,7 @@
         </div>
         <div id="overlayComment" class="overlay-section">
             <div class="overlay-content">
-                
+
                 <!-- Add your comment section content here -->
             </div>
         </div>
@@ -199,27 +205,55 @@
             </div>
         </div>
 
-        <footer class="footer" style="position: sticky; bottom: 0"> 
-            @if (Model.Lesson.LessonNo == 1) {
-                <a class="nav-button" style="text-decoration:none" disabled ="disabled"><i class="fa-solid fa-angle-left"></i> Previous</a>
-            } else {
+        <footer class="footer" style="position: sticky; bottom: 0">
+            @if (Model.Lesson.LessonNo == 1)
+            {
+                <a class="nav-button" style="text-decoration:none" disabled="disabled"><i class="fa-solid fa-angle-left"></i> Previous</a>
+            }
+            else
+            {
                 <a asp-controller="Learning" asp-action="Details" asp-route-courseId="@Model.Course.CourseId" asp-route-lessonNo="@(Model.Lesson.LessonNo - 1)" class="nav-button" style="text-decoration:none" disabled="disabled"><i class="fa-solid fa-angle-left"></i> Previous</a>
             }
-            @if (Model.Lesson.LessonNo == Model.Course.Lesson.Count()) {
-                <a  class="nav-button" style="text-decoration:none" disabled ="disabled">Next <i class="fa-solid fa-angle-right"></i></a>
-            } else {
+            @if (Model.Lesson.LessonNo == Model.Course.Lesson.Count())
+            {
+                <a class="nav-button" style="text-decoration:none" disabled="disabled">Next <i class="fa-solid fa-angle-right"></i></a>
+            }
+            else
+            {
                 <a asp-controller="Learning" asp-action="Details" asp-route-courseId="@Model.Course.CourseId" asp-route-lessonNo="@(Model.Lesson.LessonNo + 1)" class="nav-button" style="text-decoration:none">Next <i class="fa-solid fa-angle-right"></i></a>
             }
-            
-            <div class="chat-icon"><i class="fa-solid fa-headset"></i></div>
+
+            <a class="chat-icon"><i class="fa-solid fa-headset"></i></a>
+            @*Test Chat feature*@
+            <input type="hidden" id="hiddenUserId" value="@ViewData["userId"]" />
+            <div class="chatbox">
+                <h3 class=" text-center" style="background: #5fcf80;">
+                    Messaging
+                </h3>
+                <div class="messaging">
+                    <div class="inbox_msg">
+                        <div class="mesgs">
+                            <div id="messagesList">
+                            </div>
+                            <div class="type_msg">
+                                <div class="input_msg_write">
+                                    <input type="text" id="messageInput" placeholder="Type a message" />
+                                    <button id="msg_send_btn" type="button"><i class="bi bi-send" aria-hidden="true"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @*End Chat feature*@
         </footer>
     </div>
 </body>
 
 
-
-
 @section Scripts {
+    <script src="~/lib/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/Student/Chat.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
@@ -231,7 +265,7 @@
             });
         });
 
-        
+
     </script>
 }
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
@@ -265,7 +299,7 @@
             });
         }
         if (learnLink && commentLink && rankingLink && overlayComment && overlayRanking && sidebar) {
-            commentLink.addEventListener('click', function (event) {
+            @* commentLink.addEventListener('click', function (event) {
                 event.preventDefault();
                 if (overlayComment.style.display === 'block') {
                     overlayComment.style.display = 'none';
@@ -275,7 +309,7 @@
                     overlayRanking.style.display = 'none'; // Hide the other overlay
                     overlayHistory.style.display = 'none';
                 }
-            });
+            }); *@
 
             rankingLink.addEventListener('click', function (event) {
                 event.preventDefault();
@@ -308,7 +342,7 @@
         } else {
             console.error('One or more elements not found.');
         }
-        
+
 
         //resizer
         var isResizing = false;
@@ -338,7 +372,7 @@
                 document.removeEventListener('mouseup', onMouseUp);
             }
         }
-    
+
     });
-    
+
 </script>

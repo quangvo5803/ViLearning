@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using ViLearning.Models;
 using ViLearning.Models.ViewModels;
 using ViLearning.Services.Repository;
@@ -10,11 +11,12 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace ViLearning.Areas.Student.Controllers
 {
-    [Area("Student")]
-    [Authorize(Roles = SD.Role_User_Student)]
-    public class LearningController : Controller
-    {
-        private readonly IUnitOfWork _unitOfWork;
+	[Area("Student")]
+	[Authorize(Roles = SD.Role_User_Student)]
+	public class LearningController : Controller
+	{
+		private readonly IUnitOfWork _unitOfWork;
+		private readonly List<string> _bannedWords = new List<string> { "fake", "999", "888" };
 
         public LearningController(IUnitOfWork unitOfWork)
         {
