@@ -93,6 +93,7 @@ namespace ViLearning.Areas.Teacher.Controllers
                     var videoId = Guid.NewGuid().ToString();
 
                     //Save video to temp file
+
                     var uploadPath = Path.Combine(_hostingEnvironment.ContentRootPath, "wwwroot", "uploads");
                     if (!Directory.Exists(uploadPath))
                         Directory.CreateDirectory(uploadPath);
@@ -137,6 +138,7 @@ namespace ViLearning.Areas.Teacher.Controllers
                         }
                     }
 
+
                     //Clean temp files 
                     //System.IO.File.Delete(tempFilePath);
                     System.IO.File.Delete(filePath);
@@ -147,6 +149,7 @@ namespace ViLearning.Areas.Teacher.Controllers
                     _unitOfWork.Lesson.Add(lesson);
                     _unitOfWork.Save();
                     return RedirectToAction("Details", "Courses", new { id = courseId });
+
                 }
                 catch (Exception ex)
                 {
