@@ -45,13 +45,15 @@ namespace ViLearning.Areas.Student.Controllers
 
         public IActionResult Details(int CourseId)
         {
+            var feedbacks = _unitOfWork.Feedback.GetRange(f => f.CourseId == CourseId, includeProperties: "ApplicationUser");
             var lessonOfCourse = _unitOfWork.Lesson.GetRange(c=>c.Course.CourseId == CourseId,includeProperties:"Course");
             List<Lesson> lessons = _unitOfWork.Lesson.GetAll().ToList();
             Course course = _unitOfWork.Course.Get(c => c.CourseId == CourseId, includeProperties: "Subject,ApplicationUser");
             var detailViewModel = new CourseDetailsVM
             {
                 Course = course,
-                Lessons = lessonOfCourse
+                Lessons = lessonOfCourse,
+                Feedbacks = feedbacks
             };
             return View(detailViewModel);
         }

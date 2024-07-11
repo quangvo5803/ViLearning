@@ -11,6 +11,8 @@ using ViLearning.Models;
 using System.Security.Policy;
 using Microsoft.Data.SqlClient;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Newtonsoft.Json.Serialization;
+using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +21,13 @@ builder.Services.AddAuthentication().AddGoogle(options =>
     options.ClientId = builder.Configuration.GetSection("GoogleKeys:ClientID").Value;
     options.ClientSecret = builder.Configuration.GetSection("GoogleKeys:ClientSecret").Value;
 });
+// Add services to the container.
+builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
+{
+    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+    options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+});
+
 
 
 // Add services to the container.
