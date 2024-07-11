@@ -6,10 +6,10 @@
 
 <div class="card shadow border-0 mt-4">
     <div class="card-header bg-secondary bg-gradient ml-0 py-0">
-        <a class="text-decoration-none text-dark btn btn-secondary mt-3" asp-area="Teacher" asp-controller="Lessons" asp-action="Details"
-           asp-route-Id="@Model.Lesson.LessonId" asp-route-CourseName="@Model.Lesson.Course.CourseName" asp-route-LessonName="@Model.Lesson.LessonName">
-            <i class="bi bi-arrow-return-left mx-2"></i>Trở về bài học
-        </a>
+        <button type="button" class="btn btn-secondary my-2">
+            <a class="text-decoration-none text-dark" asp-area="Teacher" asp-controller="Lessons" asp-action="Details"
+               asp-route-Id="@Model.Lesson.LessonId" asp-route-CourseName="@Model.Lesson.Course.CourseName" asp-route-LessonName="@Model.Lesson.LessonName"><i class="bi bi-arrow-return-left mx-2"></i>Back to lesson</a>
+        </button>
         <h2 class="text-center text-dark-emphasis">@Model.Lesson.LessonName</h2>
         <div class="row">
             <div class="col-12 text-center">
@@ -24,8 +24,9 @@
                     <button class="btn btn-success px-2 py-1 rounded-3" type="submit"><i class="bi bi-search"></i></button>
                 </form>
             </div>
-            <a href="#" data-bs-toggle="modal" data-bs-target="#addQuestionModal"
-               class="text-decoration-none text-dark col-md-2 text-bg-success p-2 rounded-3 text-center mx-3 my-3 fw-bold">THÊM CÂU HỎI</a>
+            <div class="col-md-2 text-bg-success p-2 rounded-3 text-center mx-3 my-3">
+                <a href="#" data-bs-toggle="modal" data-bs-target="#addQuestionModal" class="text-decoration-none text-dark text-center fw-bold">THÊM CÂU HỎI</a>
+            </div>
         </div>
     </div>
     <div class="card-body p-4">
@@ -296,7 +297,7 @@
         </div>
     </div>
 </div>
-<!-- End Modal Add Question -->
+
 
 @section Scripts {
     <script src="~/js/Teacher/QuestionManage.js"></script>

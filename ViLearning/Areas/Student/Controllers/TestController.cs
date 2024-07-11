@@ -110,19 +110,17 @@ namespace ViLearning.Areas.Student.Controllers
 			return View("TestResult", testDetail);
         }
 
-        public async Task<IActionResult> TestHistory(int lessonId)
+        public List<TestDetail> TestHistory(int lessonId, string userId)
         {
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            List<TestDetail> testDetails = _unitOfWork.TestDetail.GetRange(t => t.LessonId == lessonId && t.UserId == userId,
+            List<TestDetail> testHistory = _unitOfWork.TestDetail.GetRange(t => t.LessonId == lessonId && t.UserId == userId,
                 includeProperties: "ApplicationUser,Lesson")
                 .OrderByDescending(t => t.StartTime).ToList();
-            return View("TestHistory", testDetails);
+            return testHistory;
         }
 
-        public async Task<IActionResult> TestRanking(int lessonId)
+        public List<TestDetail> TestRanking(int lessonId)
         {
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            List<TestDetail> testDetails = _unitOfWork.TestDetail.GetRange(t => t.LessonId == lessonId,
+            List<TestDetail> testRanking = _unitOfWork.TestDetail.GetRange(t => t.LessonId == lessonId,
                 includeProperties: "ApplicationUser,Lesson")
                 .OrderByDescending(t => t.Mark).ThenBy(t => t.Duration).ThenBy(t => t.StartTime).ToList();
             return View("TestRanking", testDetails);

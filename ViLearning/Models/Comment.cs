@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace ViLearning.Models
 {
@@ -21,14 +22,20 @@ namespace ViLearning.Models
         //Relation
         [ForeignKey("LessonId")]
         [ValidateNever]
+        [JsonIgnore]
         public Lesson Lesson { get; set; }
         [ForeignKey("UserId")]
         [ValidateNever]
+
+        [JsonIgnore]
         public ApplicationUser ApplicationUser { get; set; }
         [ForeignKey("ParentCommentId")]
         [ValidateNever]
+        [JsonIgnore]
+
         public Comment ParentComment { get; set; }
         // Navigation property
+        [JsonIgnore]
         public virtual ICollection<Comment> Replies { get; set; } = new List<Comment>();
     }
 }

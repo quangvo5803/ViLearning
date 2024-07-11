@@ -13,7 +13,9 @@
     <link rel="stylesheet" href="~/ViLearning.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="//cdn.datatables.net/2.0.7/css/dataTables.dataTables.min.css" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/venobox.min.css"/>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
@@ -56,7 +58,7 @@
                                         <a class="nav-link text-dark" asp-area="Admin" asp-controller="Subject" asp-action="Index">Môn học</a>
                                         <a class="nav-link text-dark" asp-area="Admin" asp-controller="User" asp-action="Index">Người dùng</a>
                                         <a class="nav-link text-dark" asp-area="Admin" asp-controller="ManageCourse" asp-action="Index">Khóa học</a>
-
+                                        <a class="nav-link text-dark" asp-area="Admin" asp-controller="Feedbacks" asp-action="Index">Phản hồi</a>
                                     </li>
                                 </ul>
                             </li>
@@ -67,9 +69,18 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="Teacher" asp-controller="Home" asp-action="Index">Trang chủ</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Teacher" asp-controller="Courses" asp-action="Index">Quản lí khóa học</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Quản lí
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="Teacher" asp-controller="Courses" asp-action="Index">khóa học</a>
+                                        <a class="nav-link text-dark" asp-area="Teacher" asp-controller="Feedbacks" asp-action="Index">Phản hồi</a>
+                                    </li>
+                                </ul>
                             </li>
+
                         }
                         else
                         {
@@ -82,7 +93,9 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="Student" asp-controller="Home" asp-action="Study">Học tập</a>
                             </li>
-                           
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Student" asp-controller="Home" asp-action="Accomplishment">Thành tựu</a>
+                            </li>
 
                         }
                     </ul>

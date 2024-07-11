@@ -11,6 +11,8 @@
         </form>
     </div>
 
+    
+
     <div class="main-content">
         <aside class="filter-sidebar">
             <form asp-action="Filter" method="get" class="filter-form">
@@ -65,6 +67,7 @@
                                 <div class="text"><a asp-action="Details" asp-route-id="@course.CourseId">View detail</a></div>
                             </div>
                         </div>
+
                         <h3 class="title mt-auto">@course.CourseName</h3>
                         <p class="inline-btn mt-auto">Lớp @course.Grade</p>
                         <a class="text-decoration-none mt-auto" asp-action="Delete" asp-route-id="@course.CourseId">

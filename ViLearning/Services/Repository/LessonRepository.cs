@@ -30,5 +30,15 @@ namespace ViLearning.Services.Repository
                 throw;
             }
         }
+
+        public void LoadTest(Lesson lesson)
+        {
+
+                _db.Lessons.Entry(lesson)
+                        .Collection(c => c.Tests)
+                        .Load();
+                _db.Update(lesson);
+          
+        }
     }
 }
