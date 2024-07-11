@@ -96,10 +96,10 @@
             @if (Model.Mark >= Model.Lesson.TotalQuestions*0.8)
             {
                 <a class="text-center start-btn"
-                    asp-area="Student"
-                    asp-controller=""
-                    asp-action=""
-                    asp-route-lessonId="@Model.LessonId">
+                       asp-controller="Learning" 
+                       asp-action="Details" 
+                       asp-route-courseId="@Model.Lesson.CourseId" 
+                       asp-route-lessonNo="@(Model.Lesson.LessonNo + 1)">
                     <button class="btn btn-success mt-5 mb-5">NEXT LESSON</button>
                 </a>
             }

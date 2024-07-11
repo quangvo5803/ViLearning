@@ -5,6 +5,8 @@ using ViLearning.Models.ViewModels;
 using ViLearning.Services.Repository;
 using ViLearning.Services.Repository.IRepository;
 using ViLearning.Utility;
+using System.Security.Claims;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ViLearning.Areas.Student.Controllers
 {
@@ -25,13 +27,18 @@ namespace ViLearning.Areas.Student.Controllers
 
         public async Task<IActionResult> Details(int courseId, int lessonNo)
         {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            TestController testController = new TestController(_unitOfWork);
             var course = _unitOfWork.Course.Get( c => c.CourseId == courseId );
             List<Lesson>? lessons = await _unitOfWork.Lesson.GetLessonByCourseId(courseId);
             var lesson = lessons?.Where(l => l.LessonNo == lessonNo).FirstOrDefault();
+            var lessonId = _unitOfWork.Lesson.Get(l => l.CourseId == courseId && l.LessonNo == lessonNo).LessonId;
             LearningMaterial lm = new LearningMaterial()
             {
                 Course = course,
-                Lesson = lesson
+                Lesson = lesson,
+                TestHistory = testController.TestHistory(lessonId, userId),
+                TestRanking = testController.TestRanking(lessonId)
             };
             return View(lm);
         }

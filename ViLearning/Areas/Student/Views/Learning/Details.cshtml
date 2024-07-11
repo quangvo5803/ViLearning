@@ -26,7 +26,7 @@
                     <a class="menu-item" id="comment-icon" style="color:white">
                         <i class="fa-regular fa-comments tt" data-bs-toggle="tooltip" data-bs-placement="top" title="Discuss"></i>
                     </a>
-                    <a class="menu-item" id="test-icon" style="color:white">
+                    <a class="menu-item" id="test-icon" asp-action="ViewTestInfo" asp-route-lessonId="@Model.Lesson.LessonId" asp-controller="Test" style="color:white">
                         <i class="fa-solid fa-file-circle-question tt" data-bs-toggle="tooltip" data-bs-placement="top" title="Do Test"></i>
                     </a>
                     <a class="menu-item" id="ranking-icon" style="color:white">
@@ -88,8 +88,40 @@
 
         <div id="overlayRanking" class="overlay-section">
             <div class="overlay-content">
-
                 <!-- Add your ranking section content here -->
+                <h1>Test Ranking</h1>
+
+                @if (Model.TestRanking.Count > 0)
+                {
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Tên</th>
+                                <th>Điểm</th>
+                                <th>Thời gian làm bài</th>
+                                <th>Thời điểm nộp bài</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var testDetail in Model.TestRanking)
+                            {
+                                <tr>
+                                    <td>@(Model.TestRanking.IndexOf(testDetail) + 1)</td>
+                                    <td>@testDetail.ApplicationUser.UserName</td>
+                                    <td>@testDetail.Mark</td>
+                                    <td>@testDetail.Duration.ToString(@"hh\:mm\:ss")</td>
+                                    <td>@(testDetail.StartTime + testDetail.Duration)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p>Không có dữ liệu ranking.</p>
+                }
+
             </div>
         </div>
         <footer class="footer" style="position: sticky; bottom: 0"> 
