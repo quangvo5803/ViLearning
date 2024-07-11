@@ -11,197 +11,65 @@
 	</ol>
 </nav>
 <div class="container mt-5">
-	<div class="row course-info justify-content-center ">
-		<div class="col-sm-7">
-			<div style="width: 800px; height: 400px; background-image: url('@Model.Course.CoverImgUrl'); background-size: cover; background-position: center;"></div>
-			<h3 class="mt-5">@Model.Course.CourseName</h3>
-			<hr />
-			<p>@Model.Course.Description</p>
-			<div class="course-lessons">
-				<div class="chapter">
-					<h4>Nội dung khóa học:</h4>
-					<ul>
-						@foreach (var lesson in Model.Lessons)
-						{
-							<a asp-controller="Home" asp-action="Index" class="text-decoration-none">
-							<li>
-								<span class="lesson-title">@lesson.LessonName</span>
-								<span class="lesson-status"><i class="bi bi-circle"></i></span>
-							</li>
-							</a>
-						}
-					</ul>
-				</div>
-			</div>
-		</div>
-		<div class="col-sm-3">
-			<div class="course-details">
-				<div class="d-flex justify-content-between align-items-center">
-					<h5 style="margin:0"> Giáo viên: </h5>
-					<p>@(Model.Course.ApplicationUser.FullName == null ? @Model.Course.ApplicationUser.Email : @Model.Course.ApplicationUser.FullName)</p>
-				</div>
-			</div>
-			<div class="course-details">
-				<div class="d-flex justify-content-between align-items-center">
-					<h5>Giá: </h5>
-					<p>@Model.Course.Price?.ToString("N0") VNĐ</p>
-				</div>
-			</div>
-			<div class="course-details">
-				<div class="d-flex justify-content-between align-items-center">
-					<h5>Số bài học: </h5>
-					<p>@Model.Lessons.Count()</p>
-				</div>
-			</div>
-			<div class="mt-4">
-				<a asp-controller="Home" asp-action="Checkout" asp-route-CourseId="@Model.Course.CourseId" class="btn btn-success d-flex justify-content-center">Đăng kí khóa học</a>
-			</div>
-		</div>
-	</div>
-</div>
-<div class="row mt-5" style="margin-left: 7em">
-    <div class="col-md-8">
-        <h3>Thêm Feedback</h3>
-        <!-- Feedback Form -->
-        <form id="feedback-form" asp-controller="Feedbacks" asp-action="CreateFeedback" asp-route-id="@Model.Course.CourseId" method="post">
-            <input type="hidden" name="CourseId" value="@Model.Course.CourseId" />
-
-            <div class="form-group">
-                <label for="feedback-star">Star Rating</label>
-                <div id="star-rating" class="star-rating">
-                    <i class="fa fa-star star" data-rating="1"></i>
-                    <i class="fa fa-star star" data-rating="2"></i>
-                    <i class="fa fa-star star" data-rating="3"></i>
-                    <i class="fa fa-star star" data-rating="4"></i>
-                    <i class="fa fa-star star" data-rating="5"></i>
+    <div class="row course-info justify-content-center ">
+        <div class="col-sm-7">
+            <div style="width: 800px; height: 400px; background-image: url('@Model.Course.CoverImgUrl'); background-size: cover; background-position: center;"></div>
+            <h3 class="mt-5">@Model.Course.CourseName</h3>
+            <hr />
+            <p>@Model.Course.Description</p>
+            <div class="course-lessons">
+                <div class="chapter">
+                    <h4>Nội dung khóa học:</h4>
+                    <ul>
+                        @foreach(var lesson in Model.Lessons)
+                        {
+                        <a asp-controller="Home" asp-action="Index" class="text-decoration-none">
+                        <li>
+                                <span class="lesson-title">@lesson.LessonName</span>
+                            <span class="lesson-status"><i class="bi bi-circle"></i></span>
+                        </li>
+                        </a>
+                        }
+                    </ul>
                 </div>
-                <input type="hidden" name="FeedBackStar" id="FeedBackStar" />
-                <span class="text-danger" id="star-error"></span>
             </div>
-
-            <div class="form-group">
-                <label for="feedback-content">Nội dung</label>
-                <textarea id="feedback-content" name="FeedBackContent" class="form-control"></textarea>
-                <span class="text-danger" id="content-error"></span>
+        </div>
+        <div class="col-sm-3">
+            <div class="course-details">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 style="margin:0"> Giáo viên: </h5>
+                    <p>@(Model.Course.ApplicationUser.FullName == null ? @Model.Course.ApplicationUser.Email : @Model.Course.ApplicationUser.FullName )</p>
+                </div>
             </div>
-
-            <button type="submit" class="btn btn-primary">Thêm Feedback</button>
-        </form>
-    </div>
-    <h3 class="mt-5">Feedbacks</h3>
-    <div id="feedbacks-container">
-        @foreach (var feedback in Model.Feedbacks.OrderByDescending(f=> f.CreatedDate).ToList())
-        {
-            <div class="feedback" id="feedback-@feedback.FeedBackId">
-                <p class="feedback-user">@feedback.ApplicationUser.UserName <span class="feedback-date">@feedback.CreatedDate.ToString("dd/MM/yyyy")</span></p>
-                <p style="color:#ffc107" class="feedback-stars">@Html.Raw(new string('★', feedback.FeedBackStar))@Html.Raw(new string('☆', 5 - feedback.FeedBackStar))</p>
-
-                <p class="feedback-content">@feedback.FeedBackContent</p>
-                @if (User.Identity.IsAuthenticated && feedback.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
-                {
-                    <button class="btn btn-link" onclick="showEditForm('@feedback.FeedBackId', '@(Html.Raw(feedback.FeedBackContent.Replace("'", "\\'")))')">Chỉnh sửa</button>
-                    <form class="d-inline" onsubmit="return deleteComment('@feedback.FeedBackId');">
-                        <button type="submit" class="btn btn-link">Xóa</button>
-                    </form>
-                    <div id="edit-form-@feedback.FeedBackId" class="edit-form" style="display:none;">
-                        <form id="edit-comment-form-@feedback.FeedBackId" onsubmit="return editComment('@feedback.FeedBackId');">
-                            <input type="hidden" name="commetId" value="@feedback.FeedBackId" />
-                            
-                            <div class="form-group">
-                                <textarea name="commentContent" class="form-control">@feedback.FeedBackContent</textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Cập nhật</button>
-                            <button type="button" class="btn btn-secondary" onclick="hideEditForm('@feedback.FeedBackId')">Hủy</button>
-                        </form>
-                    </div>
-                }
+            <div class="course-details">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5>Giá: </h5>
+                    <p>@Model.Course.Price?.ToString("N0") VNĐ</p>
+                </div>
             </div>
-        }
+            <div class="course-details">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5>Số bài học: </h5>
+                    <p>@Model.Lessons.Count()</p>
+                </div>
+            </div>
+            @if(Model.Invoice == null)
+            {
+                <div class="mt-4">
+                    <a asp-controller="Checkout" asp-action="Checkout" asp-route-CourseId="@Model.Course.CourseId" class="btn btn-success d-flex justify-content-center">Đăng kí khóa học</a>
+                </div>
+            }
+            else
+            {
+                <div class="mt-4">
+                    <a asp-controller="Learning" asp-action="Details" asp-route-courseId="@Model.Course.CourseId" asp-route-lessonNo="1" class="btn btn-success d-flex justify-content-center">Vào học ngay</a>
+                </div>
+            }
+            
+        </div>
     </div>
 </div>
 
 @section Styles {
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="~/css/Student/CourseDetails.css">
-    <style>
-        .star-rating {
-            font-size: 24px; /* Kích thước của ngôi sao */
-        }
-
-        .star {
-            color: black; /* Màu đen */
-            cursor: pointer;
-        }
-
-            .star.hover,
-            .star.selected {
-                color: #ffc107; /* Màu vàng nhạt khi hover và khi được chọn */
-            }
-    </style>
-}
-
-@section Scripts {
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('.star').on('mouseover', function () {
-                var rating = $(this).data('rating');
-                $('.star').each(function (index) {
-                    if (index < rating) {
-                        $(this).addClass('hover');
-                    } else {
-                        $(this).removeClass('hover');
-                    }
-                });
-            }).on('mouseout', function () {
-                $('.star').removeClass('hover');
-            });
-
-            $('.star').on('click', function () {
-                var rating = $(this).data('rating');
-                $('#FeedBackStar').val(rating);
-
-                $('.star').removeClass('selected');
-                for (var i = 1; i <= rating; i++) {
-                    $('.star[data-rating="' + i + '"]').addClass('selected');
-                }
-            });
-
-            $('#feedback-form').submit(function (e) {
-                e.preventDefault();
-
-                var feedbackData = {
-                    CourseId: $('input[name="CourseId"]').val(),
-                    FeedBackStar: $('#FeedBackStar').val(),
-                    FeedBackContent: $('#feedback-content').val()
-                };
-
-                $.ajax({
-                    url: $(this).attr('action'),
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify(feedbackData),
-                    success: function (response) {
-                        if (response.success) {
-                            var newFeedback = `
-                                        <div class="feedback" id="feedback-${response.feedback.feedBackId}">
-                                            <p class="feedback-user">${response.feedback.applicationUser.userName} <span class="feedback-date">${response.feedback.createdDate}</span></p>
-                                            <p class="feedback-content">${response.feedback.feedBackContent}</p>
-                                                    <p style="color: #ffc107" class="feedback-stars">${'★'.repeat(response.feedback.feedBackStar)}${'☆'.repeat(5 - response.feedback.feedBackStar)}</p>
-                                        </div>`;
-                            $('#feedbacks-container').prepend(newFeedback);
-                            $('#feedback-form')[0].reset();
-                            $('.star').removeClass('selected');
-                        } else {
-                            $('#star-error').text(response.error);
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error(xhr.responseText);
-                        alert('Lỗi: ' + xhr.responseText);
-                    }
-                });
-            });
-        });
-    </script>
 }
