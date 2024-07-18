@@ -196,7 +196,26 @@ namespace ViLearning.Areas.Identity.Pages.Account
                 }
                 foreach (var error in result.Errors)
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    if (error.Code == "DuplicateUserName")
+                    {
+                        TempData["error"] = "Email đã tồn tại";
+                    }
+                    else
+                    {
+                        if (error.Description == "Passwords must have at least one non alphanumeric character.")
+                        {
+                            error.Description = "Mật khẩu cần có ít nhất một ký tự đặc biệt.";
+                        }
+                        if (error.Description == "Passwords must have at least one digit ('0'-'9').")
+                        {
+                            error.Description = "Mật khẩu cần có ít nhất một chữ số.";
+                        }
+                        if (error.Description == "Passwords must have at least one uppercase ('A'-'Z').")
+                        {
+                            error.Description = "Mật khẩu cần có ít nhất một chữ cái in hoa.";
+                        }
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
                 }
             }
 

@@ -51,5 +51,6 @@ namespace ViLearning.Models
         public virtual ICollection<Lesson>? Lesson { get; set; }
         public virtual ICollection<Feedback>? Feedbacks { get; set; }
         
+        public virtual ICollection<LearningProgress>? LearningProgresses { get; set; }
     }
 }

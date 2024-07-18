@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ViLearning.Data;
 
@@ -11,9 +12,11 @@ using ViLearning.Data;
 namespace ViLearning.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240717083401_update LearningProgress")]
+    partial class updateLearningProgress
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -441,7 +444,13 @@ namespace ViLearning.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LearningProgressId"));
 
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CourseId1")
                         .HasColumnType("int");
 
                     b.Property<double>("OverallScore")
@@ -459,7 +468,11 @@ namespace ViLearning.Migrations
 
                     b.HasKey("LearningProgressId");
 
+                    b.HasIndex("ApplicationUserId");
+
                     b.HasIndex("CourseId");
+
+                    b.HasIndex("CourseId1");
 
                     b.HasIndex("UserId");
 
@@ -839,14 +852,22 @@ namespace ViLearning.Migrations
 
             modelBuilder.Entity("ViLearning.Models.LearningProgress", b =>
                 {
-                    b.HasOne("ViLearning.Models.Course", "Course")
+                    b.HasOne("ViLearning.Models.ApplicationUser", null)
                         .WithMany("LearningProgresses")
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("ViLearning.Models.Course", "Course")
+                        .WithMany()
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ViLearning.Models.ApplicationUser", "User")
+                    b.HasOne("ViLearning.Models.Course", null)
                         .WithMany("LearningProgresses")
+                        .HasForeignKey("CourseId1");
+
+                    b.HasOne("ViLearning.Models.ApplicationUser", "User")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

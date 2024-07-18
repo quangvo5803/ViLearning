@@ -10,9 +10,7 @@
         public ITestDetailRepository TestDetail { get; }
         public IQuestionRepository Question { get; }
         public ICourseRepository Course { get; }
-        public ICourseCertificateRepository CourseCertificate { get; }
         public IFeedbackRepository Feedback { get; }
-        public IStudentCertificateRepository StudentCertificate { get; }
         public IInvoiceRepository Invoice { get; }
         public IMessageRepository Message { get; }
         public IConversationRepository Conversation { get; }

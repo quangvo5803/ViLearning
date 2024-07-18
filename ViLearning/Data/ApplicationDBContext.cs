@@ -6,6 +6,7 @@ namespace ViLearning.Data
 {
     public class ApplicationDBContext : IdentityDbContext
     {
+
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options)
         {
         }
@@ -16,40 +17,21 @@ namespace ViLearning.Data
         public DbSet<Lesson> Lessons { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
-        public DbSet<CourseCertificate> CourseCertificates { get; set; }
-        public DbSet<StudentCertificate> StudentCertificates { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<TestDetail> TestDetails { get; set; }
         public DbSet<Content> Contents { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<LearningProgress> LearningProgresses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-           
-
-
-
-
-            // Configuration for StudentCertificate
-            modelBuilder.Entity<StudentCertificate>()
-                .HasKey(sc => new { sc.CourseCertificateId, sc.UserId });
-
-            modelBuilder.Entity<StudentCertificate>()
-                .HasOne(sc => sc.ApplicationUser)
-                .WithMany()
-                .HasForeignKey(sc => sc.UserId)
-                .OnDelete(DeleteBehavior.Restrict); // Prevent cascading deletes from ApplicationUser
-
-            modelBuilder.Entity<StudentCertificate>()
-                .HasOne(sc => sc.CourseCertificate)
-                .WithMany()
-                .HasForeignKey(sc => sc.CourseCertificateId)
-                .OnDelete(DeleteBehavior.Cascade); // Allow cascading deletes from CourseCertificate
-
+            //Configuration for LearningProgress 
+            modelBuilder.Entity<LearningProgress>()
+                .HasKey(lp => lp.LearningProgressId);
             // Configuration for Feedback
             modelBuilder.Entity<Feedback>()
                 .HasKey(f => f.FeedBackId);
