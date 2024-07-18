@@ -223,8 +223,7 @@
                 <a asp-controller="Learning" asp-action="Details" asp-route-courseId="@Model.Course.CourseId" asp-route-lessonNo="@(Model.Lesson.LessonNo + 1)" class="nav-button" style="text-decoration:none">Next <i class="fa-solid fa-angle-right"></i></a>
             }
 
-            <a class="chat-icon" id="chat-icon" style="position: relative">
-                <i class="fa-solid fa-headset"></i>
+            <a class="chat-icon" id="chat-icon" style="position: relative"><i class="fa-solid fa-headset"></i>
                 @*Test Chat feature*@
                 <input type="hidden" id="hiddenUserId" value="@ViewData["userId"]" />
                 <div id="chatbox" class="chatbox d-none">
@@ -248,6 +247,7 @@
                 </div>
                 @*End Chat feature*@
             </a>
+            
         </footer>
     </div>
 </body>
@@ -384,7 +384,6 @@
             console.log("abc");
             chatbox.classList.toggle('d-none');
         });
-
     });
 
 </script>

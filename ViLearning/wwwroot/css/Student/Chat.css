@@ -2,10 +2,10 @@
     max-width: 400px;
     margin: auto;
     position: absolute;
+    z-index: 10;
     width: 400px;
-    z-index:10;
     bottom: 44px;
-    background: #ebebeb;
+    background: #fff;
 }
 
 img {
@@ -109,7 +109,7 @@ img {
 }
 
 #messagesList {
-    height: 516px;
+    height: 400px;
     overflow-y: auto;
 }
 
