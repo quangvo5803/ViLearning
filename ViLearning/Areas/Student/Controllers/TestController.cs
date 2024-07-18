@@ -63,7 +63,6 @@ namespace ViLearning.Areas.Student.Controllers
             vm.Questions = easyQuestions.Concat(mediumQuestions)
                                         .Concat(hardQuestions)
                                         .ToList();
-            vm.TestDetail.TestResult = vm.Questions.ToDictionary(q => q.QuestionId, q => string.Empty); // Initialize dictionary with empty strings
 
 			return View("DoTest", vm);
         }

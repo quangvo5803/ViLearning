@@ -1,10 +1,11 @@
 ﻿.chatbox {
     max-width: 400px;
     margin: auto;
-    position:fixed;
-    right: 0;
-    bottom:0;
-    z-index:12000;
+    position: absolute;
+    z-index: 10;
+    width: 400px;
+    bottom: 44px;
+    background: #fff;
 }
 
 img {
@@ -107,12 +108,8 @@ img {
     border-radius: 10px;
 }
 
-.messaging {
-    padding: 0 0 50px 0;
-}
-
 #messagesList {
-    height: 516px;
+    height: 400px;
     overflow-y: auto;
 }
 

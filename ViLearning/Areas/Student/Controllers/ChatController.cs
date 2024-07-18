@@ -25,7 +25,7 @@ namespace ViLearning.Areas.Student.Controllers
             return View();
         }
 
-        public async Task<Conversation> GetOrCreateConversationAsync(string user1Id, string user2Id)
+        public async Task<Conversation> GetOrCreateConversation(string user1Id, string user2Id)
         {
             var conversation = _unitOfWork.Conversation
                 .Get(c => (c.User1Id == user1Id && c.User2Id == user2Id) ||
@@ -46,7 +46,7 @@ namespace ViLearning.Areas.Student.Controllers
             return conversation;
         }
 
-        public async Task SaveMessageAsync(int conversationId, string senderId, string messageText)
+        public async Task SaveMessage(int conversationId, string senderId, string messageText)
         {
             var message = new Message
             {
