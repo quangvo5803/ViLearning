@@ -13,8 +13,17 @@ namespace ViLearning.Models
         public double Progress { get; set; }
         public double OverallScore { get; set; }
         public string? StudentCertificateUrl { get; set; }
+
+        public DateTime StartDate { get; set; }
+        public DateTime? CompletionDate { get; set; }
+
+        public string LearnedLessons { get; set; }
+
+        [ForeignKey("CourseId")]
         [ValidateNever]
         public Course Course { get; set; }
+
+        [ForeignKey("UserId")]
         [ValidateNever]
         public ApplicationUser User { get; set; }
 

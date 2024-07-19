@@ -104,8 +104,13 @@ namespace ViLearning.Areas.Student.Controllers
                     }
                 }
             }
-            testDetail.Mark = score; 
+            testDetail.Mark = score;
             // End Get Score
+
+            // Update Learning Progress
+
+            // End Update Learning Progress
+
             testDetail.Lesson = _unitOfWork.Lesson.Get(l => l.LessonId == vm.Lesson.LessonId, includeProperties: "Course");
             testDetail.TestResult = vm.TestDetail.TestResult;
 			_unitOfWork.TestDetail.Add(testDetail);
