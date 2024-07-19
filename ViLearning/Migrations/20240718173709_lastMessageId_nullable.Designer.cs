@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ViLearning.Data;
 
@@ -11,9 +12,11 @@ using ViLearning.Data;
 namespace ViLearning.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240718173709_lastMessageId_nullable")]
+    partial class lastMessageId_nullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -361,6 +364,28 @@ namespace ViLearning.Migrations
                     b.ToTable("Courses");
                 });
 
+            modelBuilder.Entity("ViLearning.Models.CourseCertificate", b =>
+                {
+                    b.Property<int>("CertificateId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CertificateId"));
+
+                    b.Property<string>("CertificateName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CertificateId");
+
+                    b.HasIndex("CourseId");
+
+                    b.ToTable("CourseCertificates");
+                });
+
             modelBuilder.Entity("ViLearning.Models.Feedback", b =>
                 {
                     b.Property<int>("FeedBackId")
@@ -431,39 +456,6 @@ namespace ViLearning.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Invoices");
-                });
-
-            modelBuilder.Entity("ViLearning.Models.LearningProgress", b =>
-                {
-                    b.Property<int>("LearningProgressId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LearningProgressId"));
-
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
-
-                    b.Property<double>("OverallScore")
-                        .HasColumnType("float");
-
-                    b.Property<double>("Progress")
-                        .HasColumnType("float");
-
-                    b.Property<string>("StudentCertificateUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("LearningProgressId");
-
-                    b.HasIndex("CourseId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("LearningProgresses");
                 });
 
             modelBuilder.Entity("ViLearning.Models.Lesson", b =>
@@ -586,6 +578,26 @@ namespace ViLearning.Migrations
                     b.HasIndex("LessonId");
 
                     b.ToTable("Questions");
+                });
+
+            modelBuilder.Entity("ViLearning.Models.StudentCertificate", b =>
+                {
+                    b.Property<int>("CourseCertificateId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("CourseCertificateId", "UserId");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("StudentCertificates");
                 });
 
             modelBuilder.Entity("ViLearning.Models.Subject", b =>
@@ -791,6 +803,17 @@ namespace ViLearning.Migrations
                     b.Navigation("Subject");
                 });
 
+            modelBuilder.Entity("ViLearning.Models.CourseCertificate", b =>
+                {
+                    b.HasOne("ViLearning.Models.Course", "Course")
+                        .WithMany()
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+                });
+
             modelBuilder.Entity("ViLearning.Models.Feedback", b =>
                 {
                     b.HasOne("ViLearning.Models.ApplicationUser", null)
@@ -836,25 +859,6 @@ namespace ViLearning.Migrations
                     b.Navigation("Course");
                 });
 
-            modelBuilder.Entity("ViLearning.Models.LearningProgress", b =>
-                {
-                    b.HasOne("ViLearning.Models.Course", "Course")
-                        .WithMany("LearningProgresses")
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ViLearning.Models.ApplicationUser", "User")
-                        .WithMany("LearningProgresses")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Course");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("ViLearning.Models.Lesson", b =>
                 {
                     b.HasOne("ViLearning.Models.Course", "Course")
@@ -896,6 +900,29 @@ namespace ViLearning.Migrations
                     b.Navigation("Lesson");
                 });
 
+            modelBuilder.Entity("ViLearning.Models.StudentCertificate", b =>
+                {
+                    b.HasOne("ViLearning.Models.ApplicationUser", null)
+                        .WithMany("StudentCertificates")
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("ViLearning.Models.CourseCertificate", "CourseCertificate")
+                        .WithMany()
+                        .HasForeignKey("CourseCertificateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ViLearning.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("CourseCertificate");
+                });
+
             modelBuilder.Entity("ViLearning.Models.TestDetail", b =>
                 {
                     b.HasOne("ViLearning.Models.Lesson", "Lesson")
@@ -929,8 +956,6 @@ namespace ViLearning.Migrations
                 {
                     b.Navigation("Feedbacks");
 
-                    b.Navigation("LearningProgresses");
-
                     b.Navigation("Lesson");
                 });
 
@@ -956,7 +981,7 @@ namespace ViLearning.Migrations
 
                     b.Navigation("Feedbacks");
 
-                    b.Navigation("LearningProgresses");
+                    b.Navigation("StudentCertificates");
 
                     b.Navigation("TestDetail");
                 });

@@ -40,5 +40,10 @@ namespace ViLearning.Services.Repository
                 _db.Update(lesson);
           
         }
+
+        public void UnDetachLesson(Lesson lesson)
+        {
+            _db.Entry(lesson).State = EntityState.Detached;
+        }
     }
 }

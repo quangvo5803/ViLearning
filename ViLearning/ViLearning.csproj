@@ -15,6 +15,7 @@
     <PackageReference Include="FFMpegCore" Version="5.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.6" />
     <Content Remove="wwwroot\css\Teacher\.editorconfig" />
+    <PackageReference Include="PdfSharp" Version="6.1.1" />
   </ItemGroup>
 
   <ItemGroup>

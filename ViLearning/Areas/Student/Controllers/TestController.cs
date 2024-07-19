@@ -1,5 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PdfSharp.Drawing;
+using PdfSharp.Pdf;
+using PdfSharp.Pdf.IO;
+using System.Drawing;
+using System.Reflection.PortableExecutable;
 using System.Security.Claims;
 using ViLearning.Models;
 using ViLearning.Models.ViewModels;
@@ -63,7 +68,6 @@ namespace ViLearning.Areas.Student.Controllers
             vm.Questions = easyQuestions.Concat(mediumQuestions)
                                         .Concat(hardQuestions)
                                         .ToList();
-            vm.TestDetail.TestResult = vm.Questions.ToDictionary(q => q.QuestionId, q => string.Empty); // Initialize dictionary with empty strings
 
 			return View("DoTest", vm);
         }
@@ -122,7 +126,7 @@ namespace ViLearning.Areas.Student.Controllers
         {
             List<TestDetail> testRanking = _unitOfWork.TestDetail.GetRange(t => t.LessonId == lessonId,
                 includeProperties: "ApplicationUser,Lesson")
-                .OrderByDescending(t => t.Mark).ThenByDescending(t => t.Duration).ThenBy(t => t.StartTime).ToList();
+                .OrderByDescending(t => t.Mark).ThenBy(t => t.Duration).ThenBy(t => t.StartTime).ToList();
             return testRanking;
         }
     }
