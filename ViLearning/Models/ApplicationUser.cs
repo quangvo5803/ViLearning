@@ -29,7 +29,7 @@ namespace ViLearning.Models
         public virtual ICollection<Feedback>? Feedbacks { get; set; }
         public virtual ICollection<Comment>? Comments {  get; set; } 
         public virtual ICollection<TestDetail>? TestDetail { get; set; }
-        public virtual ICollection<StudentCertificate>? StudentCertificates { get; set; }
+        public virtual ICollection<LearningProgress>? LearningProgresses { get; set; }
     }
 
     

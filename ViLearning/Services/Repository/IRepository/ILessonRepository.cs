@@ -7,6 +7,7 @@ namespace ViLearning.Services.Repository.IRepository
         Task<List<Lesson>?> GetLessonByCourseId(int courseId);
         void Update(Lesson lesson);
         public void LoadTest(Lesson lesson);
-        
+
+        public void UnDetachLesson(Lesson lesson);
     }
 }
