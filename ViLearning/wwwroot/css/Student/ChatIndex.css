@@ -201,6 +201,7 @@ img {
 
 #messageInput {
     border-radius: 10px;
+    padding-inline: 10px;
 }
 
 .messaging {

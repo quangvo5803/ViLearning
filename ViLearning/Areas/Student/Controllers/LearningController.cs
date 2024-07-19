@@ -31,7 +31,7 @@ namespace ViLearning.Areas.Student.Controllers
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             TestController testController = new TestController(_unitOfWork);
-            var course = _unitOfWork.Course.Get( c => c.CourseId == courseId );
+            var course = _unitOfWork.Course.Get( c => c.CourseId == courseId, includeProperties: "ApplicationUser");
             List<Lesson>? lessons = await _unitOfWork.Lesson.GetLessonByCourseId(courseId);
             var lesson = lessons?.Where(l => l.LessonNo == lessonNo).FirstOrDefault();
             var lessonId = _unitOfWork.Lesson.Get(l => l.CourseId == courseId && l.LessonNo == lessonNo).LessonId;
@@ -41,15 +41,136 @@ namespace ViLearning.Areas.Student.Controllers
             {
                 _unitOfWork.Lesson.LoadTest(l);
             }
+
+            var id = GetLessonId(courseId, lessonNo);
+
+            var lesson1 = _unitOfWork.Lesson.Get(m => m.LessonId == id, includeProperties: "Course,Comments,Comments.ApplicationUser,Comments.Replies");
+            CommentsController commentsController = new CommentsController(_unitOfWork);
+            var viewModel = new CommentLesson
+            {
+                Lesson = lesson1,
+                Comment = new Comment { LessonId = lesson1.LessonId }
+            };
+
+
             LearningMaterial lm = new LearningMaterial()
             {
                 Course = course,
                 Lesson = lesson,
                 ListLesson = lessons,
                 TestHistory = testController.TestHistory(lessonId, userId),
-                TestRanking = testController.TestRanking(lessonId)
+                TestRanking = testController.TestRanking(lessonId),
+                commentLesson = viewModel
             };
             return View(lm);
+        }
+
+        public int GetLessonId(int courseId, int lessonNo)
+        {
+            var lessonId = _unitOfWork.Lesson.Get(l => l.CourseId == courseId && l.LessonNo == lessonNo).LessonId;
+            return lessonId;
+        }
+
+        [HttpPost]
+        public IActionResult AddComment([FromBody] CommentLesson? model)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+
+            if (ContainsBannedWords(model.Comment.CommentContent))
+            {
+                return Json(new { success = false, error = "Bình luận chứa từ ngữ không phù hợp." });
+            }
+
+            model.Comment.UserId = userId;
+            model.Comment.DateComment = DateTime.Now;
+
+            _unitOfWork.Comment.Add(model.Comment);
+            _unitOfWork.Save();
+
+            var comment = _unitOfWork.Comment.Get(c => c.CommetId == model.Comment.CommetId, includeProperties: "ApplicationUser");
+            return Json(new { success = true, comment });
+        }
+
+        [HttpPost]
+        public IActionResult EditComment([FromBody] Comment model)
+        {
+            if (model == null)
+            {
+                return Json(new { success = false, error = "Model is null" });
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var commentFromDb = _unitOfWork.Comment.Get(c => c.CommetId == model.CommetId);
+            if (commentFromDb == null)
+            {
+                return Json(new { success = false, error = "No comment found with the given CommetId" });
+            }
+
+            if (commentFromDb.UserId != userId)
+            {
+                return Json(new { success = false, error = "Unauthorized action" });
+            }
+
+            commentFromDb.CommentContent = model.CommentContent;
+            _unitOfWork.Comment.Update(commentFromDb);
+            _unitOfWork.Save();
+
+            var updatedComment = _unitOfWork.Comment.Get(c => c.CommetId == model.CommetId, includeProperties: "ApplicationUser");
+
+            return Json(new { success = true, comment = updatedComment });
+        }
+
+
+
+        [HttpPost]
+        public IActionResult DeleteComment(int id)
+        {
+            var comment = _unitOfWork.Comment.Get(c => c.CommetId == id, includeProperties: "Replies"); // Include child replies
+            if (comment == null)
+            {
+                return Json(new { success = false, error = "Comment not found" });
+            }
+
+            try
+            {
+                // Delete all replies recursively
+                DeleteReplies(comment.Replies);
+
+                // Remove the main comment
+                _unitOfWork.Comment.Remove(comment);
+                _unitOfWork.Save();
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error deleting comment: {ex.Message}");
+                return Json(new { success = false, error = "Failed to delete comment" });
+            }
+        }
+
+        private bool ContainsBannedWords(string commentContent)
+        {
+            foreach (var word in _bannedWords)
+            {
+                if (commentContent.IndexOf(word, StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private void DeleteReplies(IEnumerable<Comment> replies)
+        {
+            foreach (var reply in replies)
+            {
+                var childReplies = _unitOfWork.Comment.GetAll().Where(c => c.ParentCommentId == reply.CommetId);
+                DeleteReplies(childReplies);
+                _unitOfWork.Comment.Remove(reply);
+            }
         }
     }
 }

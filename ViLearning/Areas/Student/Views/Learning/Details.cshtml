@@ -24,12 +24,12 @@
                     <a class="menu-item" id="learn-icon" style="color:white">
                         <i class="fa-brands fa-leanpub tt" data-bs-toggle="tooltip" data-bs-placement="top" title="Learning Material"></i>
                     </a>
-                    @* <a class="menu-item" id="comment-icon" style="color:white" asp-controller="Comments" asp-action="LessonDetails" asp-route-CourseName="@Model.Course.CourseName" asp-route-LessonName="@Model.Lesson.LessonName" asp-route-id="@Model.Lesson.LessonId" >
-                        <i class="fa-regular fa-comments tt" data-bs-toggle="tooltip" data-bs-placement="top" title="Discuss"></i>
-                    </a> *@
-                    <a class="menu-item" id="comment-icon" style="color:white" asp-controller="Comments" asp-action="LessonDetails" asp-route-CourseName="@Model.Course.CourseName" asp-route-LessonName="@Model.Lesson.LessonName" asp-route-id="@Model.Lesson.LessonId">
+                    <a class="menu-item" id="comment-icon" style="color:white" asp-controller="Comments" asp-action="LessonDetails" asp-route-CourseName="@Model.Course.CourseName" asp-route-LessonName="@Model.Lesson.LessonName" asp-route-id="@Model.Lesson.LessonId" >
                         <i class="fa-regular fa-comments tt" data-bs-toggle="tooltip" data-bs-placement="top" title="Discuss"></i>
                     </a>
+                    @* <a class="menu-item" id="comment-icon" style="color:white" asp-controller="Comments" asp-action="LessonDetails" asp-route-CourseName="@Model.Course.CourseName" asp-route-LessonName="@Model.Lesson.LessonName" asp-route-id="@Model.Lesson.LessonId">
+                        <i class="fa-regular fa-comments tt" data-bs-toggle="tooltip" data-bs-placement="top" title="Discuss"></i>
+                    </a> *@
                     <a class="menu-item" id="test-icon" asp-action="ViewTestInfo" asp-route-lessonId="@Model.Lesson.LessonId" asp-controller="Test" style="color:white">
                         <i class="fa-solid fa-file-circle-question tt" data-bs-toggle="tooltip" data-bs-placement="top" title="Do Test"></i>
                     </a>
@@ -125,13 +125,13 @@
             </div>
         </div>
         <div id="overlayComment" class="overlay-section">
-            <div class="overlay-content">
-
+            <div class="overlay-content" style="margin-top: 50px">
+                @Html.Partial("LessonDetails", Model.commentLesson)
                 <!-- Add your comment section content here -->
             </div>
         </div>
 
-        <div id="overlayRanking" class="overlay-section">
+        <div id="overlayRanking" class="overlay-section" style="width:41rem">
             <div class="overlay-content">
                 <!-- Add your ranking section content here -->
                 <h1>Test Ranking</h1>
@@ -227,8 +227,8 @@
                 @*Test Chat feature*@
                 <input type="hidden" id="hiddenUserId" value="@ViewData["userId"]" />
                 <div id="chatbox" class="chatbox d-none">
-                    <h3 class=" text-center" style="background: #5fcf80;">
-                        Messaging
+                    <h3 class="text-center" style="background: #5fcf80; margin-bottom: 0; padding-block: 5px; font-size: 1rem">
+                        @Model.Course.ApplicationUser.UserName
                     </h3>
                     <div class="messaging">
                         <div class="inbox_msg">
@@ -305,7 +305,7 @@
             });
         }
         if (learnLink && commentLink && rankingLink && overlayComment && overlayRanking && sidebar) {
-            @* commentLink.addEventListener('click', function (event) {
+            commentLink.addEventListener('click', function (event) {
                 event.preventDefault();
                 if (overlayComment.style.display === 'block') {
                     overlayComment.style.display = 'none';
@@ -315,7 +315,7 @@
                     overlayRanking.style.display = 'none'; // Hide the other overlay
                     overlayHistory.style.display = 'none';
                 }
-            }); *@
+            });
 
             rankingLink.addEventListener('click', function (event) {
                 event.preventDefault();
@@ -378,11 +378,16 @@
                 document.removeEventListener('mouseup', onMouseUp);
             }
         }
-        // Bắt sự kiện click vào biểu tượng chat
-        chatIcon.addEventListener('click', function () {
-            // Toggle class d-none của chatbox
-            console.log("abc");
+
+        // Khi nhấp vào chatIcon, toggle class d-none của chatbox
+        chatIcon.addEventListener('click', function (event) {
             chatbox.classList.toggle('d-none');
+            event.stopPropagation(); // Ngăn chặn sự kiện lan truyền
+        });
+
+        // Ngăn chặn sự kiện click bên trong chatbox làm ảnh hưởng đến chatIcon
+        chatbox.addEventListener('click', function (event) {
+            event.stopPropagation();
         });
     });
 

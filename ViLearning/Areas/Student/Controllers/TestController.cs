@@ -1,5 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PdfSharp.Drawing;
+using PdfSharp.Pdf;
+using PdfSharp.Pdf.IO;
+using System.Drawing;
+using System.Reflection.PortableExecutable;
 using System.Security.Claims;
 using ViLearning.Models;
 using ViLearning.Models.ViewModels;

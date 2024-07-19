@@ -147,14 +147,18 @@ body, html {
 
 .overlay-content {
     width: 100%;
-    max-width: 600px; 
+    max-width: 640px;
     padding: 20px;
-    background-color: #fff; 
-    
+    background-color: #F0F0F0;
 }
 
 
 .overlay-from-right {
     right: 0;
     left: auto;
+}
+
+.table th, .table td {
+    vertical-align: middle;
+    text-align: center;
 }
