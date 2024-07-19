@@ -12,6 +12,8 @@ namespace ViLearning.Models
         public string UserId { get; set; }
         public double Progress { get; set; }
         public double OverallScore { get; set; }
+        public DateTime EnrollDate { get; set; }
+        public DateTime CompletionDate { get; set; }
         public string? StudentCertificateUrl { get; set; }
         [ValidateNever]
         public Course Course { get; set; }

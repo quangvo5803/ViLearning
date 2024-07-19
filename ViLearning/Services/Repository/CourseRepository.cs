@@ -49,5 +49,11 @@ namespace ViLearning.Services.Repository
             }
         }
 
+        public void LoadTeacher(Course course)
+        {
+            _db.Entry(course)
+                .Reference(c => c.ApplicationUser)
+                .Load();
+        }
     }
 }

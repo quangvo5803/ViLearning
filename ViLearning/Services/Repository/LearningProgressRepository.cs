@@ -11,6 +11,14 @@ namespace ViLearning.Services.Repository
         {
             _db = db;
         }
+
+        public void LoadCourse(LearningProgress learningProgress)
+        {
+            _db.LearningProgresses.Entry(learningProgress)
+                .Reference(l => l.Course)
+                .Load();
+        }
+
         public void Update(LearningProgress learningProgress)
         {
             _db.LearningProgresses.Update(learningProgress);
