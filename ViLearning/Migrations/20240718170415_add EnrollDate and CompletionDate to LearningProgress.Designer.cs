@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ViLearning.Data;
 
@@ -11,9 +12,11 @@ using ViLearning.Data;
 namespace ViLearning.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240718170415_add EnrollDate and CompletionDate to LearningProgress")]
+    partial class addEnrollDateandCompletionDatetoLearningProgress
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -297,7 +300,7 @@ namespace ViLearning.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ConversationId"));
 
-                    b.Property<int?>("LastMessageId")
+                    b.Property<int>("LastMessageId")
                         .HasColumnType("int");
 
                     b.Property<string>("User1Id")
@@ -759,7 +762,8 @@ namespace ViLearning.Migrations
                     b.HasOne("ViLearning.Models.Message", "LastMessage")
                         .WithMany()
                         .HasForeignKey("LastMessageId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("ViLearning.Models.ApplicationUser", "User1")
                         .WithMany()

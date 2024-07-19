@@ -13,6 +13,7 @@
         public IFeedbackRepository Feedback { get; }
         public IInvoiceRepository Invoice { get; }
         public IMessageRepository Message { get; }
+        public ILearningProgressRepository LearningProgress { get; }
         public IConversationRepository Conversation { get; }
         void Save();
     }

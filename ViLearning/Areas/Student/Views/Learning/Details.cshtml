@@ -24,12 +24,12 @@
                     <a class="menu-item" id="learn-icon" style="color:white">
                         <i class="fa-brands fa-leanpub tt" data-bs-toggle="tooltip" data-bs-placement="top" title="Learning Material"></i>
                     </a>
-                    @* <a class="menu-item" id="comment-icon" style="color:white" asp-controller="Comments" asp-action="LessonDetails" asp-route-CourseName="@Model.Course.CourseName" asp-route-LessonName="@Model.Lesson.LessonName" asp-route-id="@Model.Lesson.LessonId" >
-                        <i class="fa-regular fa-comments tt" data-bs-toggle="tooltip" data-bs-placement="top" title="Discuss"></i>
-                    </a> *@
-                    <a class="menu-item" id="comment-icon" style="color:white" asp-controller="Comments" asp-action="LessonDetails" asp-route-CourseName="@Model.Course.CourseName" asp-route-LessonName="@Model.Lesson.LessonName" asp-route-id="@Model.Lesson.LessonId">
+                    <a class="menu-item" id="comment-icon" style="color:white" asp-controller="Comments" asp-action="LessonDetails" asp-route-CourseName="@Model.Course.CourseName" asp-route-LessonName="@Model.Lesson.LessonName" asp-route-id="@Model.Lesson.LessonId" >
                         <i class="fa-regular fa-comments tt" data-bs-toggle="tooltip" data-bs-placement="top" title="Discuss"></i>
                     </a>
+                    @* <a class="menu-item" id="comment-icon" style="color:white" asp-controller="Comments" asp-action="LessonDetails" asp-route-CourseName="@Model.Course.CourseName" asp-route-LessonName="@Model.Lesson.LessonName" asp-route-id="@Model.Lesson.LessonId">
+                        <i class="fa-regular fa-comments tt" data-bs-toggle="tooltip" data-bs-placement="top" title="Discuss"></i>
+                    </a> *@
                     <a class="menu-item" id="test-icon" asp-action="ViewTestInfo" asp-route-lessonId="@Model.Lesson.LessonId" asp-controller="Test" style="color:white">
                         <i class="fa-solid fa-file-circle-question tt" data-bs-toggle="tooltip" data-bs-placement="top" title="Do Test"></i>
                     </a>
@@ -125,8 +125,8 @@
             </div>
         </div>
         <div id="overlayComment" class="overlay-section">
-            <div class="overlay-content">
-
+            <div class="overlay-content" style="margin-top: 50px">
+                @Html.Partial("LessonDetails", Model.commentLesson)
                 <!-- Add your comment section content here -->
             </div>
         </div>
@@ -305,7 +305,7 @@
             });
         }
         if (learnLink && commentLink && rankingLink && overlayComment && overlayRanking && sidebar) {
-            @* commentLink.addEventListener('click', function (event) {
+            commentLink.addEventListener('click', function (event) {
                 event.preventDefault();
                 if (overlayComment.style.display === 'block') {
                     overlayComment.style.display = 'none';
@@ -315,7 +315,7 @@
                     overlayRanking.style.display = 'none'; // Hide the other overlay
                     overlayHistory.style.display = 'none';
                 }
-            }); *@
+            });
 
             rankingLink.addEventListener('click', function (event) {
                 event.preventDefault();
