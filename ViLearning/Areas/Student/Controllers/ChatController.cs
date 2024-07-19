@@ -60,6 +60,7 @@ namespace ViLearning.Areas.Student.Controllers
 
             var conversation = _unitOfWork.Conversation.Get(c => c.ConversationId == conversationId);
             conversation.LastMessage = message;
+            conversation.LastMessageId = message.MessageId;
 
             _unitOfWork.Save();
         }

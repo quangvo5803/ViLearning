@@ -71,10 +71,17 @@ connection.start().then(function () {
 });
 
 document.getElementById("msg_send_btn").addEventListener("click", function (event) {
-    var message = document.getElementById("messageInput").value;
+    var messageInput = document.getElementById("messageInput");
+    var message = messageInput.value.trim(); // Loại bỏ khoảng trắng ở đầu và cuối chuỗi
+
+    if (message === "") {
+        // Nếu chuỗi rỗng, không gửi tin nhắn
+        return;
+    }
+
     connection.invoke("SendMessage", currentUserId, message).then(function () {
         // Xóa nội dung của input sau khi gửi tin nhắn thành công
-        document.getElementById("messageInput").value = "";
+        messageInput.value = "";
     }).catch(function (err) {
         console.error("Error sending message: ", err.toString());
     });

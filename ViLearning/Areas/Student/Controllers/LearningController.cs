@@ -31,7 +31,7 @@ namespace ViLearning.Areas.Student.Controllers
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             TestController testController = new TestController(_unitOfWork);
-            var course = _unitOfWork.Course.Get( c => c.CourseId == courseId );
+            var course = _unitOfWork.Course.Get( c => c.CourseId == courseId, includeProperties: "ApplicationUser");
             List<Lesson>? lessons = await _unitOfWork.Lesson.GetLessonByCourseId(courseId);
             var lesson = lessons?.Where(l => l.LessonNo == lessonNo).FirstOrDefault();
             var lessonId = _unitOfWork.Lesson.Get(l => l.CourseId == courseId && l.LessonNo == lessonNo).LessonId;

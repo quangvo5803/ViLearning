@@ -3,11 +3,12 @@
 @section Styles {
     <link rel="stylesheet" href="~/css/Student/ChatIndex.css">
 }
-<input type="hidden" id="hiddenUserId" value="@ViewData["userId"]" />
 <div class="container">
-    <h3 class=" text-center">Messaging</h3>
+    <h3 class=" text-center p-2">Messaging</h3>
     <div class="messaging">
+        <input type="hidden" id="hiddenUserId" value="@ViewData["userId"]" />
         <div class="inbox_msg">
+            @*Conversation List left bar*@
             <div class="inbox_people">
                 <div class="headind_srch">
                     <div class="recent_heading">
@@ -49,6 +50,7 @@
                     </div>
                 </div>
             </div>
+            @*End conversation List left bar*@
             <div class="mesgs">
                 <div id="messagesList">
                 </div>

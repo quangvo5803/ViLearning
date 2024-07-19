@@ -227,8 +227,8 @@
                 @*Test Chat feature*@
                 <input type="hidden" id="hiddenUserId" value="@ViewData["userId"]" />
                 <div id="chatbox" class="chatbox d-none">
-                    <h3 class=" text-center" style="background: #5fcf80;">
-                        Messaging
+                    <h3 class="text-center" style="background: #5fcf80; margin-bottom: 0; padding-block: 5px; font-size: 1rem">
+                        @Model.Course.ApplicationUser.UserName
                     </h3>
                     <div class="messaging">
                         <div class="inbox_msg">
@@ -375,11 +375,16 @@
                 document.removeEventListener('mouseup', onMouseUp);
             }
         }
-        // Bắt sự kiện click vào biểu tượng chat
-        chatIcon.addEventListener('click', function () {
-            // Toggle class d-none của chatbox
-            console.log("abc");
+
+        // Khi nhấp vào chatIcon, toggle class d-none của chatbox
+        chatIcon.addEventListener('click', function (event) {
             chatbox.classList.toggle('d-none');
+            event.stopPropagation(); // Ngăn chặn sự kiện lan truyền
+        });
+
+        // Ngăn chặn sự kiện click bên trong chatbox làm ảnh hưởng đến chatIcon
+        chatbox.addEventListener('click', function (event) {
+            event.stopPropagation();
         });
     });
 
