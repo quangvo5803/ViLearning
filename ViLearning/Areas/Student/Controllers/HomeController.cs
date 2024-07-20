@@ -97,7 +97,7 @@ namespace ViLearning.Areas.Student.Controllers
             }
             var viewModel = new LandingPageVM
             {
-                Courses = _unitOfWork.Course.GetRange(c => c.CourseStatus == CourseStatus.Published,includeProperties: "Subject,ApplicationUser").ToList(),
+                Courses = _unitOfWork.Course.GetRange(c => c.CourseStatus == CourseStatus.Published,includeProperties: "Subject,ApplicationUser,Feedbacks").ToList(),
                 UserList = userList,
                 TeacherList = teacherList
             };
@@ -121,7 +121,7 @@ namespace ViLearning.Areas.Student.Controllers
                                                             || c.Subject.Name.Contains(query)
                                                             || c.Description.Contains(query)
                                                             || c.ApplicationUser.FullName.Contains(query) 
-                                                            && c.CourseStatus == CourseStatus.Published, includeProperties: "Subject,ApplicationUser"),
+                                                            && c.CourseStatus == CourseStatus.Published, includeProperties: "Subject,ApplicationUser,Feedbacks"),
                 UserList = userList,
                 TeacherList = teacherList
             };
@@ -149,7 +149,7 @@ namespace ViLearning.Areas.Student.Controllers
             {
                 userId = user.Id;
             }
-            var invoice = _unitOfWork.Invoice.GetRange(i => i.UserId == userId, includeProperties: "Course,Course.ApplicationUser,Course.Subject");
+            var invoice = _unitOfWork.Invoice.GetRange(i => i.UserId == userId, includeProperties: "Course,Course.ApplicationUser,Course.Subject,Course.Feedbacks");
             return View(invoice);
         }
         [Authorize]

@@ -35,7 +35,7 @@
             <li><i class="bi bi-check-circle" style="color:#5fcf80;"></i> <span>Thi thử đại học trực tuyến</span></li>
             <li><i class="bi bi-check-circle" style="color:#5fcf80;"></i> <span>Dành cho học sinh trung học phổ thông, trung học cơ sở và tiểu học.</span></li>
         </ul>
-        <a href="#" class="btn btn-readmore"><span>Tìm hiểu thêm</span> <i class="bi bi-arrow-right"></i></a>
+        <a asp-action="CourseList" class="btn btn-readmore"><span>Tìm hiểu thêm</span> <i class="bi bi-arrow-right"></i></a>
     </div>
     <div class="col-6 col-sm-6">
         <img src="/images/about.jpg" style="width:60%; height:auto" />
@@ -105,7 +105,7 @@
                                             <span class="bi bi-star"></span>
                                         }
                                     }
-                                    <span style="margin-right3: 5px">(@course.Feedbacks.Count() đánh giá)</span>
+                                    <span style="margin-right: 5px">(@course.Feedbacks.Count() đánh giá)</span>
                                 }
                             </div>
                             <span class="ms-auto price" style="font-size:18px; font-weight:bold;">@course.Price?.ToString("N0") VNĐ</span>
