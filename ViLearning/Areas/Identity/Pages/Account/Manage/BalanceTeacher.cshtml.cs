@@ -12,16 +12,13 @@ namespace ViLearning.Areas.Identity.Pages.Account.Manage
     public class BalanceTeacherModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IUnitOfWork _unitOfWork;
 
         public BalanceTeacherModel(
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
             IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
-            _signInManager = signInManager;
             _unitOfWork = unitOfWork;
             Role = new List<string>();
         }
@@ -66,6 +63,11 @@ namespace ViLearning.Areas.Identity.Pages.Account.Manage
                 TempData["Error"] = "Số tiền hiện tại không đủ";
                 return RedirectToPage("./BalanceTeacher");
             }
+            if(user.TeacherQrCode != true)
+            {
+                TempData["Error"] = "Vui lòng cập nhật Qr Code để rút tiền";
+                return RedirectToPage("./BalanceTeacher");
+            }
             if (Input.Withdraw <= 100000)
             {
                 TempData["Error"] = "Vui lòng rút nhiều hơn 100.000 VNĐ";
@@ -89,7 +91,6 @@ namespace ViLearning.Areas.Identity.Pages.Account.Manage
                 UserId = user.Id,
                 RequestMoney = Input.Withdraw,
                 RequestDay = DateTime.Now,
-                Status = false
             };
             user.Balance -= Input.Withdraw;
             _unitOfWork.ApplicationUser.Update(user);

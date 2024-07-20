@@ -38,7 +38,7 @@ function loadDataTable() {
                 "data": 'withdrawRequestID',
                 "render": function (data) {
                     return `<div class="w-100 btn-group" role="group"> 
-                            <a href="/Admin/ManagerTeacherWithdraw/Payment?withdrawId=${data}" class="btn btn-primary mx-2">Thanh toán</a>
+                            <a href="/Admin/ManagerTeacherWithdraw/Withdraw?id=${data}" class="btn btn-primary mx-2">Thanh toán</a>
                             </div>`;
                 },
                 "width": "25%"

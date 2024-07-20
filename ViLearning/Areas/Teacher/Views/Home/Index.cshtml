@@ -1,6 +1,330 @@
-﻿@* <h1>Teacher pageeeeee</h1> *@
-
+﻿@model StaticsViewModel
 @{
-    
+    ViewData["Title"] = "Trang chủ giáo viên";
 }
 
+<div class="row mt-5 justify-content-center">
+    <!-- Earnings (Monthly) Card Example -->
+    <div class="col-md-4 mb-4">
+        <div class="card border border-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Doanh thu (Tháng này)
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.MonthlyProfit.ToString("N0") VNĐ</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-calendar" style="font-size: 2em;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Earnings (Annual) Card Example -->
+    <div class="col-md-4 mb-4">
+        <div class="card border border-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            Tổng doanh thu(Năm này)
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.YearProfit.ToString("N0") VNĐ</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-currency-dollar" style="font-size: 2em;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card border-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-uppercase mb-1" style="color:orange">
+                            Đánh giá
+                        </div>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col-auto">
+                                @if(Model.FeedbackStar > 0)
+                                {
+                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">@Model.FeedbackStar/5 sao</div>
+                                }
+                                else
+                                {
+                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">0/5 sao</div>
+                                }
+                            </div>
+                            <div class="col">
+                                <div class="progress progress-sm mr-2">
+                                    <div class="progress-bar" role="progressbar"
+                                         style="width: @(Model.FeedbackStar/5*100)%;background-color: orange" aria-valuenow="50" aria-valuemin="0"
+                                         aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-star" style="font-size: 2em"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row justify-content-center">
+    <!-- Profit chart -->
+    <div class="text-center col-md-4 mb-5">
+        <h3 class="mt-5"><a class="nav-link text-dark" href="/Identity/Account/Manage/BalanceTeacher">Doanh thu </a></h3>
+        <div class="mt-2" id="totalRevenue"> </div>
+        <canvas class="mt-2" id="profitChart" width="150" height="150"></canvas>
+        <div class="col">
+            <label for="yearFilter">Chọn năm:</label>
+            <input type="number" id="yearFilter" name="yearFilter" value="2024">
+            <button onclick="updateCharts()">Xem biểu đồ</button>
+        </div>
+    </div>
+    <!-- Course chart -->
+    <div class="text-center col-md-4 mb-5">
+        <h3 class="mt-5"><a class="nav-link text-dark" asp-area="Teacher" asp-controller="Courses" asp-action="Index">Quản lí khóa học</a></h3>
+        <div class="mt-2" id="totalCourse"></div>
+        <canvas class="mt-2" id="courseChart" width="150" height="150"></canvas>
+    </div>
+
+    <!-- Feedback chart -->
+    <div class="text-center col-md-4 mb-5">
+        <h3 class="mt-5"><a class="nav-link text-dark" asp-area="Teacher" asp-controller="Feedback" asp-action="Index">Đánh giá</a></h3>
+        <div class="mt-2" id="totalFeedback"></div>
+        <canvas class="mt-2" id="feedbackChart" width="400px" height="400px"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    async function fetchUserData() {
+        const response = await fetch('/Teacher/Home/GetUser');
+        const data = await response.json();
+        return data.user;
+    }
+    async function renderUserChart() {
+        const userCount = await fetchUserData();
+
+        const ctx = document.getElementById('userChart').getContext('2d');
+
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Học sinh'],
+                datasets: [{
+                    label: 'Number of Students',
+                    data: [userCount],
+                    backgroundColor: 'rgb(34, 139, 34)',
+                    hoverOffset: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                return tooltipItem.label + ': ' + tooltipItem.raw;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        document.getElementById('totalUsers').innerText = `Số học sinh đã mua khóa học: ${userCount}`;
+    }
+
+   
+    //Profit chart
+    async function fetchMonthlyProfit(year) {
+        const response = await fetch(`/Teacher/Home/GetMonthlyProfit?year=${year}`);
+        const data = await response.json();
+        return data;
+    }
+
+
+    async function renderProfitChart(year) {
+        const data = await fetchMonthlyProfit(year);
+
+        const ctx = document.getElementById('profitChart').getContext('2d');
+        const labels = data.months; 
+        const profits = data.profits; 
+
+
+        if (window.profitchart) {
+            window.profitchart.destroy();
+        }
+        window.profitchart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Doanh thu',
+                    data: profits,
+                    backgroundColor: 'rgb(124, 252, 0)',
+                    hoverOffset: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                return tooltipItem.dataset.label + ': ' + tooltipItem.raw;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true
+                    },
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        const totalProfit = revenues.reduce((a, b) => a + b, 0);
+        document.getElementById('totalRevenue').innerText = `Tổng lợi nhuận: ${formatCurrency(totalProfit)}`;
+    }
+    async function updateCharts() {
+        const selectedYear = document.getElementById('yearFilter').value;
+        await renderProfitChart(selectedYear);
+    }
+
+    //Course chart
+    async function fetchCourseCounts() {
+        const response = await fetch('/Teacher/Home/GetCourse');
+        const data = await response.json();
+        return data;
+    }
+
+    async function renderCourseChart() {
+        const data = await fetchCourseCounts();
+
+        const ctx = document.getElementById('courseChart').getContext('2d');
+        const labels = ['Đang đợi duyệt', 'Đã duyệt'];
+        const values = [data.pendingCourse, data.approvedCourse];
+        const totalCourse = values.reduce((a, b) => a + b, 0);
+
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Number of course',
+                    data: values,
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)'
+                    ],
+                    hoverOffset: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                return tooltipItem.label + ': ' + tooltipItem.raw;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        document.getElementById('totalCourse').innerText = `Tổng số khóa học: ${totalCourse}`;
+    }
+
+    //Feedback chart
+    async function fetchFeedbackData() {
+        const response = await fetch('/Teacher/Home/GetFeedback');
+        const data = await response.json();
+        return data;
+    }
+
+    async function renderFeedbackChart() {
+        const data = await fetchFeedbackData();
+
+        const ctx = document.getElementById('feedbackChart').getContext('2d');
+        const labels = ['5 sao', '4 sao', '3 sao', '2 sao', '1 sao'];
+        const values = [data.five, data.four, data.three, data.two, data.one];
+        const totalFeedback = values.reduce((a, b) => a + b, 0);
+
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Số đánh giá',
+                    data: values,
+                    backgroundColor: [
+                        'rgb(194,222,240)',
+                        'rgb(255,165,0)',
+                        'rgb(255,228,178)',
+                        'rgb(253,231,41)',
+                        'rgb(254,245,169)'
+                    ],
+                    hoverOffset: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                return tooltipItem.label + ': ' + tooltipItem.raw;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        document.getElementById('totalFeedback').innerText = `Tổng số đánh giá: ${totalFeedback}`;
+    }
+
+    renderUserChart();
+    renderCourseChart();
+    renderFeedbackChart();
+</script>
+<style>
+    .container {
+        max-width: 1920px;
+    }
+
+    #userChart, #profitChart, #courseChart,#feedbackChart {
+        width: 400px !important;
+        height: 400px !important;
+        margin: auto
+    }
+
+</style>

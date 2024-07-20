@@ -16,6 +16,8 @@ namespace ViLearning.Models
         public string UserId { get; set; }
         public int CourseId { get; set; }
 
+        public DateTime CreatedAt { get; set; }
+
 
         //Relation
         [ForeignKey("UserId")]

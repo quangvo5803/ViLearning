@@ -1,0 +1,49 @@
+﻿@page
+@model QRCodeSubmitModel
+@{
+    ViewData["Title"] = "Quản lí QR rút tiền";
+    ViewData["ActivePage"] = ManageNavPages.Index;
+}
+
+<div class="container d-flex flex-column align-items-center justify-content-center mt-5" style="min-height:500px">
+    @if (Model.Input.TeacherQRCodeUrl != null)
+    {
+        <div class="certificate-wrapper text-center" style="width:1500px; height:500px; overflow:hidden; display:flex; justify-content:center; align-items:center;">
+            <a class="venobox" data-gall="gallery01" data-fitview="true" href="@Model.Input.TeacherQRCodeUrl">
+                <img src="@Model.Input.TeacherQRCodeUrl" alt="Giấy Chứng Nhận" class="certificate-img" style="max-width:40%; max-height:40%; object-fit:contain;">
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning text-center" role="alert">
+            Vui lòng cập nhật mã QR!
+        </div>
+    }
+    <div class="alert alert-warning text-center" role="alert">
+        <b>Lưu ý: Vi-learning không chịu trách nhiệm nếu bạn cung cấp sai mã QR. Vui lòng kiểm tra kỹ.</b>
+    </div>
+    <form id="profile-form" method="post" enctype="multipart/form-data" class="w-75">
+        <div class="form-floating mb-3">
+            <input type="file" name="file" asp-for="Input.TeacherQRCodeUrl" class="form-control" placeholder="Tải lên QR code" />
+            <label for="file" asp-for="Input.TeacherQRCodeUrl" class="form-label">QRCode nhận tiền</label>
+        </div>
+        <div class="row justify-content-center mt-4 w-100" role="group">
+            <button type="submit" class="col-md-5 btn btn-success mx-2" style="border: 1px solid white; border-radius: 5px;">Cập nhật</button>
+            <a class="col-md-5 btn btn-secondary mx-2" asp-page="/Account/Manage/BalanceTeacher" style="border: 1px solid #6c757d; border-radius: 5px;">
+                <i class="bi bi-arrow-return-left pr-1"></i> Trở về
+            </a>
+        </div>
+    </form>
+</div>
+@section Scripts {
+    <script>
+        new VenoBox({
+            selector: '.venobox',
+            numeration: true,
+            infinigall: true,
+            share: true,
+            spinner: 'rotating-plane',
+        });
+    </script>
+}

@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ViLearning.Models;
@@ -16,13 +14,11 @@ namespace ViLearning.Areas.Admin.Controllers
 
         
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IVnPayServicecs _vpnPayServicecs;
-
-        public ManagerTeacherWithdrawController(IUnitOfWork unitOfWork, IVnPayServicecs vnPayServicecs)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public ManagerTeacherWithdrawController(IUnitOfWork unitOfWork,UserManager<ApplicationUser> userManager)
         {
             _unitOfWork = unitOfWork;
-            _vpnPayServicecs = vnPayServicecs;
-            
+            _userManager = userManager;           
         }
         public IActionResult Index()
         {
@@ -41,43 +37,44 @@ namespace ViLearning.Areas.Admin.Controllers
             }
             return Json(new { data = objList });
         }
-
-        [Authorize]
-        public IActionResult Payment(int withdrawId)
+        public IActionResult Withdraw(int id)
         {
-            var userName = User.Identity.Name;
-            var withdraw = _unitOfWork.WithdrawRequest.Get(r => r.WithdrawRequestID == withdrawId);
-            var vnPayModel = new VnPaymentRequestModel
+            var request = _unitOfWork.WithdrawRequest.Get(r => r.WithdrawRequestID == id);
+            foreach(ApplicationUser u in _unitOfWork.ApplicationUser.GetAll())
             {
-                Amount = withdraw.RequestMoney,
-                CreateDate = DateTime.Now,
-                Description = "Xử lí yêu cầu rút tiền " + withdrawId,
-                FullName = userName,
-                OrderId = new Random().Next(1000, 100000),
-                WithdrawRequest = withdraw
-            };
-            return Redirect(_vpnPayServicecs.CreatePaymentUrl(HttpContext, vnPayModel));
-        }
-
-        [Authorize]
-        public IActionResult PaymentCallBack()
-        {
-            var response = _vpnPayServicecs.PaymentExecute(Request.Query);
-            var code = response.VnPayResponseCode;
-            var withdrawId = response.OrderDescription;
-            if (response == null || response.VnPayResponseCode != "00")
-            {
-                TempData["error"] = "Lỗi thanh toán";
-                return RedirectToAction("Index");
-
+                if(request.UserId == u.Id)
+                {
+                    request.ApplicationUser = u;
+                }
             }
-            WithdrawRequest withdraw = _unitOfWork.WithdrawRequest.Get(r => r.WithdrawRequestID == int.Parse(withdrawId));
-            withdraw.Status = true;
-            withdraw.CompleteDay = DateTime.Now;
-            _unitOfWork.WithdrawRequest.Update(withdraw);
-            _unitOfWork.Save();
-            TempData["success"] = "Thanh toán thành công";
-            return RedirectToAction("Index");
+            return View(request);
         }
+
+        public IActionResult Accept(int id)
+        {
+            var request = _unitOfWork.WithdrawRequest.Get(r => r.WithdrawRequestID == id);
+            request.Status = true;
+            _unitOfWork.WithdrawRequest.Update(request);
+            _unitOfWork.Save();
+            return RedirectToAction("Index", "ManagerTeacherWithdraw");
+        }
+
+        public IActionResult Reject(int id)
+        {
+            var request = _unitOfWork.WithdrawRequest.Get(r => r.WithdrawRequestID == id);
+            foreach (ApplicationUser u in _unitOfWork.ApplicationUser.GetAll())
+            {
+                if (request.UserId == u.Id)
+                {
+                    request.ApplicationUser = u;
+                }
+            }
+            request.ApplicationUser.Balance += request.RequestMoney;
+            _unitOfWork.ApplicationUser.Update(request.ApplicationUser);
+            _unitOfWork.WithdrawRequest.Remove(request);
+            _unitOfWork.Save();
+            return RedirectToAction("Index", "ManagerTeacherWithdraw");
+        }
+
     }
 }

@@ -53,17 +53,6 @@ namespace ViLearning.Data
             modelBuilder.Entity<Feedback>()
                 .HasKey(f => f.FeedBackId);
 
-            modelBuilder.Entity<Feedback>()
-                .HasOne(f => f.ApplicationUser)
-                .WithMany()
-                .HasForeignKey(f => f.UserId)
-                .OnDelete(DeleteBehavior.Restrict); // Prevent cascading deletes from ApplicationUser
-
-            modelBuilder.Entity<Feedback>()
-                .HasOne(f => f.Course)
-                .WithMany()
-                .HasForeignKey(f => f.CourseId)
-                .OnDelete(DeleteBehavior.Cascade); // Allow cascading deletes from Course
 
             // Configuration for Comment
             modelBuilder.Entity<Comment>()

@@ -54,9 +54,9 @@ namespace ViLearning.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetMonthlyProfit()
+        public async Task<IActionResult> GetMonthlyProfit(int year)
         {
-            var invoiceList = _unitOfWork.Invoice.GetAll().ToList();
+            var invoiceList = _unitOfWork.Invoice.GetRange(i => i.PurchaseDate.Year == year).ToList();
             var monthlyProfit = new double[12];
             var monthlyRevenue = new double[12];
 
