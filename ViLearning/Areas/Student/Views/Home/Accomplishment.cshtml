@@ -27,12 +27,14 @@
             const pageSize = 6;
 
             function loadCourses(page) {
+                
                 $.getJSON('@Url.Action("GetAccomplishments", "Home")', { page: page, pageSize: pageSize }, function (data) {
                     if (data && data.learningProgresses) {
+                        console.log(data);
                         $('#learningProgress-container').empty();
                         data.learningProgresses.forEach(learningProgress => {
                             $('#learningProgress-container').append(
-                                `<div class="learningProgress-item" data-pdf-url="${learningProgress.studentCertificateUrl}" data-progress="${learningProgress.progress}" data-course-id="${learningProgress.course.id}">
+                                `<div class="learningProgress-item" data-pdf-url="${learningProgress.studentCertificateUrl}" data-progress="${learningProgress.progress}" data-course-id="${learningProgress.course.courseId}">
                                     <a href="#">
                                         <div class="img-wrapper">
                                             <img src="${learningProgress.course.coverImgUrl}" alt="" class="course-img">
@@ -115,7 +117,7 @@
                         console.error("PDF URL is not set.");
                     }
                 } else {
-                    window.location.href = `@Url.Action("Details", "Learning")?courseId=${courseId}&someParam=1`;
+                    window.location.href = `@Url.Action("Details", "Learning")?courseId=${courseId}&lessonNo=1`;
                 }
             });
 

@@ -375,12 +375,6 @@ namespace ViLearning.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("FeedBackContent")
                         .HasColumnType("nvarchar(max)");
 
@@ -388,6 +382,7 @@ namespace ViLearning.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("FeedBackId");
@@ -437,7 +432,7 @@ namespace ViLearning.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LearningProgressId"));
 
-                    b.Property<DateTime>("CompletionDate")
+                    b.Property<DateTime?>("CompletionDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("CourseId")
@@ -972,7 +967,6 @@ namespace ViLearning.Migrations
                     b.Navigation("Replies");
                 });
 
-            
             modelBuilder.Entity("ViLearning.Models.Conversation", b =>
                 {
                     b.Navigation("Messages");

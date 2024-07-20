@@ -18,12 +18,7 @@ namespace ViLearning.Migrations
                 nullable: false,
                 defaultValue: "");
 
-            migrationBuilder.AddColumn<DateTime>(
-                name: "CreatedAt",
-                table: "Feedbacks",
-                type: "datetime2",
-                nullable: false,
-                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
+            
         }
 
         /// <inheritdoc />
@@ -33,9 +28,7 @@ namespace ViLearning.Migrations
                 name: "LearnedLessons",
                 table: "LearningProgresses");
 
-            migrationBuilder.DropColumn(
-                name: "CreatedAt",
-                table: "Feedbacks");
+            
         }
     }
 }

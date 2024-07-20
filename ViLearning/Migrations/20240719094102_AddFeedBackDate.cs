@@ -39,12 +39,7 @@ namespace ViLearning.Migrations
                 name: "CourseId1",
                 table: "Feedbacks");
 
-            migrationBuilder.AddColumn<DateTime>(
-                name: "CreatedAt",
-                table: "Feedbacks",
-                type: "datetime2",
-                nullable: false,
-                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
+            
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Feedbacks_AspNetUsers_UserId",
@@ -62,9 +57,7 @@ namespace ViLearning.Migrations
                 name: "FK_Feedbacks_AspNetUsers_UserId",
                 table: "Feedbacks");
 
-            migrationBuilder.DropColumn(
-                name: "CreatedAt",
-                table: "Feedbacks");
+            
 
             migrationBuilder.AddColumn<string>(
                 name: "ApplicationUserId",

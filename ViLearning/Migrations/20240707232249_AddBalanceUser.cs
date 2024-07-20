@@ -1,12 +1,13 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
+
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
 namespace ViLearning.Migrations
 {
     /// <inheritdoc />
-    public partial class addCreateDateIntoFeedbacks : Migration
+    public partial class AddBalanceUser : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,16 +16,17 @@ namespace ViLearning.Migrations
                 name: "FK_Comments_AspNetUsers_UserId",
                 table: "Comments");
 
-            migrationBuilder.AlterColumn<string>(
-                name: "UserId",
-                table: "Feedbacks",
-                type: "nvarchar(450)",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(450)");
+            migrationBuilder.DeleteData(
+                table: "Subjects",
+                keyColumn: "Id",
+                keyValue: 1);
 
-            
+            migrationBuilder.DeleteData(
+                table: "Subjects",
+                keyColumn: "Id",
+                keyValue: 2);
 
+           
             migrationBuilder.AlterColumn<string>(
                 name: "UserId",
                 table: "Comments",
@@ -49,6 +51,13 @@ namespace ViLearning.Migrations
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)");
 
+            migrationBuilder.AddColumn<double>(
+                name: "Balance",
+                table: "AspNetUsers",
+                type: "float",
+                nullable: true,
+                defaultValue: 0.0);
+
             migrationBuilder.AddForeignKey(
                 name: "FK_Comments_AspNetUsers_UserId",
                 table: "Comments",
@@ -65,18 +74,12 @@ namespace ViLearning.Migrations
                 table: "Comments");
 
             migrationBuilder.DropColumn(
-                name: "CreatedDate",
-                table: "Feedbacks");
+                name: "CourseStatus",
+                table: "Courses");
 
-            migrationBuilder.AlterColumn<string>(
-                name: "UserId",
-                table: "Feedbacks",
-                type: "nvarchar(450)",
-                nullable: false,
-                defaultValue: "",
-                oldClrType: typeof(string),
-                oldType: "nvarchar(450)",
-                oldNullable: true);
+            migrationBuilder.DropColumn(
+                name: "Balance",
+                table: "AspNetUsers");
 
             migrationBuilder.AlterColumn<string>(
                 name: "UserId",
@@ -107,6 +110,15 @@ namespace ViLearning.Migrations
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)",
                 oldNullable: true);
+
+            migrationBuilder.InsertData(
+                table: "Subjects",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Toán" },
+                    { 2, "Ngữ Văn" }
+                });
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Comments_AspNetUsers_UserId",
