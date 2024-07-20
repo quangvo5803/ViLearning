@@ -45,5 +45,12 @@ namespace ViLearning.Services.Repository
         {
             _db.Entry(lesson).State = EntityState.Detached;
         }
+
+        public void LoadCourse(Lesson lesson)
+        {
+            _db.Entry(lesson)
+                .Reference(l => l.Course)
+                .Load();
+        }
     }
 }

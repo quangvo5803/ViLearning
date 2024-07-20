@@ -339,14 +339,12 @@
             isResizing = true;
             document.addEventListener('mousemove', onMouseMove);
             document.addEventListener('mouseup', onMouseUp);
-            console.log("Resizing started");
         });
 
         function onMouseMove(e) {
             if (!isResizing) return;
 
             const offsetRight = document.body.offsetWidth - e.clientX;
-            console.log("Offset Right:", offsetRight);
 
             mainContent.style.width = (document.body.offsetWidth - offsetRight) + 'px';
             lessonContainer.style.width = '100%';
@@ -364,17 +362,12 @@
         // Khi nhấp vào chatIcon, toggle class d-none của chatbox
         chatIcon.addEventListener('click', function (event) {
             chatbox.classList.toggle('d-none');
-            console.log('click to chat icon')
             @* event.stopPropagation(); *@ // Ngăn chặn sự kiện lan truyền
         });
 
         // Ngăn chặn sự kiện click bên trong chatbox làm ảnh hưởng đến chatIcon
         chatbox.addEventListener('click', function (event) {
-            console.log('click to chat box')
             event.stopPropagation();
-        });
-        document.getElementById("msg_send_btn").addEventListener("click", function (event) {
-            console.log('click to send btn')
         });
     });
 

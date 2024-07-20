@@ -1,5 +1,6 @@
 ﻿using ViLearning.Data;
 using ViLearning.Services.Repository.IRepository;
+using ViLearning.Utility;
 
 namespace ViLearning.Services.Repository
 {
@@ -18,7 +19,6 @@ namespace ViLearning.Services.Repository
         public IInvoiceRepository Invoice { get; private set; }
         public IConversationRepository Conversation { get; private set; }
         public IMessageRepository Message { get; private set; }
-
 
         private ApplicationDBContext _db;
 

@@ -1,6 +1,5 @@
 ﻿
 var currentUserId = document.getElementById("hiddenUserId").value;
-console.log(currentUserId);
 var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
 // Disable the send button until connection is established
@@ -73,7 +72,6 @@ connection.start().then(function () {
 document.getElementById("msg_send_btn").addEventListener("click", function (event) {
     var messageInput = document.getElementById("messageInput");
     var message = messageInput.value.trim(); // Loại bỏ khoảng trắng ở đầu và cuối chuỗi
-    console.log(123);
     if (message === "") {
         // Nếu chuỗi rỗng, không gửi tin nhắn
         return;

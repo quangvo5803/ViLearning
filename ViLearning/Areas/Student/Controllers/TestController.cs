@@ -77,7 +77,7 @@ namespace ViLearning.Areas.Student.Controllers
 		public async Task<IActionResult> SubmitTest(DoTestVM vm)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
+            var lesson = _unitOfWork.Lesson.Get(l => l.LessonId == vm.Lesson.LessonId);
             TestDetail testDetail = new TestDetail()
 			{
 				StartTime = vm.TestDetail.StartTime,
@@ -115,15 +115,15 @@ namespace ViLearning.Areas.Student.Controllers
             var learningProgress = _unitOfWork.LearningProgress.Get(q => q.UserId == testDetail.UserId && q.CourseId == testDetail.Lesson.CourseId, includeProperties:"User");
             int numOfLessonLearned = _unitOfWork.LearningProgress.NumOfLessonLearned(learningProgress); 
             double highestMarkOfLesson = await _unitOfWork.TestDetail.GetHighestMarkByLessonIdAsync(vm.Lesson.LessonId, userId);
-            Course course = _unitOfWork.Course.Get(c => c.CourseId == vm.Lesson.CourseId, includeProperties: "ApplicationUser");
+            Course course = _unitOfWork.Course.Get(c => c.CourseId == lesson.CourseId, includeProperties: "ApplicationUser");
             learningProgress.Course = course;
 
             _unitOfWork.Course.LoadCourse(course);
 
-            if (score >= vm.Lesson.TotalQuestions * 0.8 && !_unitOfWork.LearningProgress.HasLearnedLesson(learningProgress, vm.Lesson.LessonNo))
+            if (score >= vm.Lesson.TotalQuestions * 0.8 && !_unitOfWork.LearningProgress.HasLearnedLesson(learningProgress, lesson.LessonNo))
             {
                 learningProgress.Progress += 100 / course.Lesson.Count;
-                learningProgress.LearnedLessons += $"{vm.Lesson.LessonNo},";
+                learningProgress.LearnedLessons += $"{lesson.LessonNo},";
             }
 
             if (score > highestMarkOfLesson )

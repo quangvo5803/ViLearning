@@ -13,7 +13,6 @@ namespace ViLearning.Services.Repository
     public class LearningProgressRepository : Repository<LearningProgress>, ILearningProgressRepository
     {
         private ApplicationDBContext _db;
-        private readonly BlobStorageService _blobStorageService;
         public LearningProgressRepository(ApplicationDBContext db) : base(db)
         {
             _db = db;

@@ -9,5 +9,6 @@ namespace ViLearning.Services.Repository.IRepository
         public void LoadTest(Lesson lesson);
 
         public void UnDetachLesson(Lesson lesson);
+        public void LoadCourse(Lesson lesson);
     }
 }

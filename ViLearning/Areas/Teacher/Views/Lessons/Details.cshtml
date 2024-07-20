@@ -100,11 +100,18 @@
     </div>
     <center>
         <div class="mt-3">
-            <a  class="btn btn-primary" asp-action="Edit" asp-route-id="@Model?.LessonId" asp-route-CourseName="@Model.Course.CourseName" asp-route-LessonName="@Model.LessonName">Cập Nhật Thông Tin</a>
+            @if (Model.Course.CourseStatus == CourseStatus.Default || Model.Course.CourseStatus == CourseStatus.Rejected)
+            {
+                <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model?.LessonId" asp-route-CourseName="@Model.Course.CourseName" asp-route-LessonName="@Model.LessonName">Cập Nhật Thông Tin</a>
+                <a class="btn btn-secondary" asp-controller="Courses" asp-action="Details" asp-route-id="@Model.Course.CourseId">Quay Lại</a>
+                <a class="btn btn-info" asp-area="Teacher" asp-controller="Question" asp-action="QuestionManage" asp-route-lessonId="@Model.LessonId">Câu Hỏi Của Bài Học</a>
+                <hr />
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model.LessonId" asp-route-CourseName="@Model.Course.CourseName" asp-route-LessonName="@Model.LessonName">Xóa Bài Học</a>
+            } else
+            {
             <a class="btn btn-secondary" asp-controller="Courses" asp-action="Details" asp-route-id="@Model.Course.CourseId">Quay Lại</a>
-            <a class="btn btn-info" asp-area="Teacher" asp-controller="Question" asp-action="QuestionManage" asp-route-lessonId="@Model.LessonId">Câu Hỏi Của Bài Học</a>
-            <hr />
-            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model.LessonId" asp-route-CourseName="@Model.Course.CourseName" asp-route-LessonName="@Model.LessonName">Xóa Bài Học</a>
+            }
+            
         </div>
     </center>
     

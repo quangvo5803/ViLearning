@@ -56,6 +56,7 @@ namespace ViLearning.Areas.Teacher.Controllers
                 return NotFound();
             }
             var lesson = _unitOfWork.Lesson.Get(m => m.LessonId == id,includeProperties:"Course");
+            _unitOfWork.Lesson.LoadCourse(lesson);
             if (lesson == null)
             {
                 return NotFound();
