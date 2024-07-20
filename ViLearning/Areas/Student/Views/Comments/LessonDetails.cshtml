@@ -1,0 +1,391 @@
+﻿@using System.Security.Claims
+@model ViLearning.Models.ViewModels.CommentLesson
+
+@{
+    ViewData["Title"] = "Lesson Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .comment-section {
+        max-width: 800px; /* Adjust this width as needed */
+        margin: auto;
+    }
+
+    .comment, .reply {
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 10px;
+        background-color: #f9f9f9;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+        .comment > p, .reply > p {
+            margin: 0;
+        }
+
+    .comment-user, .reply-user {
+        font-weight: bold;
+        color: #007bff;
+    }
+
+    .comment-date, .reply-date {
+        font-size: 0.85rem;
+        color: #888;
+    }
+
+    .comment-content, .reply-content {
+        margin: 10px 0;
+        width: 800px;
+    }
+
+    .reply {
+        margin-left: 2rem;
+    }
+
+    .reply-form {
+        display: none;
+        margin-top: 10px;
+    }
+
+    .btn-link {
+        text-decoration: none;
+        color: black;
+        cursor: pointer;
+        border: none;
+        background: none;
+        margin: 0;
+        padding: 0;
+        font-size: 0.8rem;
+        text-transform: none;
+    }
+
+        .btn-link:hover {
+            text-decoration: underline;
+        }
+
+    .btn-info, .btn-primary {
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-danger {
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: #fff;
+    }
+
+    .replies-container {
+        display: none;
+        margin-top: 10px;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    textarea.form-control {
+        border-radius: 5px;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-group {
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .edit-form {
+        display: none;
+        margin-top: 10px;
+    }
+</style>
+
+
+
+    <div class="comment-content" style="margin-left:15rem">
+        <hr />
+        <h3>Bình luận</h3>
+        <!-- Comment Form -->
+        <form id="comment-form">
+            <input type="hidden" name="Comment.LessonId" value="@Model.Lesson.LessonId" />
+            <div class="form-group">
+                <label for="comment-content">Nội dung</label>
+                <textarea id="comment-content" name="Comment.CommentContent" class="form-control"></textarea>
+                <span class="text-danger" id="comment-error"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Thêm bình luận</button>
+        </form>
+
+        <!-- Comments List -->
+        <div id="comments-container">
+            @foreach (var comment in Model.Lesson.Comments.Where(c => c.ParentCommentId == null).OrderByDescending(c => c.DateComment).ToList())
+            {
+                <div class="comment" id="comment-@comment.CommetId">
+                    <p class="comment-user">@comment.ApplicationUser.UserName <span class="comment-date">@comment.DateComment.ToString("g")</span></p>
+                    <p class="comment-content" id="comment-content-@comment.CommetId">@comment.CommentContent</p>
+                    @if (User.Identity.IsAuthenticated && comment.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
+                    {
+                        <button class="btn btn-link" onclick="showEditForm('@comment.CommetId', '@(Html.Raw(comment.CommentContent.Replace("'", "\\'")))')">Chỉnh sửa</button>
+                        <form class="d-inline" onsubmit="return deleteComment('@comment.CommetId');">
+                            <button type="submit" class="btn btn-link">Xóa</button>
+                        </form>
+                        <div id="edit-form-@comment.CommetId" class="edit-form" style="display:none;">
+                            <form id="edit-comment-form-@comment.CommetId" onsubmit="return editComment('@comment.CommetId');">
+                                <input type="hidden" name="commetId" value="@comment.CommetId" />
+                                <input type="hidden" name="lessonId" value="@Model.Lesson.LessonId" />
+                                <div class="form-group">
+                                    <textarea name="commentContent" class="form-control">@comment.CommentContent</textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Cập nhật</button>
+                                <button type="button" class="btn btn-secondary" onclick="hideEditForm('@comment.CommetId')">Hủy</button>
+                            </form>
+                        </div>
+                    }
+
+                    <button class="btn btn-link" onclick="toggleReplyForm('@comment.CommetId')">Trả lời</button>
+                    <div id="reply-form-@comment.CommetId" class="reply-form" style="display:none;">
+                        <form id="reply-form-@comment.CommetId" data-parent-id="@comment.CommetId">
+                            <input type="hidden" name="Comment.LessonId" value="@Model.Lesson.LessonId" />
+                            <input type="hidden" name="Comment.ParentCommentId" value="@comment.CommetId" />
+                            <div class="form-group">
+                                <textarea name="Comment.CommentContent" class="form-control"></textarea>
+                            </div>
+                            <button type="button" class="btn btn-info" onclick="submitReplyForm('@comment.CommetId')">Trả lời</button>
+                        </form>
+                    </div>
+
+                    @if (comment.Replies != null && comment.Replies.Any())
+                    {
+                        <button id="toggle-button-@comment.CommetId" class="btn btn-link" onclick="toggleReplies('@comment.CommetId')">Hiển thị câu trả lời</button>
+                        <div id="replies-container-@comment.CommetId" class="replies-container" style="display:none;">
+                            @await Html.PartialAsync("_RenderReplies", comment.Replies)
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#comment-form').submit(function (e) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: '@Url.Action("AddComment", "Comments")',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        Comment: {
+                            LessonId: $('input[name="Comment.LessonId"]').val(),
+                            CommentContent: $('textarea[name="Comment.CommentContent"]').val()
+                        }
+                    }),
+                    success: function (response) {
+                        if (response.success) {
+                            var newComment = `<div class="comment" id="comment-${response.comment.commetId}">
+                                        <p class="comment-user">${response.comment.applicationUser.userName} <span class="comment-date">${response.comment.dateComment}</span></p>
+                                        <p class="comment-content" id="comment-content-${response.comment.commetId}">${response.comment.commentContent}</p>
+                                        ${response.comment.userId === '@User.FindFirstValue(ClaimTypes.NameIdentifier)' ? `
+                                            <button class="btn btn-link" onclick="showEditForm('${response.comment.commetId}', '${response.comment.commentContent.replace(/'/g, "\\'")}')">Chỉnh sửa</button>
+                                            <form class="d-inline" onsubmit="return deleteComment('${response.comment.commetId}');">
+                                                <button type="submit" class="btn btn-link">Xóa</button>
+                                            </form>
+                                            <div id="edit-form-${response.comment.commetId}" class="edit-form" style="display:none;">
+                                                <form id="edit-comment-form-${response.comment.commetId}" onsubmit="return editComment('${response.comment.commetId}');">
+                                                    <input type="hidden" name="commetId" value="${response.comment.commetId}" />
+                                                    <input type="hidden" name="lessonId" value="${response.comment.lessonId}" />
+                                                    <div class="form-group">
+                                                        <textarea name="commentContent" class="form-control">${response.comment.commentContent}</textarea>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-primary">Cập nhật</button>
+                                                    <button type="button" class="btn btn-secondary" onclick="hideEditForm('${response.comment.commetId}')">Hủy</button>
+                                                </form>
+                                            </div>
+                                        ` : ''}
+                                        <button class="btn btn-link" onclick="toggleReplyForm('${response.comment.commetId}')">Trả lời</button>
+                                        <div id="reply-form-${response.comment.commetId}" class="reply-form" style="display:none;">
+                                            <form id="reply-form-${response.comment.commetId}" data-parent-id="${response.comment.commetId}">
+                                                <input type="hidden" name="Comment.LessonId" value="${response.comment.lessonId}" />
+                                                <input type="hidden" name="Comment.ParentCommentId" value="${response.comment.commetId}" />
+                                                <div class="form-group">
+                                                    <textarea name="Comment.CommentContent" class="form-control"></textarea>
+                                                </div>
+                                                <button type="button" class="btn btn-info" onclick="submitReplyForm('${response.comment.commetId}')">Trả lời</button>
+                                            </form>
+                                        </div>
+                                    </div>`;
+                            $('#comments-container').prepend(newComment);
+                            $('#comment-form')[0].reset();
+                        } else {
+                            $('#comment-error').text(response.error);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                        alert('Lỗi: ' + xhr.responseText);
+                    }
+                });
+            });
+        });
+
+
+
+        function toggleReplyForm(commentId) {
+            $('#reply-form-' + commentId).toggle();
+        }
+
+        function submitReplyForm(commentId) {
+            var form = $('#reply-form-' + commentId);
+            $.ajax({
+                url: '@Url.Action("AddComment", "Comments")',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    Comment: {
+                        LessonId: form.find('input[name="Comment.LessonId"]').val(),
+                        ParentCommentId: form.find('input[name="Comment.ParentCommentId"]').val(),
+                        CommentContent: form.find('textarea[name="Comment.CommentContent"]').val()
+                    }
+                }),
+                success: function (response) {
+                    if (response.success) {
+                        var newReply = `<div class="reply" id="comment-${response.comment.commetId}">
+                                    <p class="comment-user">${response.comment.applicationUser.userName} <span class="comment-date">${response.comment.dateComment}</span></p>
+                                    <p class="comment-content" id="comment-content-${response.comment.commetId}">${response.comment.commentContent}</p>
+                                    ${response.comment.userId === '@User.FindFirstValue(ClaimTypes.NameIdentifier)' ? `
+                                        <button class="btn btn-link" onclick="showEditForm('${response.comment.commetId}', '${response.comment.commentContent.replace(/'/g, "\\'")}')">Chỉnh sửa</button>
+                                        <form class="d-inline" onsubmit="return deleteComment('${response.comment.commetId}');">
+                                            <input type="hidden" name="id" value="${response.comment.commetId}" />
+                                            <button type="submit" class="btn btn-link">Xóa</button>
+                                        </form>
+                                        <div id="edit-form-${response.comment.commetId}" class="edit-form" style="display:none;">
+                                            <form id="edit-comment-form-${response.comment.commetId}" onsubmit="return editComment('${response.comment.commetId}');">
+                                                <input type="hidden" name="commetId" value="${response.comment.commetId}" />
+                                                <input type="hidden" name="lessonId" value="${response.comment.lessonId}" />
+                                                <div class="form-group">
+                                                    <textarea name="commentContent" class="form-control">${response.comment.commentContent}</textarea>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary">Cập nhật</button>
+                                                <button type="button" class="btn btn-secondary" onclick="hideEditForm('${response.comment.commetId}')">Hủy</button>
+                                            </form>
+                                        </div>
+                                    ` : ''}
+                                    <button class="btn btn-link" onclick="toggleReplyForm('${response.comment.commetId}')">Trả lời</button>
+                                    <div id="reply-form-${response.comment.commetId}" class="reply-form" style="display:none;">
+                                        <form id="reply-form-${response.comment.commetId}" data-parent-id="${response.comment.commetId}">
+                                            <input type="hidden" name="Comment.LessonId" value="${response.comment.lessonId}" />
+                                            <input type="hidden" name="Comment.ParentCommentId" value="${response.comment.commetId}" />
+                                            <div class="form-group">
+                                                <textarea name="Comment.CommentContent" class="form-control"></textarea>
+                                            </div>
+                                            <button type="button" class="btn btn-info" onclick="submitReplyForm('${response.comment.commetId}')">Trả lời</button>
+                                        </form>
+                                    </div>
+                                </div>`;
+
+                        var repliesContainer = $('#replies-container-' + commentId);
+                        if (repliesContainer.length === 0) {
+                            $('#comment-' + commentId).append('<button id="toggle-button-' + commentId + '" class="btn btn-link" onclick="toggleReplies(\'' + commentId + '\')">Hiển thị câu trả lời</button>');
+                            $('#comment-' + commentId).append('<div id="replies-container-' + commentId + '" class="replies-container" style="display:none;"></div>');
+                            repliesContainer = $('#replies-container-' + commentId);
+                            $('#toggle-button-' + commentId).show();
+                        }
+
+                        repliesContainer.append(newReply);
+                        form[0].reset();
+                        form.hide();
+                    } else {
+                        alert(response.error);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                    alert('Lỗi: ' + xhr.responseText);
+                }
+            });
+        }
+
+        function deleteComment(commentId) {
+            if (confirm('Bạn có chắc muốn xóa bình luận này không?')) {
+                $.ajax({
+                    url: '@Url.Action("DeleteComment", "Comments")',
+                    type: 'POST',
+                    data: { id: commentId }, // Truyền dưới dạng form URL encoded
+                    success: function (response) {
+                        if (response.success) {
+                            $('#comment-' + commentId).remove();
+
+                        } else {
+                            alert(response.error);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                        alert('Lỗi: ' + xhr.responseText);
+                    }
+                });
+            }
+            return false;
+        }
+
+
+
+        function editComment(commentId) {
+            var form = $('#edit-comment-form-' + commentId);
+
+            $.ajax({
+                url: '@Url.Action("EditComment", "Comments")',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    CommetId: form.find('input[name="commetId"]').val(),
+                    CommentContent: form.find('textarea[name="commentContent"]').val()
+                }),
+                success: function (response) {
+                    if (response.success) {
+                        hideEditForm(response.comment.commetId);
+
+                        // Kiểm tra xem đây là comment cha hay comment con
+                        if ($('#comment-content-' + response.comment.commetId).length > 0) {
+                            // Đối với comment cha
+                            $('#comment-content-' + response.comment.commetId).text(response.comment.commentContent);
+                        } else {
+                            // Đối với comment con
+                            $('#comment-content-' + response.comment.commetId).text(response.comment.commentContent);
+                        }
+                    } else {
+                        alert(response.error);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                    alert('Lỗi: ' + xhr.responseText);
+                }
+            });
+
+            return false;
+        }
+
+
+
+        function showEditForm(commentId, commentContent) {
+            $('#edit-form-' + commentId).show();
+        }
+
+        function hideEditForm(commentId) {
+            $('#edit-form-' + commentId).hide();
+        }
+
+
+        function toggleReplies(commentId) {
+            $('#replies-container-' + commentId).toggle();
+        }
+    </script>
+}

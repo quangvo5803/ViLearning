@@ -110,7 +110,7 @@ namespace ViLearning.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
-            if(!_roleManager.RoleExistsAsync(SD.Role_User_Student).GetAwaiter().GetResult())
+            if (!_roleManager.RoleExistsAsync(SD.Role_User_Student).GetAwaiter().GetResult())
             {
                 _roleManager.CreateAsync(new IdentityRole(SD.Role_User_Student)).GetAwaiter().GetResult();
                 _roleManager.CreateAsync(new IdentityRole(SD.Role_User_Teacher)).GetAwaiter().GetResult();

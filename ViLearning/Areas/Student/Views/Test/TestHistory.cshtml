@@ -1,0 +1,37 @@
+﻿@model List<TestDetail>
+
+@{
+    ViewData["Title"] = "Test History";
+}
+
+
+<h1>Test History</h1>
+
+@if (Model.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Thời gian nộp</th>
+                <th>Điểm số</th>
+                <th>Thời gian làm bài</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var testDetail in Model)
+            {
+                <tr>
+                    <td>@(Model.IndexOf(testDetail) + 1)</td>
+                    <td>@(testDetail.StartTime+testDetail.Duration)</td>
+                    <td>@testDetail.Mark</td>
+                    <td>@testDetail.Duration.ToString(@"hh\:mm\:ss")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Không có dữ liệu lịch sử làm test.</p>
+}

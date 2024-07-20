@@ -1,6 +1,7 @@
 ﻿using ViLearning.Data;
 using ViLearning.Models;
 using ViLearning.Services.Repository.IRepository;
+using ViLearning.Utility;
 
 namespace ViLearning.Services.Repository
 {
@@ -14,11 +15,11 @@ namespace ViLearning.Services.Repository
         public ITestDetailRepository TestDetail { get; private set; }
         public IQuestionRepository Question { get; private set; }
         public ICourseRepository Course { get; private set; }
-        public ICourseCertificateRepository CourseCertificate { get; private set; }
         public IFeedbackRepository Feedback { get; private set; }
-        public IStudentCertificateRepository StudentCertificate { get; private set; }
-
+        public ILearningProgressRepository LearningProgress { get; private set; }
         public IInvoiceRepository Invoice { get; private set; }
+        public IConversationRepository Conversation { get; private set; }
+        public IMessageRepository Message { get; private set; }
 
         public IWithdrawRequestRepositoy WithdrawRequest {  get; private set; }
 
@@ -35,11 +36,12 @@ namespace ViLearning.Services.Repository
             Lesson = new LessonRepository(_db);
             TestDetail = new TestDetailRepository(_db);
             Course = new CourseRepository(_db);
-            CourseCertificate = new CourseCertificateRepository(_db);
             Feedback = new FeedbackRepository(_db);
             Question = new QuestionRepository(_db);
-            StudentCertificate = new StudentCertificateRepository(_db);
             Invoice = new InvoiceRepository(_db);
+            Conversation = new ConversationRepository(_db);
+            Message = new MessageRepository(_db);
+            LearningProgress = new LearningProgressRepository(_db);
             WithdrawRequest = new WithdrawRequestRepositoy(_db);
         }
 

@@ -8,8 +8,8 @@ namespace ViLearning.Models
     {
         [Key]
         public int FeedBackId { get; set; }
-        [Range(1,5)]
-        public int FeedBackStar {  get; set; }
+        [Range(1, 5)]
+        public int FeedBackStar { get; set; }
         [Display(Name = "Đánh giá: ")]
         public string? FeedBackContent { get; set; }
         //Foreign key

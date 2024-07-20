@@ -10,6 +10,7 @@ body, html {
     width: 100vw;
     
 }
+
 .header {
     display: flex;
     justify-content: space-between;
@@ -19,7 +20,7 @@ body, html {
     border-bottom: 1px solid #ddd;
     position: sticky;
     top: 0;
-    z-index: 1000;
+    z-index: 1100;
 }
 
 .back-icon {
@@ -52,13 +53,18 @@ body, html {
     padding: 20px;
     overflow-y: auto; 
     height: 100vh; 
+    flex: 1;
+    max-width:80%;
+    width: calc(100% - 300px);
 }
+
 
 .lesson-list {
     background-color: #f9f9f9;
     padding: 0;
     border-left: 1px solid #ddd;
-    
+    position: relative;
+    max-width:100%;
 }
 
 .lesson-item {
@@ -78,12 +84,17 @@ body, html {
 .lesson-item a {
     display: block;
     height: inherit;
-    width:inherit;
+        width: inherit;
     line-height: 3.5rem;
+        padding-left:1rem;
+        
 }
+
 .lesson-status {
     font-size: 1.5em;
-    color: #4caf50; /* Green for learned, can change to grey for not learned */
+    color: #4caf50;
+    position:absolute;
+    left: 0.5rem;
 }
 
 .footer {
@@ -95,6 +106,7 @@ body, html {
     border-top: 1px solid #ddd;
     position: sticky;
     bottom: 0;
+    z-index:1100;
 }
 
 .nav-button {
@@ -107,10 +119,12 @@ body, html {
     border-radius: 5px;
     width: 8rem;
 }
+
     .nav-button:hover {
         background-color: RGB(46 139 49);
         
     }
+
 .chat-icon {
     font-size: 1.5em;
     cursor: pointer;
@@ -130,4 +144,37 @@ body, html {
 
 .current-lesson {
     background-color: RGB(255 244 215);
+}
+.resizer {
+    cursor:col-resize;
+    width:5px;
+}
+.overlay-section {
+    display: none;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 35rem;
+    background-color: #f9f9f9; 
+    z-index: 1000;
+    overflow-y: auto; 
+}
+
+.overlay-content {
+    width: 100%;
+    max-width: 640px;
+    padding: 20px;
+    background-color: #F0F0F0;
+}
+
+
+.overlay-from-right {
+    right: 0;
+    left: auto;
+}
+
+.table th, .table td {
+    vertical-align: middle;
+    text-align: center;
 }

@@ -9,14 +9,13 @@ namespace ViLearning.Models
     {
         [Key]
         public int TestDetailId { get; set; }
-        public int NumberQuestion { get; set; }
-        [Range(0,10)]
         public double Mark {  get; set; }
 
         //Foregin key
         public int LessonId { get; set; }
         public string UserId { get; set; }
-
+        public DateTime StartTime { get; set; }
+        public TimeSpan Duration { get; set; } 
         //Relation
         [ForeignKey("LessonId")]
         [ValidateNever]
@@ -24,5 +23,14 @@ namespace ViLearning.Models
         [ForeignKey("UserId")]
         [ValidateNever]
         public ApplicationUser ApplicationUser { get; set; }
-    }
+
+        [NotMapped]
+		public Dictionary<int, string>? TestResult { get; set; }
+
+		[NotMapped]
+		public Dictionary<int, bool>? QuestionsIsCorrect { get; set; }
+
+		[NotMapped]
+		public ICollection<Question>? Questions { get; set; }
+	}
 }

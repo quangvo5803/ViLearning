@@ -7,10 +7,14 @@ namespace ViLearning.Models
 {
     public enum CourseStatus
     {
-        Default,
-        Rejected,
-        Pending, 
-        Published
+		[Display(Name = "Chưa được kiểm duyệt")]
+		Default,
+		[Display(Name = "Đã bị từ chối")]
+		Rejected,
+		[Display(Name = "Đang được xét duyệt")]
+		Pending, 
+		[Display(Name = "Đã được xuất bản")]                        
+		Published
     }
     public class Course
     {
@@ -51,5 +55,6 @@ namespace ViLearning.Models
         public virtual ICollection<Lesson>? Lesson { get; set; }
         public virtual ICollection<Feedback>? Feedbacks { get; set; }
         
+        public virtual ICollection<LearningProgress>? LearningProgresses { get; set; }
     }
 }

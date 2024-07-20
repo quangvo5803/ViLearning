@@ -26,13 +26,7 @@ namespace ViLearning.Migrations
                 keyColumn: "Id",
                 keyValue: 2);
 
-            migrationBuilder.AddColumn<int>(
-                name: "CourseStatus",
-                table: "Courses",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
-
+           
             migrationBuilder.AlterColumn<string>(
                 name: "UserId",
                 table: "Comments",
