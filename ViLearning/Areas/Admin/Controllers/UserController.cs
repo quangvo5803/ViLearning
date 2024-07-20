@@ -114,12 +114,13 @@ namespace ViLearning.Areas.Admin.Controllers
 
         #region API CALLS
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult>GetAll()
         {
             List<ApplicationUser> objUserList = _unitOfWork.ApplicationUser.GetAll().ToList();
             foreach (var user in objUserList)
             {
-                user.Role = _userManager.GetRolesAsync(user).GetAwaiter().GetResult().FirstOrDefault();
+                var roles = await _userManager.GetRolesAsync(user);
+                user.Role = roles.FirstOrDefault();
             }
             return Json(new { data = objUserList });
         }

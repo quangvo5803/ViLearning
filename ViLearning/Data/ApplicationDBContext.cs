@@ -24,6 +24,7 @@ namespace ViLearning.Data
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<LearningProgress> LearningProgresses { get; set; }
+        public DbSet<WithdrawRequest> WithdrawRequests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -36,17 +37,6 @@ namespace ViLearning.Data
             modelBuilder.Entity<Feedback>()
                 .HasKey(f => f.FeedBackId);
 
-            modelBuilder.Entity<Feedback>()
-                .HasOne(f => f.ApplicationUser)
-                .WithMany()
-                .HasForeignKey(f => f.UserId)
-                .OnDelete(DeleteBehavior.Restrict); // Prevent cascading deletes from ApplicationUser
-
-            modelBuilder.Entity<Feedback>()
-                .HasOne(f => f.Course)
-                .WithMany()
-                .HasForeignKey(f => f.CourseId)
-                .OnDelete(DeleteBehavior.Cascade); // Allow cascading deletes from Course
 
             // Configuration for Comment
             modelBuilder.Entity<Comment>()
@@ -112,6 +102,9 @@ namespace ViLearning.Data
                 .WithMany()
                 .HasForeignKey(c => c.LastMessageId)
                 .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<ApplicationUser>()
+                .Property(u => u.Balance)
+                .HasDefaultValue(0);
         }
     }
 }

@@ -10,6 +10,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Text.Encodings.Web;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
@@ -124,7 +125,7 @@ namespace ViLearning.Areas.Identity.Pages.Account
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-            if (ModelState.IsValid)
+                if (ModelState.IsValid)
             {
                 var user = CreateUser();
 
@@ -132,6 +133,7 @@ namespace ViLearning.Areas.Identity.Pages.Account
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 user.TeacherCertificate = false;
+                user.Balance = 0;
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
@@ -218,7 +220,6 @@ namespace ViLearning.Areas.Identity.Pages.Account
                     }
                 }
             }
-
             // If we got this far, something failed, redisplay form
             return Page();
         }

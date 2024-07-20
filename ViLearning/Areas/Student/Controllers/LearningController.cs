@@ -11,11 +11,11 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace ViLearning.Areas.Student.Controllers
 {
-	[Area("Student")]
-	[Authorize(Roles = SD.Role_User_Student)]
-	public class LearningController : Controller
-	{
-		private readonly IUnitOfWork _unitOfWork;
+    [Area("Student")]
+    [Authorize(Roles = SD.Role_User_Student)]
+    public class LearningController : Controller
+    {
+        private readonly IUnitOfWork _unitOfWork;
 		private readonly List<string> _bannedWords = new List<string> { "fake", "999", "888" };
 
         public LearningController(IUnitOfWork unitOfWork)

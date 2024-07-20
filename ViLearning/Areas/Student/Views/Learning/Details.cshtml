@@ -81,7 +81,7 @@
                                         }
                                         if (max >= 8)
                                         {
-                                            <span class="lesson-status">●</span>
+                                    <span class="lesson-status">●</span>
                                         }
                                         else
                                         {
@@ -90,6 +90,7 @@
                                     }
                                     <span class="lesson-name" data-bs-toggle="tooltip" data-bs-placement="top" title="@lesson.LessonName">@lesson.LessonName</span>
                                 </a>
+                                
                             </div>
                         }
                         else
@@ -117,6 +118,7 @@
                                         }
                                     }
                                     <span class="lesson-name" data-bs-toggle="tooltip" data-bs-placement="top" title="@lesson.LessonName">@lesson.LessonName</span>
+                                    <span class="lesson-status">●</span>
                                 </a>
                             </div>
                         }
@@ -205,7 +207,7 @@
             </div>
         </div>
 
-        <footer class="footer" style="position: sticky; bottom: 0">
+        <footer class="footer" style="position: sticky; bottom: 0"> 
             @if (Model.Lesson.LessonNo == 1)
             {
                 <a class="nav-button" style="text-decoration:none" disabled="disabled"><i class="fa-solid fa-angle-left"></i> Previous</a>
@@ -222,7 +224,7 @@
             {
                 <a asp-controller="Learning" asp-action="Details" asp-route-courseId="@Model.Course.CourseId" asp-route-lessonNo="@(Model.Lesson.LessonNo + 1)" class="nav-button" style="text-decoration:none">Next <i class="fa-solid fa-angle-right"></i></a>
             }
-
+            
             <a class="chat-icon" id="chat-icon" style="position: relative"><i class="fa-solid fa-headset"></i>
                 @*Test Chat feature*@
                 <input type="hidden" id="hiddenUserId" value="@ViewData["userId"]" />

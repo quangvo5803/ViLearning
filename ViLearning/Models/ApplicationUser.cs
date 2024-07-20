@@ -19,10 +19,15 @@ namespace ViLearning.Models
         public Gender? Gender { get; set; }
         public bool? TeacherCertificate { get; set; }
         public string? TeacherCertificateImgUrl { get; set; }
+
+        public bool? TeacherQrCode { get; set; }
+        public string? TeacherQrCodeUrl { get; set; }
         [NotMapped]
         public string Role { get; set; }
         [NotMapped]
         public string RoleID { get; set; }
+
+        public double Balance { get; set; } = 0;
 
         //Navigation property
         public virtual ICollection<Course>? Courses { get; set; } 

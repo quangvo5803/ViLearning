@@ -12,6 +12,7 @@
         public ICourseRepository Course { get; }
         public IFeedbackRepository Feedback { get; }
         public IInvoiceRepository Invoice { get; }
+        public IWithdrawRequestRepositoy WithdrawRequest {  get; }
         public IMessageRepository Message { get; }
         public ILearningProgressRepository LearningProgress { get; }
         public IConversationRepository Conversation { get; }

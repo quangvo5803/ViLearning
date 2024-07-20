@@ -2,7 +2,7 @@
 {
     public class LearningMaterial
     {
-        public Course Course { get; set; }
+        public Course Course { get; set; }  
         
         public Lesson Lesson { get; set; }
 

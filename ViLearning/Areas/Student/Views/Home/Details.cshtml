@@ -1,5 +1,9 @@
 ﻿@using System.Security.Claims
 @model CourseDetailsVM
+
+@{
+    ViewData["Title"] = "Thông tin khóa học";
+}
 <div class="course-header">
 	<h1 class="text-white">THÔNG TIN KHÓA HỌC</h1>
 	<p>Kiểm soát tri thức - Hướng tới thành công.</p>
@@ -11,67 +15,262 @@
 	</ol>
 </nav>
 <div class="container mt-5">
-	<div class="row course-info justify-content-center ">
-		<div class="col-sm-7">
-			<div style="width: 800px; height: 400px; background-image: url('@Model.Course.CoverImgUrl'); background-size: cover; background-position: center;"></div>
-			<h3 class="mt-5">@Model.Course.CourseName</h3>
-			<hr />
-			<p>@Model.Course.Description</p>
-			<div class="course-lessons">
-				<div class="chapter">
-					<h4>Nội dung khóa học:</h4>
-					<ul>
-						@foreach (var lesson in Model.Lessons)
-						{
-							<a asp-controller="Home" asp-action="Index" class="text-decoration-none">
-							<li>
-								<span class="lesson-title">@lesson.LessonName</span>
-								<span class="lesson-status"><i class="bi bi-circle"></i></span>
-							</li>
-							</a>
-						}
-					</ul>
-				</div>
-			</div>
-		</div>
-		<div class="col-sm-3">
-			<div class="course-details">
-				<div class="d-flex justify-content-between align-items-center">
-					<h5 style="margin:0"> Giáo viên: </h5>
-					<p>@(Model.Course.ApplicationUser.FullName == null ? @Model.Course.ApplicationUser.Email : @Model.Course.ApplicationUser.FullName)</p>
-				</div>
-			</div>
-			<div class="course-details">
-				<div class="d-flex justify-content-between align-items-center">
-					<h5>Giá: </h5>
-					<p>@Model.Course.Price?.ToString("N0") VNĐ</p>
-				</div>
-			</div>
-			<div class="course-details">
-				<div class="d-flex justify-content-between align-items-center">
-					<h5>Số bài học: </h5>
-					<p>@Model.Lessons.Count()</p>
-				</div>
-			</div>
-			@if (Model.Invoice == null)
-			{
-				<div class="mt-4">
-					<a asp-controller="Checkout" asp-action="Checkout" asp-route-CourseId="@Model.Course.CourseId" class="btn btn-success d-flex justify-content-center">Đăng kí khóa học</a>
-				</div>
-			}
-			else
-			{
+    <div class="row course-info justify-content-center ">
+        <div class="col-sm-7">
+            <div style="width: 800px; height: 400px; background-image: url('@Model.Course.CoverImgUrl'); background-size: cover; background-position: center;"></div>
 
-				<div class="mt-4">
-					<a asp-controller="Learning" asp-action="Details" asp-route-courseId="@Model.Course.CourseId" asp-route-lessonNo="1" class="btn btn-success d-flex justify-content-center">Vào học ngay</a>
-				</div>
+            <h3 class="mt-5">@Model.Course.CourseName</h3>
+            <hr />
+            <p>@Model.Course.Description</p>
+            <div class="course-lessons">
+                <div class="chapter">
+                    <h4>Nội dung khóa học:</h4>
+                    <ul>
+                        @foreach (var lesson in Model.Lessons)
+                        {
+                            <a asp-controller="Home" asp-action="Index" class="text-decoration-none">
+                            <li>
+                                <span class="lesson-title">@lesson.LessonName</span>
+                                <span class="lesson-status"><i class="bi bi-circle"></i></span>
+                            </li>
+                            </a>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="course-details">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 style="margin:0"> Giáo viên: </h5>
+                    <p>@(Model.Course.ApplicationUser.FullName == null ? @Model.Course.ApplicationUser.Email : @Model.Course.ApplicationUser.FullName)</p>
+                </div>
+            </div>
+            <div class="course-details">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5>Giá: </h5>
+                    <p>@Model.Course.Price?.ToString("N0") VNĐ</p>
+                </div>
+            </div>
+            <div class="course-details">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5>Số bài học: </h5>
+                    <p>@Model.Lessons.Count()</p>
+                </div>
+            </div>
+            @if (Model.Invoice == null)
+            {
+                <div class="mt-4">
+                    <a asp-controller="Checkout" asp-action="Checkout" asp-route-CourseId="@Model.Course.CourseId" class="btn btn-success d-flex justify-content-center">Đăng kí khóa học</a>
+                </div>
+            }
+            else
+            {
+                <div class="mt-4">
+                    <a asp-controller="Learning" asp-action="Details" asp-route-courseId="@Model.Course.CourseId" asp-route-lessonNo="1" class="btn btn-success d-flex justify-content-center">Vào học ngay</a>
+                </div>
 
-			}
+            }
+            @if (Model.Feedback == null)
+            {
+                <div class="mt-4">
+                    <a asp-controller="Home" asp-action="Feedback" asp-route-courseId="@Model.Course.CourseId" class="btn btn-warning d-flex justify-content-center">Đánh giá khóa học</a>
+                </div>
+            }
+            <div class="mt-5">
+                <div class="main-content review">
+                    <div class="rating-overview">
+                        <div>
+                            @{
+                                double rating = Model.Course.Feedbacks.Any() ? Model.Course.Feedbacks.Average(f => f.FeedBackStar) : 5;
+                                <span style=" font-weight:bold; margin-right:5px">@rating</span>
+                                for (var i = 1; i <= 5; i++)
+                                {
+                                    if (rating >= i)
+                                    {
+                                        <span class="bi bi-star-fill"></span>
+                                    }
+                                    else if (rating >= i - 0.5)
+                                    {
+                                        <span class="bi bi-star-half"></span>
+                                    }
+                                    else
+                                    {
+                                        <span class="bi bi-star"></span>
+                                    }
+                                }
+                                <span>(@Model.Course.Feedbacks.Count() đánh giá)</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="rating-distribution">
+                        <div>
+                            <button class="btn btn btn-outline-warning filter-btn custom-btn selected" style="font-size:10px" data-star="">Tất cả</button>
+                        </div>
+                        @for (var star = 5; star >= 1; star--)
+                        {
+                            <div>
+                                <button class="btn btn btn-outline-warning filter-btn custom-btn" data-star="@star">@star sao</button>
+                            </div>
+                        }
+                    </div>
 
-		</div>
-	</div>
+                    <div id="feedbacks-container">
+                        @await Html.PartialAsync("_FeedbackPartial", Model.Feedbacks)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Styles {
-	<link rel="stylesheet" href="~/css/Student/CourseDetails.css">
+    <link rel="stylesheet" href="~/css/Student/CourseDetails.css">
+    <style>
+        .star-rating {
+            display: flex;
+            align-items: center;
+        }
+
+            .star-rating .bi {
+                font-size: 18px;
+                color: orange;
+            }
+
+                .star-rating .bi.checked {
+                    color: #fd4;
+                }
+
+        .bi-star-fill::before {
+            font-size: 18px;
+            color: orange;
+        }
+        .bi-star-half:before{
+            font-size:18px;
+            color:orange;
+        }
+
+        .main-review {
+            width: 60%;
+            margin: 0 auto;
+        }
+
+        .rating-overview {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+            .rating-overview .rating-value {
+                font-size: 3em;
+                color: #FFA500;
+            }
+
+            .rating-overview .stars {
+                color: #FFA500;
+            }
+
+        .rating-distribution {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+            .rating-distribution div {
+                width: 100px;
+                text-align: center;
+            }
+
+            .rating-distribution .bar {
+                width: 200px;
+                background: #e0e0e0;
+                height: 10px;
+                position: relative;
+            }
+
+                .rating-distribution .bar div {
+                    height: 100%;
+                    background: #FFA500;
+                }
+
+        .reviews {
+            margin-top: 20px;
+        }
+
+        .review {
+            border-bottom: 1px solid #e0e0e0;
+            padding: 20px 0;
+        }
+
+            .review .user {
+                font-weight: bold;
+            }
+
+            .review .date {
+                color: #888;
+                font-size: 0.9em;
+            }
+
+            .review .comment {
+                margin: 10px 0;
+            }
+
+        .custom-btn {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 14px;
+        }
+
+        .filter-btn.selected {
+            background-color: #FFA500;
+            color: white;
+        }
+    </style>
+}
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.filter-btn').click(function () {
+                var starRating = $(this).data('star');
+                var courseId = @Model.Course.CourseId;
+
+                $('.filter-btn').removeClass('selected');
+                $(this).addClass('selected');
+
+                $.ajax({
+                    url: '@Url.Action("GetFeedbacks", "Home")',
+                    type: 'GET',
+                    data: { courseId: courseId, starRating: starRating, page: 1 },
+                    success: function (result) {
+                        $('#feedbacks-container').html(result);
+                        updatePagination(1); // Reset pagination
+                    }
+                });
+            });
+
+            $(document).on('click', '.page-link', function (e) {
+                e.preventDefault();
+                var page = $(this).data('page');
+                var courseId = @Model.Course.CourseId;
+                var starRating = $('.filter-btn.selected').data('star') || null;
+
+                $.ajax({
+                    url: '@Url.Action("GetFeedbacks", "Home")',
+                    type: 'GET',
+                    data: { courseId: courseId, starRating: starRating, page: page },
+                    success: function (result) {
+                        $('#feedbacks-container').html(result);
+                        updatePagination(page);
+                    }
+                });
+            });
+
+            function updatePagination(currentPage) {
+                $('.page-item').removeClass('active');
+                $('.page-link[data-page="' + currentPage + '"]').closest('.page-item').addClass('active');
+            }
+        });
+
+    </script>
 }

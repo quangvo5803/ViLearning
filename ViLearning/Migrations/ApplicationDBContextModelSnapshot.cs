@@ -369,14 +369,11 @@ namespace ViLearning.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FeedBackId"));
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CourseId1")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -395,11 +392,7 @@ namespace ViLearning.Migrations
 
                     b.HasKey("FeedBackId");
 
-                    b.HasIndex("ApplicationUserId");
-
                     b.HasIndex("CourseId");
-
-                    b.HasIndex("CourseId1");
 
                     b.HasIndex("UserId");
 
@@ -652,12 +645,48 @@ namespace ViLearning.Migrations
                     b.ToTable("TestDetails");
                 });
 
+            modelBuilder.Entity("ViLearning.Models.WithdrawRequest", b =>
+                {
+                    b.Property<int>("WithdrawRequestID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WithdrawRequestID"));
+
+                    b.Property<DateTime?>("CompleteDay")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("RequestDay")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("RequestMoney")
+                        .HasColumnType("float");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("WithdrawRequestID");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("WithdrawRequests");
+                });
+
             modelBuilder.Entity("ViLearning.Models.ApplicationUser", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
                     b.Property<int?>("Age")
                         .HasColumnType("int");
+
+                    b.Property<double>("Balance")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("float")
+                        .HasDefaultValue(0.0);
 
                     b.Property<DateTime?>("DOB")
                         .HasColumnType("datetime2");
@@ -672,6 +701,12 @@ namespace ViLearning.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("TeacherCertificateImgUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("TeacherQrCode")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("TeacherQrCodeUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasDiscriminator().HasValue("ApplicationUser");
@@ -806,24 +841,17 @@ namespace ViLearning.Migrations
 
             modelBuilder.Entity("ViLearning.Models.Feedback", b =>
                 {
-                    b.HasOne("ViLearning.Models.ApplicationUser", null)
-                        .WithMany("Feedbacks")
-                        .HasForeignKey("ApplicationUserId");
-
                     b.HasOne("ViLearning.Models.Course", "Course")
-                        .WithMany()
+                        .WithMany("Feedbacks")
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ViLearning.Models.Course", null)
-                        .WithMany("Feedbacks")
-                        .HasForeignKey("CourseId1");
-
                     b.HasOne("ViLearning.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany()
+                        .WithMany("Feedbacks")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("ApplicationUser");
 
@@ -928,11 +956,23 @@ namespace ViLearning.Migrations
                     b.Navigation("Lesson");
                 });
 
+            modelBuilder.Entity("ViLearning.Models.WithdrawRequest", b =>
+                {
+                    b.HasOne("ViLearning.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+                });
+
             modelBuilder.Entity("ViLearning.Models.Comment", b =>
                 {
                     b.Navigation("Replies");
                 });
 
+            
             modelBuilder.Entity("ViLearning.Models.Conversation", b =>
                 {
                     b.Navigation("Messages");

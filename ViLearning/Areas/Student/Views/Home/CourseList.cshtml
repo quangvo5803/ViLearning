@@ -1,5 +1,7 @@
 ﻿@model LandingPageVM
-
+@{
+    ViewData["Title"] = "Danh sách khóa học";
+}
 <div class="course-header">
     <h1 class="text-white">DANH SÁCH KHÓA HỌC</h1>
     <p>Kiểm soát tri thức - Hướng tới thành công.</p>
@@ -15,7 +17,7 @@
 
         @foreach (var course in Model.Courses)
         {
-            <div class="col-sm-4 mb-4">
+            <div class="col-md-4 mb-4">
                 <a asp-action="Details" asp-route-CourseId="@course.CourseId" style="text-decoration:none">
                     <div class="card h-100 d-flex flex-column">
                         <img src="@course.CoverImgUrl" class="card-img-top rounded mx-auto d-block" alt="@course.CourseName" style=" height: 300px; width:100%; object-fit:cover">
@@ -34,6 +36,28 @@
                         </div>
 
                         <div class="card-footer d-flex justify-content-between bg-transparent border-top-0">
+                            <div class="star-rating">
+                                @{
+                                    double rating = course.Feedbacks.Any() ? course.Feedbacks.Average(f => f.FeedBackStar) : 0;
+                                    <span style="margin-right: 5px">@rating</span>
+                                    for (var i = 1; i <= 5; i++)
+                                    {
+                                        if (rating >= i)
+                                        {
+                                            <span class="bi bi-star-fill"></span>
+                                        }
+                                        else if (rating >= i - 0.5)
+                                        {
+                                            <span class="bi bi-star-half"></span>
+                                        }
+                                        else
+                                        {
+                                            <span class="bi bi-star"></span>
+                                        }
+                                    }
+                                    <span style="margin-right: 5px">(@course.Feedbacks.Count() đánh giá)</span>
+                                }
+                            </div>
                             <span class="ms-auto price" style="font-size:18px; font-weight:bold;">@course.Price?.ToString("N0") VNĐ</span>
                         </div>
                     </div>
@@ -44,4 +68,21 @@
 </div>
 @section Styles {
     <link rel="stylesheet" href="~/css/Student/CourseList.css">
+    <style>
+        .star-rating {
+            display: flex;
+            align-items: center;
+        }
+
+            .star-rating .bi {
+                font-size: 18px;
+                color: orange;
+                margin-right: 2px;
+            }
+
+                .star-rating .bi.checked {
+                    color: #fd4;
+                }
+
+    </style>
 }

@@ -115,7 +115,7 @@ namespace ViLearning.Areas.Identity.Pages.Account
      $"        <td></td>\r\n" +
      $"      </tr>\r\n" +
      $"    </table>\r\n");
-
+            TempData["Success"] = "Đã gửi email xác nhận vui lòng kiểm tra email!";
             ModelState.AddModelError(string.Empty, "Đã gửi email xác minh. Vui lòng kiểm tra email của bạn.");
             return Page();
         }

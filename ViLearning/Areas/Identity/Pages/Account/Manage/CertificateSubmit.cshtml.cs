@@ -1,9 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.IO;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+﻿using System.ComponentModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -26,6 +21,7 @@ namespace ViLearning.Areas.Identity.Pages.Account.Manage
             _userManager = userManager;
             _signInManager = signInManager;
             _blobStorageService = blobStorageService;
+            Role = new List<string>();
         }
         public IList<string> Role { get; set; }
 
@@ -69,13 +65,13 @@ namespace ViLearning.Areas.Identity.Pages.Account.Manage
             if (!ModelState.IsValid)
             {
                 StatusMessage = "Model state is invalid.";
-                return Page();
+                return RedirectToPage("./CertificateSubmit");
             }
 
             if (file == null || file.Length == 0)
             {
-                StatusMessage = "No file selected or file is empty.";
-                return Page();
+                TempData["Error"] = "No file selected or file is empty.";
+                return RedirectToPage("./CertificateSubmit");
             }
 
             try
@@ -101,7 +97,7 @@ namespace ViLearning.Areas.Identity.Pages.Account.Manage
                 var updateResult = await _userManager.UpdateAsync(user);
                 if (!updateResult.Succeeded)
                 {
-                    StatusMessage = "Unexpected error when trying to update teacher certificate status.";
+                    TempData["Error"] = "Unexpected error when trying to update teacher certificate status.";
                     return RedirectToPage();
                 }
 
@@ -111,8 +107,8 @@ namespace ViLearning.Areas.Identity.Pages.Account.Manage
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Error uploading file: {ex.Message}";
-                return Page();
+                TempData["Error"] = "Lỗi tải file,vui lòng tải file ảnh";
+                return RedirectToPage("./CertificateSubmit");
             }
         }
     }

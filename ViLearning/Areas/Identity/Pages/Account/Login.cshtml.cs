@@ -71,6 +71,7 @@ namespace ViLearning.Areas.Identity.Pages.Account
             /// </summary>
             [Required(ErrorMessage = "Bạn cần phải nhập email")]
             [EmailAddress(ErrorMessage = "Email không hợp lệ")]
+            [Display(Name = "Email")]
             public string Email { get; set; }
 
             /// <summary>
@@ -79,6 +80,7 @@ namespace ViLearning.Areas.Identity.Pages.Account
             /// </summary>
             [Required(ErrorMessage = "Bạn cần phải nhập mật khẩu")]
             [DataType(DataType.Password)]
+            [Display(Name = "Mật khẩu")]
             public string Password { get; set; }
 
             /// <summary>
@@ -109,9 +111,7 @@ namespace ViLearning.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
-
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-
             if (ModelState.IsValid)
             {
                 // This doesn't count login failures towards account lockout
@@ -144,7 +144,7 @@ namespace ViLearning.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "Đăng nhập không thành công");
                     return Page();
                 }
             }

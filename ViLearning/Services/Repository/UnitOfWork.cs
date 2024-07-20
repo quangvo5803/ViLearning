@@ -1,4 +1,5 @@
 ﻿using ViLearning.Data;
+using ViLearning.Models;
 using ViLearning.Services.Repository.IRepository;
 using ViLearning.Utility;
 
@@ -20,6 +21,9 @@ namespace ViLearning.Services.Repository
         public IConversationRepository Conversation { get; private set; }
         public IMessageRepository Message { get; private set; }
 
+        public IWithdrawRequestRepositoy WithdrawRequest {  get; private set; }
+
+
         private ApplicationDBContext _db;
 
         public UnitOfWork(ApplicationDBContext db)
@@ -38,6 +42,7 @@ namespace ViLearning.Services.Repository
             Conversation = new ConversationRepository(_db);
             Message = new MessageRepository(_db);
             LearningProgress = new LearningProgressRepository(_db);
+            WithdrawRequest = new WithdrawRequestRepositoy(_db);
         }
 
         public void Save()
