@@ -30,7 +30,6 @@ namespace ViLearning.Areas.Student.Controllers
         public async Task<IActionResult> Details(int courseId, int lessonNo)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            TestController testController = new TestController(_unitOfWork);
             var course = _unitOfWork.Course.Get( c => c.CourseId == courseId, includeProperties: "ApplicationUser");
             List<Lesson>? lessons = await _unitOfWork.Lesson.GetLessonByCourseId(courseId);
             var lesson = lessons?.Where(l => l.LessonNo == lessonNo).FirstOrDefault();
@@ -58,11 +57,27 @@ namespace ViLearning.Areas.Student.Controllers
                 Course = course,
                 Lesson = lesson,
                 ListLesson = lessons,
-                TestHistory = testController.TestHistory(lessonId, userId),
-                TestRanking = testController.TestRanking(lessonId),
+                TestHistory = TestHistory(lessonId, userId),
+                TestRanking = TestRanking(lessonId),
                 commentLesson = viewModel
             };
             return View(lm);
+        }
+
+        public List<TestDetail> TestHistory(int lessonId, string userId)
+        {
+            List<TestDetail> testHistory = _unitOfWork.TestDetail.GetRange(t => t.LessonId == lessonId && t.UserId == userId,
+                includeProperties: "ApplicationUser,Lesson")
+                .OrderByDescending(t => t.StartTime).ToList();
+            return testHistory;
+        }
+
+        public List<TestDetail> TestRanking(int lessonId)
+        {
+            List<TestDetail> testRanking = _unitOfWork.TestDetail.GetRange(t => t.LessonId == lessonId,
+                includeProperties: "ApplicationUser,Lesson")
+                .OrderByDescending(t => t.Mark).ThenBy(t => t.Duration).ThenBy(t => t.StartTime).ToList();
+            return testRanking;
         }
 
         public int GetLessonId(int courseId, int lessonNo)

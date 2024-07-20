@@ -22,10 +22,6 @@ namespace ViLearning.Areas.Student.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly BlobStorageService _blobStorageService;
 
-        public TestController(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
         public TestController(IUnitOfWork unitOfWork, BlobStorageService blobStorageService)
         {
             _unitOfWork = unitOfWork;
@@ -150,22 +146,6 @@ namespace ViLearning.Areas.Student.Controllers
             _unitOfWork.Save();
 
 			return View("TestResult", testDetail);
-        }
-
-        public List<TestDetail> TestHistory(int lessonId, string userId)
-        {
-            List<TestDetail> testHistory = _unitOfWork.TestDetail.GetRange(t => t.LessonId == lessonId && t.UserId == userId,
-                includeProperties: "ApplicationUser,Lesson")
-                .OrderByDescending(t => t.StartTime).ToList();
-            return testHistory;
-        }
-
-        public List<TestDetail> TestRanking(int lessonId)
-        {
-            List<TestDetail> testRanking = _unitOfWork.TestDetail.GetRange(t => t.LessonId == lessonId,
-                includeProperties: "ApplicationUser,Lesson")
-                .OrderByDescending(t => t.Mark).ThenBy(t => t.Duration).ThenBy(t => t.StartTime).ToList();
-            return testRanking;
         }
 
         public async Task<string> AssignCertificate(LearningProgress learningProgress)
