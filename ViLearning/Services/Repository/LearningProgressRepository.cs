@@ -78,7 +78,7 @@ namespace ViLearning.Services.Repository
             // Tải file lên Blob Storage
             string containerName = "student-certificates-img";
             string fileName = $"{Guid.NewGuid()}.pdf";
-            string fileUrl = await _blobStorageService.UploadFileAsync(containerName, fileName, stream);
+            //string fileUrl = await _blobStorageService.UploadFileAsync(containerName, fileName, stream);
 
             return fileUrl;
         }
