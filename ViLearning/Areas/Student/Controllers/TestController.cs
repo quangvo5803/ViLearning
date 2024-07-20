@@ -20,10 +20,16 @@ namespace ViLearning.Areas.Student.Controllers
     public class TestController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly BlobStorageService _blobStorageService;
 
         public TestController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
+        }
+        public TestController(IUnitOfWork unitOfWork, BlobStorageService blobStorageService)
+        {
+            _unitOfWork = unitOfWork;
+            _blobStorageService = blobStorageService;
         }
         public IActionResult Index()
         {
@@ -134,7 +140,7 @@ namespace ViLearning.Areas.Student.Controllers
             if (learningProgress.Progress == 100) 
             {
                 learningProgress.CompletionDate = DateTime.Now.Date;
-                learningProgress.StudentCertificateUrl = await _unitOfWork.LearningProgress.AssignCertificate(learningProgress);
+                learningProgress.StudentCertificateUrl = await AssignCertificate(learningProgress);
             }
             
             _unitOfWork.LearningProgress.Update(learningProgress);
@@ -160,6 +166,59 @@ namespace ViLearning.Areas.Student.Controllers
                 includeProperties: "ApplicationUser,Lesson")
                 .OrderByDescending(t => t.Mark).ThenBy(t => t.Duration).ThenBy(t => t.StartTime).ToList();
             return testRanking;
+        }
+
+        public async Task<string> AssignCertificate(LearningProgress learningProgress)
+        {
+            string templatePath = Path.Combine("wwwroot", "images", "ViLearning_Certificate_Template.pdf");
+
+            // Check if File Exist
+            if (!System.IO.File.Exists(templatePath))
+            {
+                return null;
+            }
+            PdfDocument document = PdfReader.Open(templatePath, PdfDocumentOpenMode.Modify);
+            PdfPage page = document.Pages[0];
+
+            // Tạo đồ họa để vẽ
+            XGraphics gfx = XGraphics.FromPdfPage(page);
+
+            // Định nghĩa font và kích thước
+            XFont font12 = new XFont("Arial", 12);
+            XFont font24 = new XFont("Arial", 24);
+            XFont font32 = new XFont("Arial", 32);
+
+            // Định vị trí để thêm văn bản vào PDF (tọa độ x, y)
+            XPoint datePosition = new XPoint(70, 75); // Vị trí của Complete Date
+            XPoint namePosition = new XPoint(70, 128); // Vị trí của Student’s Name
+            XPoint coursePosition = new XPoint(70, 192); // Vị trí của Course’s Name
+            XPoint teacherPosition = new XPoint(290, 212); // Vị trí của Teacher’s Name
+
+            // Thêm ngày hoàn thành
+            gfx.DrawString(learningProgress.CompletionDate.ToString(), font12, XBrushes.Black, datePosition);
+
+            // Thêm tên học viên
+            gfx.DrawString(learningProgress.User.UserName, font32, XBrushes.Black, namePosition);
+
+            // Thêm tên khóa học
+            gfx.DrawString(learningProgress.Course.CourseName, font24, XBrushes.Black, coursePosition);
+
+            // Thêm tên giáo viên
+            gfx.DrawString(learningProgress.Course.ApplicationUser.UserName, font12, XBrushes.Black, teacherPosition);
+
+            // Lưu tệp PDF mới lên Blob Storage
+            // document.Save(outputPath);
+            // Lưu tài liệu PDF vào MemoryStream
+            MemoryStream stream = new MemoryStream();
+            document.Save(stream, false);
+            stream.Position = 0; // Đặt vị trí của stream về đầu
+
+            // Tải file lên Blob Storage
+            string containerName = "student-certificates-img";
+            string fileName = $"{Guid.NewGuid()}.pdf";
+            string fileUrl = await _blobStorageService.UploadFileAsync(containerName, fileName, stream);
+
+            return fileUrl;
         }
     }
 }
