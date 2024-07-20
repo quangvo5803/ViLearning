@@ -142,5 +142,30 @@ namespace ViLearning.Areas.Student.Controllers
 
             return View();
         }
+
+        [Authorize]
+        public async Task<JsonResult> GetAccomplishments(int page = 1, int pageSize = 4)
+        {
+            var user = await _userManager.GetUserAsync(User);
+           
+            var learningProgresses = _unitOfWork.LearningProgress.GetRange(l => l.UserId == user.Id).ToList();
+            foreach (var learning in learningProgresses)
+            {
+                _unitOfWork.LearningProgress.LoadCourse(learning);
+                _unitOfWork.Course.LoadTeacher(learning.Course);
+            }
+            int totalCourses = learningProgresses.Count;
+            int totalPages = (int)Math.Ceiling(totalCourses/(double) pageSize); 
+            var learningProgressesToDisplay = learningProgresses.Skip((page-1)*pageSize).Take(pageSize).ToList();
+            var accomplishment = new CertificateVM
+            {
+                LearningProgresses = (List<LearningProgress>)learningProgressesToDisplay,
+                CurrentPage = page,
+                TotalPages = totalPages,
+                PageSize = pageSize
+            };
+            return Json(accomplishment);
+        }
+        
     }
 }
