@@ -127,10 +127,9 @@ namespace ViLearning.Areas.Student.Controllers
                 learningProgress.Progress += 100 / course.Lesson.Count;
                 learningProgress.LearnedLessons += $"{lesson.LessonNo},";
             }
-
             if (score > highestMarkOfLesson )
             {
-                learningProgress.OverallScore = (learningProgress.OverallScore* numOfLessonLearned + score) / numOfLessonLearned + 1;
+                learningProgress.OverallScore = (learningProgress.OverallScore* numOfLessonLearned + score - highestMarkOfLesson) / numOfLessonLearned + 1;
             }
 
             if (learningProgress.Progress == 100) 

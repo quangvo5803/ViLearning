@@ -63,7 +63,6 @@ namespace ViLearning.Areas.Student.Controllers
             };
             return View(lm);
         }
-
         public List<TestDetail> TestHistory(int lessonId, string userId)
         {
             List<TestDetail> testHistory = _unitOfWork.TestDetail.GetRange(t => t.LessonId == lessonId && t.UserId == userId,
@@ -79,7 +78,6 @@ namespace ViLearning.Areas.Student.Controllers
                 .OrderByDescending(t => t.Mark).ThenBy(t => t.Duration).ThenBy(t => t.StartTime).ToList();
             return testRanking;
         }
-
         public int GetLessonId(int courseId, int lessonNo)
         {
             var lessonId = _unitOfWork.Lesson.Get(l => l.CourseId == courseId && l.LessonNo == lessonNo).LessonId;
