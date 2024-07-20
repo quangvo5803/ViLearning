@@ -1,4 +1,7 @@
-﻿<div class="row">
+﻿@{
+    ViewData["Title"] = "Trang chủ Admin";
+}
+<div class="row">
     <div class="text-center col-md-4 mb-5" style="align-items:center">
         <h3 class="mt-5"><a class="nav-link text-dark" asp-area="Admin" asp-controller="User" asp-action="Index">Quản lí Người Dùng</a></h3>
         <div class="mt-2" id="totalUsers"></div>
@@ -8,6 +11,11 @@
         <h3 class="mt-5"><a class="nav-link text-dark" asp-area="Admin" asp-controller="ManagerTeacherWithdraw" asp-action="Index">Doanh thu </a></h3>
         <div class="mt-2" id="totalRevenue"></div>
         <canvas class="mt-2" id="profitChart" width="150" height="150"></canvas>
+        <div class="col">
+            <label for="yearFilter">Chọn năm:</label>
+            <input type="number" id="yearFilter" name="yearFilter" value="2024">
+            <button onclick="updateCharts()">Xem biểu đồ</button>
+        </div>
     </div>
     <div class="text-center col-md-4 mb-5" style="align-items:center">
         <h3 class="mt-5"><a class="nav-link text-dark" asp-area="Admin" asp-controller="ManageCourse" asp-action="Index">Quản lí khóa học</a></h3>
@@ -69,21 +77,27 @@
         document.getElementById('totalUsers').innerText = `Số người dùng: ${totalUsers}`;
     }
     //Profit chart
-    async function fetchMonthlyProfit() {
-        const response = await fetch('/Admin/Home/GetMonthlyProfit');
+    async function fetchMonthlyProfit(year) {
+        const response = await fetch(`/Admin/Home/GetMonthlyProfit?year=${year}`);
         const data = await response.json();
         return data;
     }
 
-    async function renderProfitChart() {
-        const data = await fetchMonthlyProfit();
+
+    async function renderProfitChart(year) {
+        const data = await fetchMonthlyProfit(year);
 
         const ctx = document.getElementById('profitChart').getContext('2d');
         const labels = data.months; // Array of month names
         const profits = data.profits; // Array of profits for each month
         const revenues = data.revenues; // Array of revenues for each month
 
-        new Chart(ctx, {
+        // Clear existing chart if needed
+        // ...
+        if (window.profitchart) {
+            window.profitchart.destroy();
+        }
+        window.profitchart = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: labels,
@@ -128,6 +142,11 @@
         const totalProfit = revenues.reduce((a, b) => a + b, 0);
         document.getElementById('totalRevenue').innerText = `Tổng lợi nhuận: ${formatCurrency(totalProfit)}`;
     }
+    async function updateCharts() {
+        const selectedYear = document.getElementById('yearFilter').value;
+        await renderProfitChart(selectedYear);
+    }
+
     //Course chart
     async function fetchCourseCounts() {
         const response = await fetch('/Admin/Home/GetCourse');
@@ -176,9 +195,9 @@
         document.getElementById('totalCourse').innerText = `Tổng số khóa học: ${totalCourse}`;
     }
 
+
     renderCourseChart();
     renderUserChart();
-    renderProfitChart();
 </script>
 <style>
     .container{

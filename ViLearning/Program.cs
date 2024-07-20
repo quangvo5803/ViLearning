@@ -26,7 +26,6 @@ builder.Services.AddAuthentication(options =>
     options.ClientId = builder.Configuration["GoogleKeys:ClientID"];
     options.ClientSecret = builder.Configuration["GoogleKeys:ClientSecret"];
 });
-
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDBContext>(options =>

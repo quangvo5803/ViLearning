@@ -4,13 +4,13 @@
     ViewData["Title"] = "Gửi lại email xác thực";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h1 class="mt-5">@ViewData["Title"]</h1>
 <h2>Nhập email của bạn.</h2>
 <hr />
 <div class="row mt-5">
-    <div class="col-md-4">
+    <div class="col-md-4" style="margin-bottom:130px">
         <form method="post">
-            <div class="form-floating mb-3">
+            <div class="form-floating mb-3" >
                 <input asp-for="Input.Email" class="form-control" aria-required="true" placeholder="name@example.com" />
                 <label asp-for="Input.Email" class="form-label"></label>
                 <span asp-validation-for="Input.Email" class="text-danger"></span>

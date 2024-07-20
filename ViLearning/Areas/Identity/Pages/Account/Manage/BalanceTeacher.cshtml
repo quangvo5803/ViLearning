@@ -28,7 +28,14 @@
                 <input asp-for="Input.Withdraw" class="form-control" placeholder="Nhập số dư muốn rút" />
                 <span asp-validation-for="Input.Withdraw" class="text-danger"></span>
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Yêu cầu rút tiền</button>
+            <div class="row">
+                <div class="col-md-6">
+                    <a class="btn btn-lg btn-primary w-100" style="margin: 20px 0;" asp-page="/Account/Manage/QRCodeSubmit">Quản lí QR rút tiền</a>
+                </div>
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-lg btn-primary w-100" style="margin: 20px 0;">Yêu cầu rút tiền</button>
+                </div>
+            </div>
         </form>
 
         <h4 class="mt-5">Danh sách yêu cầu rút tiền</h4>
