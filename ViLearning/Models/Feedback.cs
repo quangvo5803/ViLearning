@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -12,6 +13,8 @@ namespace ViLearning.Models
         public int FeedBackStar {  get; set; }
         [Display(Name = "Đánh giá: ")]
         public string? FeedBackContent { get; set; }
+
+        public DateTime CreatedAt { get; set; }
         //Foreign key
         public string? UserId { get; set; }
         public int CourseId { get; set; }

@@ -6,6 +6,7 @@ using ViLearning.Data;
 using ViLearning.Models;
 using ViLearning.Services.Repository.IRepository;
 using ViLearning.Utility;
+using Microsoft.IdentityModel.Tokens;
 
 namespace ViLearning.Services.Repository
 {
@@ -13,10 +14,9 @@ namespace ViLearning.Services.Repository
     {
         private ApplicationDBContext _db;
         private readonly BlobStorageService _blobStorageService;
-        public LearningProgressRepository(ApplicationDBContext db, BlobStorageService blobStorageService) : base(db)
+        public LearningProgressRepository(ApplicationDBContext db) : base(db)
         {
             _db = db;
-            _blobStorageService = blobStorageService;
         }
 
         public void LoadCourse(LearningProgress learningProgress)
@@ -84,5 +84,37 @@ namespace ViLearning.Services.Repository
             return fileUrl;
         }
 
+        public bool HasLearnedLesson(string learnedLessons, int lessonNo)
+        {
+            if (string.IsNullOrEmpty(learnedLessons))
+            {
+                return false;
+            }
+
+            string[] lessonsArray = learnedLessons.Split(',');
+            return lessonsArray.Contains(lessonNo.ToString());
+        }
+
+        public bool HasLearnedLesson(LearningProgress learningProgress, int lessonNo)
+        {
+            if (string.IsNullOrEmpty(learningProgress.LearnedLessons))
+            {
+                return false;
+            }
+
+            string[] lessonsArray = learningProgress.LearnedLessons.Split(',');
+            return lessonsArray.Contains(lessonNo.ToString());
+        }
+
+        public int NumOfLessonLearned(LearningProgress learningProgress)
+        {
+            if (string.IsNullOrEmpty(learningProgress.LearnedLessons))
+            {
+                return 0;
+            }
+
+            string[] lessonsArray = learningProgress.LearnedLessons.Split(',');
+            return lessonsArray.Length;
+        }
     }
 }

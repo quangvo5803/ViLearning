@@ -6,5 +6,10 @@ namespace ViLearning.Services.Repository.IRepository
     {
         void Update (LearningProgress learningProgress);
         void LoadCourse(LearningProgress learningProgress);
+        Task<string> AssignCertificate(LearningProgress learningProgress);
+
+        public bool HasLearnedLesson(LearningProgress learningProgress, int lessonNo);
+
+        public int NumOfLessonLearned(LearningProgress learningProgress);
     }
 }

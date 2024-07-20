@@ -13,12 +13,8 @@ namespace ViLearning.Models
         public double Progress { get; set; }
         public double OverallScore { get; set; }
         public DateTime EnrollDate { get; set; }
-        public DateTime CompletionDate { get; set; }
-        public string? StudentCertificateUrl { get; set; }
-
-        public DateTime StartDate { get; set; }
         public DateTime? CompletionDate { get; set; }
-
+        public string? StudentCertificateUrl { get; set; }
         public string LearnedLessons { get; set; }
 
         [ForeignKey("CourseId")]

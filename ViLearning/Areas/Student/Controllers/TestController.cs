@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
+using System;
 using System.Drawing;
 using System.Reflection.PortableExecutable;
 using System.Security.Claims;
@@ -75,11 +76,13 @@ namespace ViLearning.Areas.Student.Controllers
         [HttpPost]
 		public async Task<IActionResult> SubmitTest(DoTestVM vm)
         {
-			TestDetail testDetail = new TestDetail()
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            TestDetail testDetail = new TestDetail()
 			{
 				StartTime = vm.TestDetail.StartTime,
 				Duration = DateTime.Now - vm.TestDetail.StartTime,
-				UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+				UserId = userId,
 				LessonId = vm.Lesson.LessonId,
                 Questions = new List<Question>(),
                 QuestionsIsCorrect = new Dictionary<int, bool>(),
@@ -106,13 +109,37 @@ namespace ViLearning.Areas.Student.Controllers
             }
             testDetail.Mark = score;
             // End Get Score
-
-            // Update Learning Progress
-
-            // End Update Learning Progress
-
             testDetail.Lesson = _unitOfWork.Lesson.Get(l => l.LessonId == vm.Lesson.LessonId, includeProperties: "Course");
             testDetail.TestResult = vm.TestDetail.TestResult;
+            // Update Learning Progress
+            var learningProgress = _unitOfWork.LearningProgress.Get(q => q.UserId == testDetail.UserId && q.CourseId == testDetail.Lesson.CourseId, includeProperties:"User");
+            int numOfLessonLearned = _unitOfWork.LearningProgress.NumOfLessonLearned(learningProgress); 
+            double highestMarkOfLesson = await _unitOfWork.TestDetail.GetHighestMarkByLessonIdAsync(vm.Lesson.LessonId, userId);
+            Course course = _unitOfWork.Course.Get(c => c.CourseId == vm.Lesson.CourseId, includeProperties: "ApplicationUser");
+            learningProgress.Course = course;
+
+            _unitOfWork.Course.LoadCourse(course);
+
+            if (score >= vm.Lesson.TotalQuestions * 0.8 && !_unitOfWork.LearningProgress.HasLearnedLesson(learningProgress, vm.Lesson.LessonNo))
+            {
+                learningProgress.Progress += 100 / course.Lesson.Count;
+                learningProgress.LearnedLessons += $"{vm.Lesson.LessonNo},";
+            }
+
+            if (score > highestMarkOfLesson )
+            {
+                learningProgress.OverallScore = (learningProgress.OverallScore* numOfLessonLearned + score) / numOfLessonLearned + 1;
+            }
+
+            if (learningProgress.Progress == 100) 
+            {
+                learningProgress.CompletionDate = DateTime.Now.Date;
+                learningProgress.StudentCertificateUrl = await _unitOfWork.LearningProgress.AssignCertificate(learningProgress);
+            }
+            
+            _unitOfWork.LearningProgress.Update(learningProgress);
+            // End Update Learning Progress
+
 			_unitOfWork.TestDetail.Add(testDetail);
             _unitOfWork.Save();
 

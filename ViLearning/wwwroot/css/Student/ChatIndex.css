@@ -163,7 +163,7 @@ img {
 
 .outgoing_msg {
     overflow: hidden;
-    margin: 26px 0 26px;
+    margin: 0 0 26px 0;
 }
 
 .sent_msg {
