@@ -3,9 +3,11 @@
     <!-- Course items will be dynamically added here -->
 </div>
 <div class="pagination">
-    <button id="prev-btn" disabled>Previous</button>
+
+    <button id="prev-btn" disabled>Trang trước</button>
     <span id="page-info" style="line-height:44px"></span>
-    <button id="next-btn">Next</button>
+    <button id="next-btn">Trang tiếp theo</button>
+
 </div>
 
 <!-- Modal HTML -->
@@ -53,7 +55,9 @@
                                 </div>`
                             );
                         });
-                        $('#page-info').text(`Page ${data.currentPage} of ${data.totalPages}`);
+
+                        $('#page-info').text(`${data.currentPage} : ${data.totalPages}`);
+
                         $('#prev-btn').prop('disabled', data.currentPage === 1);
                         $('#next-btn').prop('disabled', data.currentPage === data.totalPages);
                         currentPage = data.currentPage;
