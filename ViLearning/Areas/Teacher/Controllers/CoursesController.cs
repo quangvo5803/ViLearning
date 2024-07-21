@@ -223,7 +223,9 @@ namespace ViLearning.Areas.Teacher.Controllers
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                courses = courses.Where(s => s.CourseName.Contains(searchString));
+                courses = courses.Where(s =>
+                    s.CourseName.IndexOf(searchString, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                    s.Description.IndexOf(searchString, StringComparison.OrdinalIgnoreCase) >= 0);
             }
             var viewModel = new CourseSubjectVM
             {

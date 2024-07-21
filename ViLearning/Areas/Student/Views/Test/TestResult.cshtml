@@ -36,6 +36,55 @@
         .right-answer {
             background-color: lightblue;
         }
+
+        .congratulation-card {
+            position: relative;
+            display: flex;
+            width: 450px;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border: 1px solid #d2d2dc;
+            border-radius: 4px;
+            -webkit-box-shadow: 0px 0px 5px 0px rgb(249, 249, 250);
+            -moz-box-shadow: 0px 0px 5px 0px rgba(212, 182, 212, 1);
+            box-shadow: 0px 0px 5px 0px rgb(161, 163, 164)
+        }
+
+            .card .card-body {
+                padding: 1rem 1rem
+            }
+
+        .card-body {
+            flex: 1 1 auto;
+            padding: 1.25rem
+        }
+
+        .cross {
+            padding: 10px;
+            color: #d6312d;
+            cursor: pointer
+        }
+
+        .continue:focus {
+            outline: none
+        }
+
+        .continue {
+            border-radius: 5px;
+            text-transform: capitalize;
+            font-size: 13px;
+            padding: 8px 19px;
+            cursor: pointer;
+            color: #fff;
+            background-color: #D50000
+        }
+
+            .continue:hover {
+                background-color: #D32F2F !important
+            }
     </style>
 }
 
@@ -93,9 +142,25 @@
             }
             
             <div class="text-center">
-            @if (Model.Mark >= Model.Lesson.TotalQuestions*0.8)
+
+            @if ((double)ViewData["LearningProgressAfter"] == 100)
             {
-                <a class="text-center start-btn"
+                <a class="text-center text-decoration-none"
+                       asp-controller="Learning" 
+                       asp-action="Details" 
+                       asp-route-courseId="@Model.Lesson.CourseId" 
+                       asp-route-lessonNo="@(Model.Lesson.LessonNo)">
+                    <button class="btn btn-success mt-5 mb-5">BACK TO LESSON</button>
+                </a>  
+                
+                <a class="text-center text-decoration-none"
+                       asp-area="Student" asp-controller="Home" asp-action="Study">
+                    <button class="btn btn-primary mt-5 mb-5">BACK TO STUDY SECTION</button>
+                </a>
+            }
+            else if (Model.Mark >= Model.Lesson.TotalQuestions*0.8)
+            {
+                    <a class="text-center text-decoration-none"
                        asp-controller="Learning" 
                        asp-action="Details" 
                        asp-route-courseId="@Model.Lesson.CourseId" 
@@ -105,7 +170,7 @@
             }
             else
             {
-                <a class="text-center start-btn"
+                    <a class="text-center text-decoration-none"
                    asp-area="Student"
                    asp-controller="Test"
                    asp-action="DoTest"
@@ -118,7 +183,28 @@
         </div>
     </div>
 </div>
-
+@*Congratulation Modal*@
+<div class="modal fade" id="congratulationModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="card congratulation-card">
+            <div class="text-end cross"> <i class="bi bi-x-square"></i> </div>
+            <div class="card-body text-center">
+                <img src="https://img.icons8.com/bubbles/200/000000/trophy.png">
+                <h4>CONGRATULATIONS!</h4>
+                <p>You have been passed our course!</p> 
+                <button class="btn btn-out btn-square continue">CONTINUE</button>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts {
-
+    <script>
+        $(document).ready(function () {
+            var learningProgressBefore = @((double)ViewData["LearningProgressBefore"]);
+            var learningProgressAfter = @((double)ViewData["LearningProgressAfter"]);
+            if (learningProgressBefore != learningProgressAfter && learningProgressAfter == 100) {
+                $('#congratulationModal').modal('show');
+            }
+        });
+    </script>
 }

@@ -122,6 +122,8 @@ namespace ViLearning.Areas.Student.Controllers
 
             _unitOfWork.Course.LoadCourse(course);
 
+            ViewData["LearningProgressBefore"] = learningProgress.Progress;
+
             if (score >= vm.Lesson.TotalQuestions * 0.8 && !_unitOfWork.LearningProgress.HasLearnedLesson(learningProgress, lesson.LessonNo))
             {
                 learningProgress.Progress += 100 / course.Lesson.Count;
@@ -137,7 +139,7 @@ namespace ViLearning.Areas.Student.Controllers
                 learningProgress.CompletionDate = DateTime.Now.Date;
                 learningProgress.StudentCertificateUrl = await AssignCertificate(learningProgress);
             }
-            
+            ViewData["LearningProgressAfter"] = learningProgress.Progress;
             _unitOfWork.LearningProgress.Update(learningProgress);
             // End Update Learning Progress
 

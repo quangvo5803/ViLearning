@@ -66,7 +66,9 @@
                             <div class="lesson-item" style="text-emphasis-color:white; text-decoration:none">
                                 <a asp-controller="Learning" asp-action="Details" asp-route-courseId="@Model.Course.CourseId" asp-route-lessonNo="@lesson.LessonNo" style="color: #212529;display: block; height: inherit; width:inherit; line-height: 3.5rem; text-decoration:none">
 
-                                    @if (lesson.Tests != null)
+
+                                    @if (lesson.Tests.Count > 0)
+
 
                                     {
                                         double max = -1;
@@ -97,7 +99,7 @@
                         {
                             <div class="lesson-item" style="background-color:RGB(255 244 215)">
                                 <a asp-controller="Learning" asp-action="Details" asp-route-courseId="@Model.Course.CourseId" asp-route-lessonNo="@lesson.LessonNo" style="color: #212529;display: block; height: inherit; width:inherit; line-height: 3.5rem; text-decoration:none">
-                                    @if (lesson.Tests == null)
+                                    @if (lesson.Tests.Count == 0)
                                     {
 
                                         <span class="lesson-status" style="font-size: 1.5em; color: #A6A8AA; position:absolute; left:2%">●</span>
@@ -278,22 +280,26 @@
         const lessonContainer = document.getElementById('lessson-container');
         const chatIcon = document.getElementById('chat-icon');
         const chatbox = document.getElementById('chatbox');
-        if (Hls.isSupported()) {
-            const hls = new Hls();
-            hls.loadSource(playlistUrl);
-            hls.attachMedia(video);
-            hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                videoArea.addEventListener('click', () => {
-                    video.play();
+
+        if (playlistUrl && video) {
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource(playlistUrl);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    video.addEventListener('click', () => {
+                        video.play();
+                    });
                 });
-            });
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            video.src = playlistUrl;
-            video.addEventListener('loadedmetadata', () => {
-                video.addEventListener('click', () => {
-                    video.play();
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = playlistUrl;
+                video.addEventListener('loadedmetadata', () => {
+                    video.addEventListener('click', () => {
+                        video.play();
+                    });
                 });
-            });
+            }
+
         }
         if (learnLink && commentLink && rankingLink && overlayComment && overlayRanking && sidebar) {
             commentLink.addEventListener('click', function (event) {
