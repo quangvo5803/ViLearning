@@ -39,11 +39,12 @@
                 <div class="form-group">
                     <label asp-for="Video" class="control-label">Video Bài Giảng</label>
                     <br />
-                    <video width="320" height="240" controls>
-                        <source src="@Model.Video" type="video/mp4">
-                        <source src="@Model.Video" type="video/ogg">
-                        Your browser does not support the video tag.
-                    </video>
+                    @if (Model.Video != null)
+                    {
+                        <video width="320" height="240" controls id="video">
+                        </video>
+                    }
+                   
                     <input type="file" name="Video" asp-for="Video" class="form-control" class="box"/>
                     <span asp-validation-for="Video" class="text-danger"></span>
                 </div>
@@ -132,3 +133,27 @@
         </script>
 }
 </body>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const playlistUrl = "@Model.Video";
+
+        if (Hls.isSupported()) {
+            const hls = new Hls();
+            hls.loadSource(playlistUrl);
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                videoArea.addEventListener('click', () => {
+                    video.play();
+                });
+            });
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = playlistUrl;
+            video.addEventListener('loadedmetadata', () => {
+                video.addEventListener('click', () => {
+                    video.play();
+                });
+            });
+        }
+    });
+</script>
