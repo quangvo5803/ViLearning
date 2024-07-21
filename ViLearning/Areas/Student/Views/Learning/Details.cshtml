@@ -278,7 +278,7 @@
         const lessonContainer = document.getElementById('lessson-container');
         const chatIcon = document.getElementById('chat-icon');
         const chatbox = document.getElementById('chatbox');
-        @* if (Hls.isSupported()) {
+        if (Hls.isSupported()) {
             const hls = new Hls();
             hls.loadSource(playlistUrl);
             hls.attachMedia(video);
@@ -294,7 +294,7 @@
                     video.play();
                 });
             });
-        } *@
+        }
         if (learnLink && commentLink && rankingLink && overlayComment && overlayRanking && sidebar) {
             commentLink.addEventListener('click', function (event) {
                 event.preventDefault();
