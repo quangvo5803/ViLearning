@@ -231,6 +231,7 @@
             <a class="chat-icon" id="chat-icon" style="position: relative"><i class="fa-solid fa-headset"></i>
                 @*Test Chat feature*@
                 <input type="hidden" id="hiddenUserId" value="@ViewData["userId"]" />
+                <input type="hidden" id="hiddenReceiverId" value="@Model.Course.ApplicationUser.Id" />
                 <div id="chatbox" class="chatbox d-none">
                     <h3 class="text-center" style="background: #5fcf80; margin-bottom: 0; padding-block: 5px; font-size: 1rem">
                         @Model.Course.ApplicationUser.UserName
