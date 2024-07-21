@@ -143,9 +143,9 @@
             
             <div class="text-center">
 
-            @if ((int)ViewData["LearningProgressAfter"] == 100)
+            @if ((double)ViewData["LearningProgressAfter"] == 100)
             {
-                <a class="text-center"
+                <a class="text-center text-decoration-none"
                        asp-controller="Learning" 
                        asp-action="Details" 
                        asp-route-courseId="@Model.Lesson.CourseId" 
@@ -153,14 +153,14 @@
                     <button class="btn btn-success mt-5 mb-5">BACK TO LESSON</button>
                 </a>  
                 
-                <a class="text-center"
+                <a class="text-center text-decoration-none"
                        asp-area="Student" asp-controller="Home" asp-action="Study">
                     <button class="btn btn-primary mt-5 mb-5">BACK TO STUDY SECTION</button>
                 </a>
             }
             else if (Model.Mark >= Model.Lesson.TotalQuestions*0.8)
             {
-                <a class="text-center"
+                    <a class="text-center text-decoration-none"
                        asp-controller="Learning" 
                        asp-action="Details" 
                        asp-route-courseId="@Model.Lesson.CourseId" 
@@ -170,7 +170,7 @@
             }
             else
             {
-                <a class="text-center"
+                    <a class="text-center text-decoration-none"
                    asp-area="Student"
                    asp-controller="Test"
                    asp-action="DoTest"
@@ -187,7 +187,7 @@
 <div class="modal fade" id="congratulationModal" role="dialog">
     <div class="modal-dialog">
         <div class="card congratulation-card">
-            <div class="text-right cross"> <i class="bi bi-x-square"></i> </div>
+            <div class="text-end cross"> <i class="bi bi-x-square"></i> </div>
             <div class="card-body text-center">
                 <img src="https://img.icons8.com/bubbles/200/000000/trophy.png">
                 <h4>CONGRATULATIONS!</h4>
@@ -200,9 +200,8 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            var learningProgressBefore = @((int)ViewData["LearningProgressBefore"]);
-            var learningProgressAfter = @((int)ViewData["LearningProgressAfter"]);
-
+            var learningProgressBefore = @((double)ViewData["LearningProgressBefore"]);
+            var learningProgressAfter = @((double)ViewData["LearningProgressAfter"]);
             if (learningProgressBefore != learningProgressAfter && learningProgressAfter == 100) {
                 $('#congratulationModal').modal('show');
             }
