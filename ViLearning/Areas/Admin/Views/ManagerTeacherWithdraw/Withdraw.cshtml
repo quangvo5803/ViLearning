@@ -1,0 +1,28 @@
+﻿@model WithdrawRequest
+@{
+    ViewData["Title"] = "Yêu cầu rút tiền";
+}
+<div class="container d-flex flex-column align-items-center justify-content-center mt-5">
+    <div class="certificate-wrapper text-center" style="max-width:1500px; max-height:700px;overflow: hidden; display:flex; justify-content:center; align-items:center;">
+        <a class="venobox" data-gall="gallery01" data-fitview="true" href="@Model.ApplicationUser.TeacherQrCodeUrl">
+            <img src="@Model.ApplicationUser.TeacherQrCodeUrl" alt="Giấy Chứng Nhận" class="certificate-img" style="max-width:70%;max-height:70%; width:auto;height:auto;object-fit:contain">
+        </a>
+    </div>
+    <div class="row justify-content-between mt-4 w-100" role="group" aria-label="Basic example">
+        <a class="col-md-3 btn btn-success" asp-controller="ManagerTeacherWithdraw" asp-action="Accept" asp-route-id="@Model.WithdrawRequestID">Đã thanh toán</a>
+        <a class="col-md-3 btn btn-danger" asp-controller="ManagerTeacherWithdraw" asp-action="Reject" asp-route-id="@Model.WithdrawRequestID">Từ chối</a>
+        <a class="col-md-3 btn btn-secondary" asp-controller="ManagerTeacherWithdraw" asp-action="Index"><i class="bi bi-arrow-return-left pr-1"></i> Trở về danh sách yêu cầu rút tiên</a>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        new VenoBox({
+            selector: '.venobox',
+            numeration: true,
+            infinigall: true,
+            share: true,
+            spinner: 'rotating-plane',
+        });
+    </script>
+}

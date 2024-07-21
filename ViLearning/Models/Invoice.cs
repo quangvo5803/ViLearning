@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ViLearning.Models
 {
     public class Invoice
     {
+        [Key]
         public int InvoiceID { get; set; }
         //Foreign Key
         public int CourseId { get; set; }

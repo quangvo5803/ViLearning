@@ -1,0 +1,389 @@
+﻿@model LearningMaterial
+@{
+    Layout = null;
+}
+
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/Student/LearningMaterial.css">
+    <link rel="stylesheet" href="~/css/Student/Chat.css">
+    <script src="https://kit.fontawesome.com/db43418352.js" crossorigin="anonymous"></script>
+</head>
+
+<body style="overflow-y: hidden">
+    <div class="d-flex flex-column min-vh-100" id="content" style="width:100vw; overflow-x:hidden">
+        <header class="header">
+            <a class="back-icon" asp-controller="Home" asp-action="Details" asp-route-CourseId="@Model.Course.CourseId"><i class="fa-solid fa-chevron-left"></i></a>
+            <div class="course-title">@Model.Course.CourseName</div>
+        </header>
+
+        <div class="container-fluid flex-grow-1" style="position:relative">
+            <div class=" row flex-nowrap" style="position:absolute; height:100%; min-width:100%">
+                <aside class="sidebar col-auto" id="sidebar">
+                    <a class="menu-item" id="learn-icon" style="color:white">
+                        <i class="fa-brands fa-leanpub tt" data-bs-toggle="tooltip" data-bs-placement="top" title="Learning Material"></i>
+                    </a>
+                    <a class="menu-item" id="comment-icon" style="color:white" asp-controller="Comments" asp-action="LessonDetails" asp-route-CourseName="@Model.Course.CourseName" asp-route-LessonName="@Model.Lesson.LessonName" asp-route-id="@Model.Lesson.LessonId" >
+                        <i class="fa-regular fa-comments tt" data-bs-toggle="tooltip" data-bs-placement="top" title="Discuss"></i>
+                    </a>
+                    <a class="menu-item" id="test-icon" asp-action="ViewTestInfo" asp-route-lessonId="@Model.Lesson.LessonId" asp-controller="Test" style="color:white">
+                        <i class="fa-solid fa-file-circle-question tt" data-bs-toggle="tooltip" data-bs-placement="top" title="Do Test"></i>
+                    </a>
+                    <a class="menu-item" id="ranking-icon" style="color:white">
+                        <i class="fa-solid fa-ranking-star tt" data-bs-toggle="tooltip" data-bs-placement="top" title="Ranking"></i>
+                    </a>
+                    <a class="menu-item" id="history-icon" style="color:white">
+                        <i class="fa-solid fa-clock-rotate-left" data-bs-toggle="tooltip" data-bs-placement="top" title="Test History"></i>
+                    </a>
+
+                </aside>
+
+                <main id="main-content" class="main-content col" style="height: 100%">
+                    <center>
+                        <div class="row mb-3">
+                            <div class="col">
+                                @if (Model.Lesson.Video != null)
+                                {
+                                    <video width="900" height="600" controls id="video">
+                                    </video>
+                                }  
+                            </div>
+                        </div>
+                    </center>
+                    <div class="row">
+                        <div class="col">
+                            @Html.Raw(Model.Lesson.Content)
+                        </div>
+                    </div>
+                </main>
+                <div class="resizer" id="resizer"></div>
+                <aside id="lesson-list" class="lesson-list col-3">
+                    @foreach (Lesson lesson in Model.ListLesson)
+                    {
+                        @if (lesson.LessonId != Model.Lesson.LessonId)
+                        {
+                            <div class="lesson-item" style="text-emphasis-color:white; text-decoration:none">
+                                <a asp-controller="Learning" asp-action="Details" asp-route-courseId="@Model.Course.CourseId" asp-route-lessonNo="@lesson.LessonNo" style="color: #212529;display: block; height: inherit; width:inherit; line-height: 3.5rem; text-decoration:none">
+
+
+                                    @if (lesson.Tests.Count > 0)
+
+
+                                    {
+                                        double max = -1;
+                                        foreach (TestDetail test in lesson.Tests)
+                                        {
+                                            if (test.Mark > max) max = test.Mark;
+                                        }
+                                        if (max >= 8)
+                                        {
+
+                                            <span class="lesson-status" style="font-size: 1.5em; color: #4caf50; position:absolute; left:2%">●</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="lesson-status" style="color:red; position:absolute; left:2%">●</span>
+                                        }
+                                    } else
+                                    {
+                                        <span class="lesson-status" style="font-size: 1.5em; color: #A6A8AA; position:absolute; left:2%">●</span>
+
+                                    }
+                                    <span class="lesson-name" data-bs-toggle="tooltip" data-bs-placement="top" title="@lesson.LessonName">@lesson.LessonName</span>
+                                </a>
+                                
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="lesson-item" style="background-color:RGB(255 244 215)">
+                                <a asp-controller="Learning" asp-action="Details" asp-route-courseId="@Model.Course.CourseId" asp-route-lessonNo="@lesson.LessonNo" style="color: #212529;display: block; height: inherit; width:inherit; line-height: 3.5rem; text-decoration:none">
+                                    @if (lesson.Tests.Count == 0)
+                                    {
+
+                                        <span class="lesson-status" style="font-size: 1.5em; color: #A6A8AA; position:absolute; left:2%">●</span>
+
+                                    }
+                                    else
+                                    {
+                                        double max = -1;
+                                        foreach (TestDetail test in lesson.Tests)
+                                        {
+                                            if (test.Mark > max) max = test.Mark;
+                                        }
+                                        if (max >= 8)
+                                        {
+
+                                            <span class="lesson-status" style="font-size: 1.5em; color: #4caf50; position:absolute; left:2%">●</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="lesson-status" style="color:red; position:absolute; left:2%">●</span>
+
+                                        }
+                                    }
+                                    <span class="lesson-name" data-bs-toggle="tooltip" data-bs-placement="top" title="@lesson.LessonName">@lesson.LessonName</span>
+                                </a>
+                            </div>
+                        }
+                    }
+                </aside>
+            </div>
+        </div>
+        <div id="overlayComment" class="overlay-section">
+            <div class="overlay-content" style="margin-top: 50px">
+                @Html.Partial("LessonDetails", Model.commentLesson)
+                <!-- Add your comment section content here -->
+            </div>
+        </div>
+
+        <div id="overlayRanking" class="overlay-section" style="width:41rem">
+            <div class="overlay-content">
+                <!-- Add your ranking section content here -->
+                <h1>Test Ranking</h1>
+
+                @if (Model.TestRanking.Count > 0)
+                {
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Tên</th>
+                                <th>Điểm</th>
+                                <th>Thời gian làm bài</th>
+                                <th>Thời điểm nộp bài</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var testDetail in Model.TestRanking)
+                            {
+                                <tr>
+                                    <td>@(Model.TestRanking.IndexOf(testDetail) + 1)</td>
+                                    <td>@testDetail.ApplicationUser.UserName</td>
+                                    <td>@testDetail.Mark</td>
+                                    <td>@testDetail.Duration.ToString(@"hh\:mm\:ss")</td>
+                                    <td>@(testDetail.StartTime + testDetail.Duration)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p>Không có dữ liệu ranking.</p>
+                }
+
+            </div>
+        </div>
+        <div id="overlayHistory" class="overlay-section">
+            <div class="overlay-content">
+                <!-- Add your test history section content here -->
+                <h1>Test History</h1>
+
+                @if (Model.TestHistory.Count > 0)
+                {
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Thời gian nộp</th>
+                                <th>Điểm số</th>
+                                <th>Thời gian làm bài</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var testDetail in Model.TestHistory)
+                            {
+                                <tr>
+                                    <td>@(Model.TestHistory.IndexOf(testDetail) + 1)</td>
+                                    <td>@(testDetail.StartTime + testDetail.Duration)</td>
+                                    <td>@testDetail.Mark</td>
+                                    <td>@testDetail.Duration.ToString(@"hh\:mm\:ss")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p>Không có dữ liệu lịch sử làm test.</p>
+                }
+            </div>
+        </div>
+
+        <footer class="footer" style="position: sticky; bottom: 0"> 
+            @if (Model.Lesson.LessonNo == 1)
+            {
+                <a class="nav-button" style="text-decoration:none" disabled="disabled"><i class="fa-solid fa-angle-left"></i> Previous</a>
+            }
+            else
+            {
+                <a asp-controller="Learning" asp-action="Details" asp-route-courseId="@Model.Course.CourseId" asp-route-lessonNo="@(Model.Lesson.LessonNo - 1)" class="nav-button" style="text-decoration:none" disabled="disabled"><i class="fa-solid fa-angle-left"></i> Previous</a>
+            }
+            @if (Model.Lesson.LessonNo == Model.Course.Lesson.Count())
+            {
+                <a class="nav-button" style="text-decoration:none" disabled="disabled">Next <i class="fa-solid fa-angle-right"></i></a>
+            }
+            else
+            {
+                <a asp-controller="Learning" asp-action="Details" asp-route-courseId="@Model.Course.CourseId" asp-route-lessonNo="@(Model.Lesson.LessonNo + 1)" class="nav-button" style="text-decoration:none">Next <i class="fa-solid fa-angle-right"></i></a>
+            }
+            
+            <a class="chat-icon" id="chat-icon" style="position: relative"><i class="fa-solid fa-headset"></i>
+                @*Test Chat feature*@
+                <input type="hidden" id="hiddenUserId" value="@ViewData["userId"]" />
+                <input type="hidden" id="hiddenReceiverId" value="@Model.Course.ApplicationUser.Id" />
+                <div id="chatbox" class="chatbox d-none">
+                    <h3 class="text-center" style="background: #5fcf80; margin-bottom: 0; padding-block: 5px; font-size: 1rem">
+                        @Model.Course.ApplicationUser.FullName
+                    </h3>
+                    <div class="messaging">
+                        <div class="inbox_msg">
+                            <div class="mesgs">
+                                <div id="messagesList">
+                                </div>
+                                <div class="type_msg">
+                                    <div class="input_msg_write">
+                                        <input type="text" id="messageInput" placeholder="Type a message" />
+                                        <button id="msg_send_btn" type="button"><i class="fa fa-send" aria-hidden="true"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @*End Chat feature*@
+            </a>
+            
+        </footer>
+    </div>
+</body>
+
+<script src="~/lib/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/Student/Chat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const playlistUrl = "@Model.Lesson.Video";
+        const learnLink = document.getElementById('learn-icon');
+        const commentLink = document.getElementById('comment-icon');
+        const rankingLink = document.getElementById('ranking-icon');
+        const historyLink = document.getElementById('history-icon');
+        const overlayComment = document.getElementById('overlayComment');
+        const overlayRanking = document.getElementById('overlayRanking');
+        const overlayHistory = document.getElementById('overlayHistory');
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('main-content');
+        const lessonList = document.getElementById('lesson-list');
+        const resizer = document.getElementById('resizer');
+        const lessonContainer = document.getElementById('lessson-container');
+        const chatIcon = document.getElementById('chat-icon');
+        const chatbox = document.getElementById('chatbox');
+
+        if (playlistUrl && video) {
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource(playlistUrl);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    video.addEventListener('click', () => {
+                        video.play();
+                    });
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = playlistUrl;
+                video.addEventListener('loadedmetadata', () => {
+                    video.addEventListener('click', () => {
+                        video.play();
+                    });
+                });
+            }
+
+        }
+        if (learnLink && commentLink && rankingLink && overlayComment && overlayRanking && sidebar) {
+            commentLink.addEventListener('click', function (event) {
+                event.preventDefault();
+                if (overlayComment.style.display === 'block') {
+                    overlayComment.style.display = 'none';
+                } else {
+                    overlayComment.style.left = (sidebar.offsetWidth + sidebar.offsetLeft) + 'px';
+                    overlayComment.style.display = 'block';
+                    overlayRanking.style.display = 'none'; // Hide the other overlay
+                    overlayHistory.style.display = 'none';
+                }
+            });
+
+            rankingLink.addEventListener('click', function (event) {
+                event.preventDefault();
+                if (overlayRanking.style.display === 'block') {
+                    overlayRanking.style.display = 'none';
+                } else {
+                    overlayRanking.style.left = (sidebar.offsetWidth + sidebar.offsetLeft) + 'px';
+                    overlayRanking.style.display = 'block';
+                    overlayComment.style.display = 'none'; // Hide the other overlay
+                    overlayHistory.style.display = 'none';
+                }
+            });
+            historyLink.addEventListener('click', function (event) {
+                event.preventDefault();
+                if (overlayHistory.style.display === 'block') {
+                    overlayHistory.style.display = 'none';
+                } else {
+                    overlayHistory.style.left = (sidebar.offsetWidth + sidebar.offsetLeft) + 'px';
+                    overlayHistory.style.display = 'block';
+                    overlayRanking.style.display = 'none';
+                    overlayComment.style.display = 'none'; // Hide the other overlay
+                }
+            });
+
+            learnLink.addEventListener('click', function (event) {
+                event.preventDefault();
+                overlayComment.style.display = 'none';
+                overlayRanking.style.display = 'none';
+            });
+        } else {
+            console.error('One or more elements not found.');
+        }
+
+
+        //resizer
+        var isResizing = false;
+
+        resizer.addEventListener('mousedown', function (e) {
+            isResizing = true;
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+        });
+
+        function onMouseMove(e) {
+            if (!isResizing) return;
+
+            const offsetRight = document.body.offsetWidth - e.clientX;
+
+            mainContent.style.width = (document.body.offsetWidth - offsetRight) + 'px';
+            lessonContainer.style.width = '100%';
+            lessonList.style.flexBasis = (offsetRight) + 'px';
+        }
+
+        function onMouseUp(e) {
+            if (isResizing) {
+                isResizing = false;
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+            }
+        }
+
+        // Khi nhấp vào chatIcon, toggle class d-none của chatbox
+        chatIcon.addEventListener('click', function (event) {
+            chatbox.classList.toggle('d-none');
+            @* event.stopPropagation(); *@ // Ngăn chặn sự kiện lan truyền
+        });
+
+        // Ngăn chặn sự kiện click bên trong chatbox làm ảnh hưởng đến chatIcon
+        chatbox.addEventListener('click', function (event) {
+            event.stopPropagation();
+        });
+    });
+
+</script>

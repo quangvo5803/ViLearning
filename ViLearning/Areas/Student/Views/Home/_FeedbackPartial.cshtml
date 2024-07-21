@@ -1,0 +1,70 @@
+﻿@model FeedbacksViewModel
+
+<div class="reviews">
+    @foreach (var feedback in Model.Feedbacks)
+    {
+        <div class="review">
+            <div class="user">@feedback.ApplicationUser.Email</div>
+            <div class="date">@feedback.CreatedAt.ToString("dd/MM/yyyy")</div>
+            <div class="stars">
+                @for (var i = 1; i <= feedback.FeedBackStar; i++)
+                {
+                    <span class="bi bi-star-fill"></span>
+                }
+            </div>
+            <div class="comment">
+                @feedback.FeedBackContent
+            </div>
+        </div>
+    }
+    @if (Model.TotalPages > 1)
+    {
+        <div class="pagination">
+            <ul class="pagination">
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                        <a class="page-link" href="#" data-page="@i">@i</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+</div>
+
+@section Styles{
+    <style>
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .page-item {
+            margin: 0 2px;
+        }
+
+        .page-link {
+            display: inline-block;
+            padding: 0.5rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.25;
+            text-align: center;
+            text-decoration: none;
+            background-color: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 0.25rem;
+        }
+
+        .page-item.active .page-link {
+            background-color: #007bff;
+            color: #fff;
+            border-color: #007bff;
+        }
+
+        .page-link:hover {
+            background-color: #e9ecef;
+        }
+
+    </style>
+}

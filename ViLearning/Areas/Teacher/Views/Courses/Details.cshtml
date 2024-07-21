@@ -1,4 +1,5 @@
-﻿@model ViLearning.Models.Course
+﻿@using System.ComponentModel.DataAnnotations
+@model ViLearning.Models.Course
 
 @{
 	ViewData["Title"] = "Details";
@@ -28,9 +29,18 @@
 			<div class="playlist-details__column">
 
 				<div class="playlist-details__details">
+					@{
+						var courseStatus = Model.CourseStatus;
+						var displayName = courseStatus.GetType()
+						.GetField(courseStatus.ToString())
+						.GetCustomAttributes(typeof(DisplayAttribute), false)
+						.FirstOrDefault() as DisplayAttribute;
+						var statusName = displayName?.Name ?? courseStatus.ToString();
+					}
 					<h3>@Model.CourseName</h3>
 					<p>@Model.Description</p>
-					<p>Trạng thái: <strong>@Model.CourseStatus</strong></p>
+					<p>Trạng thái: @statusName</p>
+
 					@if (Model.CourseStatus == CourseStatus.Default || Model.CourseStatus == CourseStatus.Rejected)
 					{
 						<a asp-action="Edit" asp-route-id="@Model.CourseId" class="inline-btn">Chỉnh Sửa Khóa Học</a>

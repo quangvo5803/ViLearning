@@ -1,0 +1,35 @@
+﻿@model List<Feedback>
+@{
+    ViewData["Title"] = "Xem đánh giá";
+}
+<div class="card shadow border-0 mt-4">
+    <div class="card-header bg-secondary bg-gradient ml-0 py-0">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-dark py-2">Danh sách đánh giá</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-4" style="margin-bottom: 150px">
+        <table id="tblData" class="table table-bordered table-striped" width="100%">
+            <thead>
+                <tr>
+                    <th>Sao đánh giá</th>
+                    <th>Nội dung đánh giá</th>
+                    <th>Tên khóa học</th>
+                    <th>Ngày đánh giá</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/js/feedback.js"></script>
+}
+@section Styles{
+    <style>
+        .bi-star-fill::before{
+            color:orange;
+        }
+    </style>
+}

@@ -1,0 +1,28 @@
+﻿@model List<WithdrawRequest>
+@{
+    ViewData["Title"] = "Quản lí yêu cầu rút tiền";
+}
+<div class="card shadow border-0 mt-4">
+    <div class="card-header bg-secondary bg-gradient ml-0 py-0">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-dark py-2">Danh sách yêu cầu rút tiền</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-4" style="margin-bottom:130px">
+        <table id="tblData" class="table table-bordered table-striped" width="100%">
+            <thead>
+                <tr>
+                    <th>Email của giáo viên</th>               
+                    <th>Ngày yêu cầu</th>
+                    <th>Số tiền rút</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/js/withdraw.js"></script>
+}

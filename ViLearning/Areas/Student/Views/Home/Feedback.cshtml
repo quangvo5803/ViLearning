@@ -1,0 +1,246 @@
+﻿@model Course
+
+
+@{
+    ViewData["Title"] = "Đánh giá";
+}
+<div class="row mt-5 mb-5 justify-content-center">  
+    <div class="col-md-6">
+        
+            <div class="card h-100 d-flex flex-column">
+                <img src="@Model.CoverImgUrl" class="card-img-top rounded mx-auto d-block" alt="@Model.CourseName" style=" height: 300px; width:100%; object-fit:cover">
+                <div class="card-body d-flex flex-column">
+                    <span class="badge badge-success">@Model.Subject?.Name</span>
+                    <h5 class="card-title mt-2">@Model.CourseName</h5>
+                    <p class="card-text">@Model.Description</p>
+                    <div class="mt-auto d-flex justify-content-between align-items-center mt-3">
+                        <div class="d-flex align-items-center">
+                            <span class="ms-2">Giáo viên: @(Model.ApplicationUser.FullName == null ? Model.ApplicationUser.Email : Model.ApplicationUser.FullName)</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <a class="btn btn-success">@Model.Subject?.Name</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer d-flex justify-content-between bg-transparent border-top-0">
+                    <span class="ms-auto price" style="font-size:18px; font-weight:bold;">@Model.Price?.ToString("N0") VNĐ</span>
+                </div>
+            </div>
+        
+    </div>
+    <div class="main-rating col-md-6">
+        <div class="post">
+            <div class="text">Thanks for rating us!</div>
+            <div class="edit">Edit</div>
+        </div>
+        <div class="star-widget">
+            <form asp-action="Feedback" method="post">
+                <input type="hidden" name="courseId" value="@Model.CourseId" />
+
+                <div class="rating">
+                    <input name="Rating" type="radio" id="rate-5" value="5">
+                    <label for="rate-5" class="fas fa-star"></label>
+                    <input name="Rating" type="radio" id="rate-4" value="4">
+                    <label for="rate-4" class="fas fa-star"></label>
+                    <input name="Rating" type="radio" id="rate-3" value="3">
+                    <label for="rate-3" class="fas fa-star"></label>
+                    <input name="Rating" type="radio" id="rate-2" value="2">
+                    <label for="rate-2" class="fas fa-star"></label>
+                    <input name="Rating" type="radio" id="rate-1" value="1">
+                    <label for="rate-1" class="fas fa-star"></label>
+                </div>
+                <header id="ratingHeader" style="font-size:16px;"></header>
+                <div class="textarea">
+                    <textarea cols="30" rows="5" name="Description" placeholder="Mô tả trải nghiệm của bạn..."></textarea>
+                </div>
+                <div class="btn">
+                    <button type="submit">Đánh giá</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const ratingInputs = document.querySelectorAll('input[name="Rating"]');
+            const header = document.getElementById("ratingHeader");
+
+            const setHeaderContent = (value) => {
+                let content;
+                switch (value) {
+                    case "5":
+                        content = "Tuyệt vời trên cả mong đợi 😍";
+                        break;
+                    case "4":
+                        content = "Tốt như tôi mong đợi 😎";
+                        break;
+                    case "3":
+                        content = "Trung bình, lẽ ra có thể hay hơn 😐";
+                        break;
+                    case "2":
+                        content = "Kém khá thất vọng 😞";
+                        break;
+                    case "1":
+                        content = "Rất tệ, không như tôi mong đợi 😠";
+                        break;
+                    default:
+                        content = "";
+                }
+                header.textContent = content;
+            };
+
+            // Set default rating to 5 stars and update header
+            setHeaderContent("5");
+
+            ratingInputs.forEach(input => {
+                input.addEventListener("change", function () {
+                    setHeaderContent(this.value);
+                });
+            });
+        });
+        const btn = document.querySelector("button")
+        const post = document.querySelector(".post")
+        const widget = document.querySelector(".star-widget")
+        const editBtn = document.querySelector(".edit")
+        btn.onclick = () => {
+            widget.style.display = "none";
+            post.style.display = "block";
+            editBtn.onclick = () => {
+                widget.style.display = "block";
+                post.style.display = "none";
+            }
+            return false;
+        }
+
+        // To reuse, remove the code below this point to remove default rating/experience input.
+
+        document.getElementById("rate-5").checked = true;
+
+        document.querySelector(".textarea textarea").style.height = "100px";
+
+    </script>
+}
+@section Styles {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <style>
+        .main-rating {
+            position: relative;
+            width: 400px;
+            background: #FFF;
+            padding: 20px 30px;
+            box-shadow: 5px 5px 5px 5px #5557;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+            .main-rating .post {
+                display: none;
+            }
+
+            .main-rating .text {
+                font-size: 25px;
+                color: #666;
+                font-weight: 500;
+            }
+
+            .main-rating .edit {
+                position: absolute;
+                right: 10px;
+                top: 5px;
+                font-size: 16px;
+                color: #666;
+                font-weight: 500;
+                cursor: pointer;
+            }
+
+                .main-rating .edit:hover {
+                    text-decoration: underline;
+                }
+
+            .main-rating .star-widget input {
+                display: none;
+            }
+
+        .star-widget label {
+            font-size: 40px;
+            color: #444;
+            padding: 10px;
+            float: right;
+            transition: all 0.2s ease;
+        }
+
+        input:not(:checked) ~ label:hover,
+        input:not(:checked) ~ label:hover ~ label {
+            color: #fd4;
+        }
+
+        input:checked ~ label {
+            color: #fd4;
+        }
+
+        input#rate-5:checked ~ label {
+            color: #fe7;
+            text-shadow: 0 0 20px #952;
+        }
+
+        form header {
+            width: 100%;
+            font-size: 20px;
+            color: #333;
+            font-weight: 500;
+            margin: 20px 0 10px 0;
+            text-align: center;
+            transition: all 0.2 ease;
+        }
+
+        form .textarea {
+            height: 100px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+            form .textarea textarea {
+                height: 100%;
+                width: 100%;
+                outline: none;
+                color: #333;
+                padding-top: 10px;
+                border: none;
+                outline: none;
+                background: #f3f3f3;
+                padding: 12px 15px;
+                font-size: 17px;
+                resize: none;
+            }
+
+        form .btn {
+            height: 45px;
+            width: 100%;
+        }
+
+            form .btn button {
+                height: 100%;
+                width: 100%;
+                border: 1px solid #444;
+                outline: none;
+                background: #ff4b4b;
+                border-radius: 20px;
+                color: #FFF;
+                font-size: 17px;
+                font-weight: 500;
+                text-transform: uppercase;
+                cursor: pointer;
+                transform: all 0.3s ease;
+            }
+
+                form .btn button:hover {
+                    background-color: #f73636;
+                }
+    </style>
+}

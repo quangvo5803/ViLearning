@@ -20,8 +20,14 @@ namespace ViLearning.Areas.Admin.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        [HttpGet]
         public IActionResult Index()
+        {
+            var courseList = _unitOfWork.Course.GetRange(c=> c.CourseStatus == CourseStatus.Published);
+            return View(courseList);
+        }
+
+        [HttpGet]
+        public IActionResult WaitingCourse()
         {
             var pendingCourses = _unitOfWork.Course.GetAll().Where(c => c.CourseStatus == CourseStatus.Pending);
             var courseUserVMs = pendingCourses.Select(course => new CourseUserVM
@@ -58,7 +64,7 @@ namespace ViLearning.Areas.Admin.Controllers
             _unitOfWork.Course.Update(course);
             _unitOfWork.Save();
 
-            return RedirectToAction("Index");
+            return RedirectToAction("WaitingCourse");
         }
 
         [HttpGet]
@@ -73,7 +79,12 @@ namespace ViLearning.Areas.Admin.Controllers
             return View(course);
         }
 
-
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            List<Course> objCourseList = _unitOfWork.Course.GetRange(c => c.CourseStatus == CourseStatus.Published).ToList();
+            return Json(new { data = objCourseList });
+        }
     }
 }
 

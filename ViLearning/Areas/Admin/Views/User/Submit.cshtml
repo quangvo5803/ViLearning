@@ -1,5 +1,8 @@
 ﻿@model ApplicationUser
-<div class="container d-flex flex-column align-items-center justify-content-center mt-5">
+@{
+    ViewData["Title"] = "Duyệt chứng chỉ";
+}
+<div class="container d-flex flex-column align-items-center justify-content-center mt-5" style="margin-bottom:140px">
     <div class="certificate-wrapper text-center" style="max-width:1500px; max-height:800px;overflow: hidden;">
         <a class="venobox" data-gall="gallery01" data-fitview="true" href="@Model.TeacherCertificateImgUrl">
             <img src="@Model.TeacherCertificateImgUrl" alt="Giấy Chứng Nhận" class="certificate-img" style="max-width:100%;max-height:100%; width:auto;height:auto;object-fit:contain">

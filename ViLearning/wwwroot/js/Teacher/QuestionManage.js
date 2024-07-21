@@ -1,10 +1,10 @@
 ﻿// Show options if question type is multiple choice
 document.getElementById('questionType').addEventListener('change', function () {
     var multipleChoiceOptions = document.getElementById('multipleChoiceOptions');
-    if (this.value === 'MultipleChoice') {
-        multipleChoiceOptions.classList.remove('d-none');
-    } else {
+    if (this.value === 'Essay') {
         multipleChoiceOptions.classList.add('d-none');
+    } else {
+        multipleChoiceOptions.classList.remove('d-none');
     }
 });
 
@@ -14,10 +14,10 @@ document.addEventListener("DOMContentLoaded", function () {
     var multipleChoiceOptionsSections = document.querySelectorAll(".multipleChoiceOptions_update");
 
     function toggleOptions(selectElement, optionsSection) {
-        if (selectElement.value === "MultipleChoice") {
-            optionsSection.classList.remove("d-none");
-        } else {
+        if (selectElement.value === "Essay") {
             optionsSection.classList.add("d-none");
+        } else {
+            optionsSection.classList.remove("d-none");
         }
     }
 

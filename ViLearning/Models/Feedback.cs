@@ -8,13 +8,15 @@ namespace ViLearning.Models
     {
         [Key]
         public int FeedBackId { get; set; }
-        [Range(1,5)]
-        public int FeedBackStar {  get; set; }
+        [Range(1, 5)]
+        public int FeedBackStar { get; set; }
         [Display(Name = "Đánh giá: ")]
         public string? FeedBackContent { get; set; }
         //Foreign key
         public string UserId { get; set; }
         public int CourseId { get; set; }
+
+        public DateTime CreatedAt { get; set; }
 
 
         //Relation

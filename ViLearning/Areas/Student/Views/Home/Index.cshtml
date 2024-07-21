@@ -1,6 +1,6 @@
 ﻿@model LandingPageVM
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Trang chủ";
 }
 @{
     var random = new Random();
@@ -10,7 +10,7 @@
     <div class="container-fluid" style="display:flex;justify-content:center;">
         <form class="d-flex" role="search" action="/Student/Home/Search" method="get">
             <input class="form-control me-2" type="text" name="query" placeholder="Tìm kiếm khóa học" aria-label="Search" style="width:700px">
-            <button class="btn btn-outline-success" type="submit">Search</button>
+            <button class="btn btn-outline-success search-button" type="submit">Search</button>
         </form>
     </div>
 </nav>
@@ -35,7 +35,7 @@
             <li><i class="bi bi-check-circle" style="color:#5fcf80;"></i> <span>Thi thử đại học trực tuyến</span></li>
             <li><i class="bi bi-check-circle" style="color:#5fcf80;"></i> <span>Dành cho học sinh trung học phổ thông, trung học cơ sở và tiểu học.</span></li>
         </ul>
-        <a href="#" class="btn btn-readmore"><span>Tìm hiểu thêm</span> <i class="bi bi-arrow-right"></i></a>
+        <a asp-action="CourseList" class="btn btn-readmore"><span>Tìm hiểu thêm</span> <i class="bi bi-arrow-right"></i></a>
     </div>
     <div class="col-6 col-sm-6">
         <img src="/images/about.jpg" style="width:60%; height:auto" />
@@ -72,7 +72,7 @@
                     <div class="card h-100 d-flex flex-column">
                         <img src="@course.CoverImgUrl" class="card-img-top rounded mx-auto d-block" alt="@course.CourseName" style=" height: 300px; width:100%; object-fit:cover">
                         <div class="card-body d-flex flex-column">
-                            <span class="badge badge-success">@course.Subject?.Name</span>
+                            <span class="badg   e badge-success">@course.Subject?.Name</span>
                             <h5 class="card-title mt-2">@course.CourseName</h5>
                             <p class="card-text">@course.Description</p>
                             <div class="mt-auto d-flex justify-content-between align-items-center mt-3">
@@ -86,17 +86,54 @@
                         </div>
 
                         <div class="card-footer d-flex justify-content-between bg-transparent border-top-0">
+                            <div class="star-rating">
+                                @{
+                                    double rating = course.Feedbacks.Any() ? course.Feedbacks.Average(f => f.FeedBackStar) : 0;
+                                    <span style="margin-right: 5px">@rating</span>
+                                    for (var i = 1; i <= 5; i++)
+                                    {
+                                        if (rating >= i)
+                                        {
+                                            <span class="bi bi-star-fill"></span>
+                                        }
+                                        else if (rating >= i - 0.5)
+                                        {
+                                            <span class="bi bi-star-half"></span>
+                                        }
+                                        else
+                                        {
+                                            <span class="bi bi-star"></span>
+                                        }
+                                    }
+                                    <span style="margin-right: 5px">(@course.Feedbacks.Count() đánh giá)</span>
+                                }
+                            </div>
                             <span class="ms-auto price" style="font-size:18px; font-weight:bold;">@course.Price?.ToString("N0") VNĐ</span>
                         </div>
                     </div>
                 </a>
             </div>
 
-
-
         }
     </div>
 </div>
 @section Styles {
     <link rel="stylesheet" href="~/css/Student/LandingPage.css">
+    <style>
+        .star-rating {
+            display: flex;
+            align-items: center;
+        }
+
+            .star-rating .bi {
+                font-size: 18px;
+                color: orange;
+                margin-right: 2px;
+            }
+
+                .star-rating .bi.checked {
+                    color: #fd4;
+                }
+
+    </style>
 }

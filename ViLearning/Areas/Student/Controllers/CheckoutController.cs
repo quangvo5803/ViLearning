@@ -49,22 +49,37 @@ namespace ViLearning.Areas.Student.Controllers
         [Authorize]
         public IActionResult PaymentCallBack()
         {
+            //Create payment
             var response = _vpnPayServicecs.PaymentExecute(Request.Query);
             var code = response.VnPayResponseCode;
             var courseId = response.OrderDescription;
-            var course = _unitOfWork.Course.Get(c=> c.CourseId == c.CourseId, includeProperties: "Subject,ApplicationUser");
+            var course = _unitOfWork.Course.Get(c=> c.CourseId == int.Parse(courseId), includeProperties: "Subject,ApplicationUser");
             if (response == null || response.VnPayResponseCode != "00")
             {
                 TempData["error"] = "Lỗi thanh toán";
                 return RedirectToAction("Details", "Home", new { CourseId = courseId });
 
             }
+            //Create invoice if payment success
             Invoice invoice = new Invoice();
             invoice.CourseId = int.Parse(courseId);
             invoice.Amount = (double)course.Price;
             invoice.PurchaseDate = DateTime.Now;
             invoice.UserId = User.Identity.GetUserId();
             _unitOfWork.Invoice.Add(invoice);
+            //Add money for teachers
+            var user = _unitOfWork.ApplicationUser.Get(u => u.Id == course.ApplicationUser.Id);
+            user.Balance += (double)course.Price * 0.9;
+            LearningProgress lp = new LearningProgress()
+            {
+                CourseId = int.Parse(courseId),
+                UserId = invoice.UserId,
+                Progress = 0,
+                OverallScore = 0,
+                EnrollDate = DateTime.Now.Date,
+                LearnedLessons = ""
+            };
+            _unitOfWork.LearningProgress.Add(lp);
             _unitOfWork.Save();
             TempData["success"] = "Thanh toán thành công";
             return RedirectToAction("Details", "Home", new { CourseId = courseId });

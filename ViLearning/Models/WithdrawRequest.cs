@@ -4,20 +4,21 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ViLearning.Models
 {
-    public class StudentCertificate
+    public class WithdrawRequest
     {
-        //Foreign key
-       
-        public int CourseCertificateId { get; set; }
-        
+        [Key]
+        public int WithdrawRequestID { get; set; }
+
+        [Required]
         public string UserId { get; set; }
 
-        //Relation
+        public double RequestMoney {  get; set; }
+        public DateTime RequestDay { get; set; }
+        public bool Status { get; set; }
+        public DateTime? CompleteDay {  get; set; }
+
         [ForeignKey("UserId")]
         [ValidateNever]
         public ApplicationUser ApplicationUser { get; set; }
-        [ForeignKey("CourseCertificateId")]
-        [ValidateNever]
-        public CourseCertificate CourseCertificate { get; set; }
     }
 }
