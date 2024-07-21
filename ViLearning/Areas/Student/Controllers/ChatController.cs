@@ -12,57 +12,52 @@ namespace ViLearning.Areas.Student.Controllers
     public class ChatController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly BlobStorageService _blobStorageService;
-        public ChatController(IUnitOfWork unitOfWork, BlobStorageService blobStorageService)
+        public ChatController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _blobStorageService = blobStorageService;
         }
         public IActionResult Index()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             ViewData["userId"] = userId;
-            return View();
-        }
 
-        public async Task<Conversation> GetOrCreateConversation(string user1Id, string user2Id)
-        {
-            var conversation = _unitOfWork.Conversation
-                .Get(c => (c.User1Id == user1Id && c.User2Id == user2Id) ||
-                          (c.User1Id == user2Id && c.User2Id == user1Id));
-
-            if (conversation == null)
-            {
-                conversation = new Conversation
+            // Lấy tất cả các cuộc trò chuyện của người dùng và sắp xếp theo thời gian tin nhắn gần nhất
+            var conversations = _unitOfWork.Conversation
+                .GetAll()
+                .Where(c => c.User1Id == userId || c.User2Id == userId)
+                .Select(c => new
                 {
-                    User1Id = user1Id,
-                    User2Id = user2Id,
-                };
-
-                _unitOfWork.Conversation.Add(conversation);
-                _unitOfWork.Save();
+                    Conversation = c,
+                    LastMessageTimestamp = c.LastMessage != null ? c.LastMessage.Timestamp : (DateTime?)null
+                })
+                .OrderByDescending(x => x.LastMessageTimestamp)
+                .Select(x => x.Conversation) // Trả về đối tượng Conversation
+                .ToList();
+            foreach (var conversation in conversations)
+            {
+                conversation.User1 = _unitOfWork.ApplicationUser.Get(u => u.Id == conversation.User1Id);
+                conversation.User2 = _unitOfWork.ApplicationUser.Get(u => u.Id == conversation.User2Id);
+                conversation.LastMessage = _unitOfWork.Message.Get(m => m.MessageId == conversation.LastMessageId);
             }
-
-            return conversation;
+            return View(conversations);
         }
 
-        public async Task SaveMessage(int conversationId, string senderId, string messageText)
+        [HttpGet]
+        public async Task<IActionResult> LoadMessages(int conversationId)
         {
-            var message = new Message
+            var messages = _unitOfWork.Message
+                .GetRange(m => m.ConversationId == conversationId)
+                .OrderBy(m => m.Timestamp)
+                .ToList();
+
+            var messageDtos = messages.Select(m => new
             {
-                ConversationId = conversationId,
-                SenderId = senderId,
-                MessageText = messageText,
-                Timestamp = DateTime.Now
-            };
+                MessageId = m.MessageId,
+                MessageText = m.MessageText,
+                Timestamp = m.Timestamp
+            });
 
-            _unitOfWork.Message.Add(message);
-
-            var conversation = _unitOfWork.Conversation.Get(c => c.ConversationId == conversationId);
-            conversation.LastMessage = message;
-            conversation.LastMessageId = message.MessageId;
-
-            _unitOfWork.Save();
+            return Json(messageDtos);
         }
     }
 }

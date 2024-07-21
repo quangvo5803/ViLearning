@@ -68,6 +68,8 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
+// Register IChatService
+builder.Services.AddScoped<IChatService, ChatService>();
 
 // Add Azure Blob Storage Service
 var azureStorageConnectionString = builder.Configuration["AzureStorage:ConnectionString"];

@@ -1,5 +1,7 @@
 ﻿var currentUserId = document.getElementById("hiddenUserId").value;
 var receiverUserId = document.getElementById("hiddenReceiverId").value;
+console.log(currentUserId);
+console.log(receiverUserId);
 var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
 // Disable the send button until connection is established
@@ -60,7 +62,7 @@ connection.on("ReceiveMessage", function (userId, message, sendAt) {
 
     // Tự động cuộn xuống cuối
     messageList.scrollTop = messageList.scrollHeight;
-});
+}); 
 
 
 connection.start().then(function () {

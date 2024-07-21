@@ -234,7 +234,7 @@
                 <input type="hidden" id="hiddenReceiverId" value="@Model.Course.ApplicationUser.Id" />
                 <div id="chatbox" class="chatbox d-none">
                     <h3 class="text-center" style="background: #5fcf80; margin-bottom: 0; padding-block: 5px; font-size: 1rem">
-                        @Model.Course.ApplicationUser.UserName
+                        @Model.Course.ApplicationUser.FullName
                     </h3>
                     <div class="messaging">
                         <div class="inbox_msg">
@@ -278,7 +278,7 @@
         const lessonContainer = document.getElementById('lessson-container');
         const chatIcon = document.getElementById('chat-icon');
         const chatbox = document.getElementById('chatbox');
-        if (Hls.isSupported()) {
+        @* if (Hls.isSupported()) {
             const hls = new Hls();
             hls.loadSource(playlistUrl);
             hls.attachMedia(video);
@@ -294,7 +294,7 @@
                     video.play();
                 });
             });
-        }
+        } *@
         if (learnLink && commentLink && rankingLink && overlayComment && overlayRanking && sidebar) {
             commentLink.addEventListener('click', function (event) {
                 event.preventDefault();
