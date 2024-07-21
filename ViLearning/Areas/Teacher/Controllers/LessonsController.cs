@@ -22,6 +22,7 @@ using ViLearning.Models.ViewModels;
 using ViLearning.Services.Repository;
 using ViLearning.Services.Repository.IRepository;
 using ViLearning.Utility;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 namespace ViLearning.Areas.Teacher.Controllers
 {
@@ -137,11 +138,19 @@ namespace ViLearning.Areas.Teacher.Controllers
                         using (var proc = new Process { StartInfo = proc1 })
                         {
                             proc.Start();
+                            var outputTask = Task.Run(() => proc.StandardOutput.ReadToEndAsync());
+                            var errorTask = Task.Run(() => proc.StandardError.ReadToEndAsync());
+                            var output = await outputTask;
+                            var error = await errorTask;
                             bool exited = proc.WaitForExit(6000);
                             if (!exited)
                             {
                                 proc.Kill();
 
+                            }
+                            if (proc.ExitCode != 0)
+                            {
+                                throw new Exception($"FFmpeg failed with error: {error}");
                             }
                         }
 
@@ -168,13 +177,13 @@ namespace ViLearning.Areas.Teacher.Controllers
                         _unitOfWork.Lesson.Add(lesson);
                         _unitOfWork.Save();
                         return RedirectToAction("Details", "Courses", new { id = courseId });
-                    } else
-                    {
-                        _unitOfWork.Lesson.Add(lesson);
-                        _unitOfWork.Save();
-                        return RedirectToAction("Details", "Courses", new { id = courseId });
-                    }
+                } else
+                {
+                    _unitOfWork.Lesson.Add(lesson);
+                    _unitOfWork.Save();
+                    return RedirectToAction("Details", "Courses", new { id = courseId });
                 }
+            }
                 catch (Exception ex)
                 {
                     StatusMessage = $"Error uploading file: {ex.Message}";
@@ -270,11 +279,19 @@ namespace ViLearning.Areas.Teacher.Controllers
                         using (var proc = new Process { StartInfo = proc1 })
                         {
                             proc.Start();
+                            var outputTask = Task.Run(() => proc.StandardOutput.ReadToEndAsync());
+                            var errorTask = Task.Run(() => proc.StandardError.ReadToEndAsync());
+                            var output = await outputTask;
+                            var error = await errorTask;
                             bool exited = proc.WaitForExit(6000);
                             if (!exited)
                             {
                                 proc.Kill();
 
+                            }
+                            if (proc.ExitCode != 0)
+                            {
+                                throw new Exception($"FFmpeg failed with error: {error}");
                             }
                         }
 

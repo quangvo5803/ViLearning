@@ -139,22 +139,24 @@
     document.addEventListener('DOMContentLoaded', (event) => {
         const playlistUrl = "@Model.Video";
 
-        if (Hls.isSupported()) {
-            const hls = new Hls();
-            hls.loadSource(playlistUrl);
-            hls.attachMedia(video);
-            hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                videoArea.addEventListener('click', () => {
-                    video.play();
+        if (playlistUrl && video) {
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource(playlistUrl);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    video.addEventListener('click', () => {
+                        video.play();
+                    });
                 });
-            });
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            video.src = playlistUrl;
-            video.addEventListener('loadedmetadata', () => {
-                video.addEventListener('click', () => {
-                    video.play();
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = playlistUrl;
+                video.addEventListener('loadedmetadata', () => {
+                    video.addEventListener('click', () => {
+                        video.play();
+                    });
                 });
-            });
+            }
         }
     });
 </script>

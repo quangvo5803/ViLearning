@@ -49,7 +49,7 @@ function loadDataTable() {
             {
                 "data": 'id',
                 "render": function (data, type, row) {
-                    var btnDisabled = !row.teacherCertificateImgUrl || row.teacherCertificate ? "" : "return false;";
+                    var btnDisabled = !row.teacherCertificateImgUrl || row.teacherCertificate ? "return false;" : "";
                     return `<div class="w-100 btn-group" role="group"> 
                             <a href="user/submit?id=${data}" class="btn btn-primary mx-2" onclick="${btnDisabled}">Duyệt</a>
                             </div>`;
