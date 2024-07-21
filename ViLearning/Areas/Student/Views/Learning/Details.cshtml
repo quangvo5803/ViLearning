@@ -65,7 +65,9 @@
                         {
                             <div class="lesson-item" style="text-emphasis-color:white; text-decoration:none">
                                 <a asp-controller="Learning" asp-action="Details" asp-route-courseId="@Model.Course.CourseId" asp-route-lessonNo="@lesson.LessonNo" style="color: #212529;display: block; height: inherit; width:inherit; line-height: 3.5rem; text-decoration:none">
+
                                     @if (lesson.Tests != null)
+
                                     {
                                         double max = -1;
                                         foreach (TestDetail test in lesson.Tests)
@@ -74,6 +76,7 @@
                                         }
                                         if (max >= 8)
                                         {
+
                                             <span class="lesson-status" style="font-size: 1.5em; color: #4caf50; position:absolute; left:2%">●</span>
                                         }
                                         else
@@ -83,6 +86,7 @@
                                     } else
                                     {
                                         <span class="lesson-status" style="font-size: 1.5em; color: #A6A8AA; position:absolute; left:2%">●</span>
+
                                     }
                                     <span class="lesson-name" data-bs-toggle="tooltip" data-bs-placement="top" title="@lesson.LessonName">@lesson.LessonName</span>
                                 </a>
@@ -95,7 +99,9 @@
                                 <a asp-controller="Learning" asp-action="Details" asp-route-courseId="@Model.Course.CourseId" asp-route-lessonNo="@lesson.LessonNo" style="color: #212529;display: block; height: inherit; width:inherit; line-height: 3.5rem; text-decoration:none">
                                     @if (lesson.Tests == null)
                                     {
+
                                         <span class="lesson-status" style="font-size: 1.5em; color: #A6A8AA; position:absolute; left:2%">●</span>
+
                                     }
                                     else
                                     {
@@ -106,11 +112,13 @@
                                         }
                                         if (max >= 8)
                                         {
+
                                             <span class="lesson-status" style="font-size: 1.5em; color: #4caf50; position:absolute; left:2%">●</span>
                                         }
                                         else
                                         {
                                             <span class="lesson-status" style="color:red; position:absolute; left:2%">●</span>
+
                                         }
                                     }
                                     <span class="lesson-name" data-bs-toggle="tooltip" data-bs-placement="top" title="@lesson.LessonName">@lesson.LessonName</span>

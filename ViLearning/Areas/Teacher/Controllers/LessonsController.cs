@@ -97,6 +97,7 @@ namespace ViLearning.Areas.Teacher.Controllers
                         // Generate unique video id
                         var videoId = Guid.NewGuid().ToString();
 
+
                         //Save video to temp file
                         var uploadPath = Path.Combine(_hostingEnvironment.ContentRootPath, "wwwroot", "uploads");
                         if (!Directory.Exists(uploadPath))
@@ -111,6 +112,7 @@ namespace ViLearning.Areas.Teacher.Controllers
                             Directory.CreateDirectory(Path.Combine(uploadPath, "hls", Video.FileName));
 
 
+
                         var outputDirectory = Path.Combine(uploadPath, "hls");
                         var outputPattern = Path.Combine(outputDirectory, "slice_%03d.ts");
                         var playlistFile = Path.Combine(outputDirectory, "playlist.m3u8");
@@ -120,13 +122,16 @@ namespace ViLearning.Areas.Teacher.Controllers
                         var proc1 = new ProcessStartInfo();
                         proc1.UseShellExecute = false;
 
+
                         proc1.WorkingDirectory = outputDirectory;
+
 
                         proc1.FileName = @"C:\Windows\System32\cmd.exe";
                         proc1.Arguments = "/c " + ffmpegArgs;
                         proc1.RedirectStandardError = true;
                         proc1.RedirectStandardOutput = true;
                         proc1.CreateNoWindow = true;
+
 
 
                         using (var proc = new Process { StartInfo = proc1 })
@@ -142,6 +147,7 @@ namespace ViLearning.Areas.Teacher.Controllers
 
                         var files = Directory.GetFiles(outputDirectory);
                         foreach (var file in files)
+
                         {
                             var blobName = $"{videoId}/{Path.GetFileName(file)}";
                             using (var fs = new FileStream(file, FileMode.Open, FileAccess.ReadWrite))
@@ -226,11 +232,11 @@ namespace ViLearning.Areas.Teacher.Controllers
                     {
                         // Generate unique video id
                         var videoId = Guid.NewGuid().ToString();
-
                         //Save video to temp file
                         var uploadPath = Path.Combine(_hostingEnvironment.ContentRootPath, "wwwroot", "uploads");
                         if (!Directory.Exists(uploadPath))
                             Directory.CreateDirectory(uploadPath);
+
 
                         var filePath = Path.Combine(uploadPath, Video.FileName);
                         using (var fileStream = new FileStream(filePath, FileMode.Create))
@@ -252,11 +258,13 @@ namespace ViLearning.Areas.Teacher.Controllers
 
                         proc1.WorkingDirectory = outputDirectory;
 
+
                         proc1.FileName = @"C:\Windows\System32\cmd.exe";
                         proc1.Arguments = "/c " + ffmpegArgs;
                         proc1.RedirectStandardError = true;
                         proc1.RedirectStandardOutput = true;
                         proc1.CreateNoWindow = true;
+
 
 
                         using (var proc = new Process { StartInfo = proc1 })
