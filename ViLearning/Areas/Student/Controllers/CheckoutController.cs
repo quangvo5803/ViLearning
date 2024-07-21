@@ -67,9 +67,18 @@ namespace ViLearning.Areas.Student.Controllers
             invoice.PurchaseDate = DateTime.Now;
             invoice.UserId = User.Identity.GetUserId();
             _unitOfWork.Invoice.Add(invoice);
-            //Add money for teacher
-           var user = _unitOfWork.ApplicationUser.Get(u => u.Id == course.ApplicationUser.Id);
+            //Add money for teachers
+            var user = _unitOfWork.ApplicationUser.Get(u => u.Id == course.ApplicationUser.Id);
             user.Balance += (double)course.Price * 0.9;
+            LearningProgress lp = new LearningProgress()
+            {
+                CourseId = int.Parse(courseId),
+                UserId = invoice.UserId,
+                Progress = 0,
+                OverallScore = 0,
+                EnrollDate = DateTime.Now.Date,
+                LearnedLessons = ""
+            };
             _unitOfWork.Save();
             TempData["success"] = "Thanh toán thành công";
             return RedirectToAction("Details", "Home", new { CourseId = courseId });

@@ -71,7 +71,7 @@
                 </div>
 
             }
-            @if (Model.Feedback == null)
+            @if (Model.Feedback == null && Model.LearningProgress.Progress >= 50)
             {
                 <div class="mt-4">
                     <a asp-controller="Home" asp-action="Feedback" asp-route-courseId="@Model.Course.CourseId" class="btn btn-warning d-flex justify-content-center">Đánh giá khóa học</a>

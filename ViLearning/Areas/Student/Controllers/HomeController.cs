@@ -79,7 +79,8 @@ namespace ViLearning.Areas.Student.Controllers
                     Feedbacks = pageFeedbacks,
                     TotalPages = totalPages,
                     CurrentPage = page
-                }
+                },
+                LearningProgress = _unitOfWork.LearningProgress.Get(l => l.UserId == userId && l.CourseId == CourseId)
             };
             return View(detailViewModel);
         }
