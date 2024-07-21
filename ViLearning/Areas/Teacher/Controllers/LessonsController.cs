@@ -84,7 +84,7 @@ namespace ViLearning.Areas.Teacher.Controllers
         public async Task<IActionResult> Create(string name, 
             [Bind("LessonId,LessonName,LessonNo,Content,Video,TotalQuestions,EasyQuestions,MediumQuestions,HardQuestions,TestDuration,CourseId")] 
             Lesson lesson, 
-            IFormFile Video)
+            IFormFile? Video)
         {
             int courseId = _unitOfWork.Course.Get(c => c.CourseName.Equals(name)).CourseId;
             ModelState.Remove("Comments");
@@ -92,75 +92,88 @@ namespace ViLearning.Areas.Teacher.Controllers
             {
                 try
                 {
-                    // Generate unique video id
-                    var videoId = Guid.NewGuid().ToString();
-
-                    //Save video to temp file
-                    var uploadPath = Path.Combine(_hostingEnvironment.ContentRootPath, "wwwroot", "uploads");
-                    if (!Directory.Exists(uploadPath))
-                        Directory.CreateDirectory(uploadPath);
-
-                    var filePath = Path.Combine(uploadPath, Video.FileName);
-                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    if (Video != null)
                     {
-                        await Video.CopyToAsync(fileStream);
-                    }
-                    if (!Directory.Exists(Path.Combine(uploadPath, "hls", Video.FileName)))
-                        Directory.CreateDirectory(Path.Combine(uploadPath, "hls", Video.FileName));
+                        // Generate unique video id
+                        var videoId = Guid.NewGuid().ToString();
 
 
-                    var outputDirectory = Path.Combine(uploadPath, "hls");
-                    var outputPattern = Path.Combine(outputDirectory, "slice_%03d.ts");
-                    var playlistFile = Path.Combine(outputDirectory, "playlist.m3u8");
+                        //Save video to temp file
+                        var uploadPath = Path.Combine(_hostingEnvironment.ContentRootPath, "wwwroot", "uploads");
+                        if (!Directory.Exists(uploadPath))
+                            Directory.CreateDirectory(uploadPath);
 
-                    // ffmpeg command to generate hls segments and playlist
-                    var ffmpegArgs = $"ffmpeg -i \"{filePath}\" -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 \"{playlistFile}\"";
-                    var proc1 = new ProcessStartInfo();
-                    proc1.UseShellExecute = false;
-
-                    proc1.WorkingDirectory = outputDirectory;
-
-                    proc1.FileName = @"C:\Windows\System32\cmd.exe";
-                    proc1.Arguments = "/c " + ffmpegArgs;
-                    proc1.RedirectStandardError = true;
-                    proc1.RedirectStandardOutput = true;
-                    proc1.CreateNoWindow = true;
-
-
-                    using (var proc = new Process { StartInfo = proc1}) 
-                    {
-                        proc.Start();
-                        bool exited = proc.WaitForExit(6000);
-                        if (!exited)
+                        var filePath = Path.Combine(uploadPath, Video.FileName);
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
                         {
-                            proc.Kill();
-                            
+                            await Video.CopyToAsync(fileStream);
                         }
-                    }
-                    
-                    var files = Directory.GetFiles(outputDirectory);
-                    foreach ( var file in files) 
-                    {
-                        var blobName = $"{videoId}/{Path.GetFileName(file)}";
-                        using (var fs = new FileStream(file,FileMode.Open, FileAccess.ReadWrite))
+                        if (!Directory.Exists(Path.Combine(uploadPath, "hls", Video.FileName)))
+                            Directory.CreateDirectory(Path.Combine(uploadPath, "hls", Video.FileName));
+
+
+
+                        var outputDirectory = Path.Combine(uploadPath, "hls");
+                        var outputPattern = Path.Combine(outputDirectory, "slice_%03d.ts");
+                        var playlistFile = Path.Combine(outputDirectory, "playlist.m3u8");
+
+                        // ffmpeg command to generate hls segments and playlist
+                        var ffmpegArgs = $"ffmpeg -i \"{filePath}\" -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 \"{playlistFile}\"";
+                        var proc1 = new ProcessStartInfo();
+                        proc1.UseShellExecute = false;
+
+
+                        proc1.WorkingDirectory = outputDirectory;
+
+
+                        proc1.FileName = @"C:\Windows\System32\cmd.exe";
+                        proc1.Arguments = "/c " + ffmpegArgs;
+                        proc1.RedirectStandardError = true;
+                        proc1.RedirectStandardOutput = true;
+                        proc1.CreateNoWindow = true;
+
+
+
+                        using (var proc = new Process { StartInfo = proc1 })
                         {
-                            string url = await _blobStorageService.UploadFileAsync("lesson-video", blobName, fs);
-                            if (url[url.Length - 1] == '8') lesson.Video = url;
+                            proc.Start();
+                            bool exited = proc.WaitForExit(6000);
+                            if (!exited)
+                            {
+                                proc.Kill();
+
+                            }
                         }
+
+                        var files = Directory.GetFiles(outputDirectory);
+                        foreach (var file in files)
+
+                        {
+                            var blobName = $"{videoId}/{Path.GetFileName(file)}";
+                            using (var fs = new FileStream(file, FileMode.Open, FileAccess.ReadWrite))
+                            {
+                                string url = await _blobStorageService.UploadFileAsync("lesson-video", blobName, fs);
+                                if (url[url.Length - 1] == '8') lesson.Video = url;
+                            }
+                        }
+
+
+                        //Clean temp files 
+                        //System.IO.File.Delete(tempFilePath);
+                        System.IO.File.Delete(filePath);
+                        Directory.Delete(outputDirectory, true);
+
+                        //store lesson to db
+                        var playlistUrl = _blobStorageService.GetPlaylistBlobName("lesson-video", $"{videoId}/playlist.m3u8");
+                        _unitOfWork.Lesson.Add(lesson);
+                        _unitOfWork.Save();
+                        return RedirectToAction("Details", "Courses", new { id = courseId });
+                    } else
+                    {
+                        _unitOfWork.Lesson.Add(lesson);
+                        _unitOfWork.Save();
+                        return RedirectToAction("Details", "Courses", new { id = courseId });
                     }
-
-
-                    //Clean temp files 
-                    //System.IO.File.Delete(tempFilePath);
-                    System.IO.File.Delete(filePath);
-                    Directory.Delete(outputDirectory,true);
-
-                    //store lesson to db
-                    var playlistUrl = _blobStorageService.GetPlaylistBlobName("lesson-video", $"{videoId}/playlist.m3u8");
-                    _unitOfWork.Lesson.Add(lesson);
-                    _unitOfWork.Save();
-                    return RedirectToAction("Details", "Courses", new { id = courseId });
-
                 }
                 catch (Exception ex)
                 {
@@ -219,11 +232,11 @@ namespace ViLearning.Areas.Teacher.Controllers
                     {
                         // Generate unique video id
                         var videoId = Guid.NewGuid().ToString();
-
                         //Save video to temp file
                         var uploadPath = Path.Combine(_hostingEnvironment.ContentRootPath, "wwwroot", "uploads");
                         if (!Directory.Exists(uploadPath))
                             Directory.CreateDirectory(uploadPath);
+
 
                         var filePath = Path.Combine(uploadPath, Video.FileName);
                         using (var fileStream = new FileStream(filePath, FileMode.Create))
@@ -245,11 +258,13 @@ namespace ViLearning.Areas.Teacher.Controllers
 
                         proc1.WorkingDirectory = outputDirectory;
 
+
                         proc1.FileName = @"C:\Windows\System32\cmd.exe";
                         proc1.Arguments = "/c " + ffmpegArgs;
                         proc1.RedirectStandardError = true;
                         proc1.RedirectStandardOutput = true;
                         proc1.CreateNoWindow = true;
+
 
 
                         using (var proc = new Process { StartInfo = proc1 })

@@ -93,8 +93,9 @@ body, html {
 .lesson-status {
     font-size: 1.5em;
     color: #4caf50;
-    position:absolute;
-    left: 0.5rem;
+    position: absolute;
+    left: 2%;
+
 }
 
 .footer {
@@ -137,10 +138,6 @@ body, html {
     white-space: nowrap;
 }
 
-.lesson-status {
-    position: absolute;
-    left: 98%;
-}
 
 .current-lesson {
     background-color: RGB(255 244 215);
