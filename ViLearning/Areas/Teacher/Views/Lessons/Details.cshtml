@@ -119,7 +119,6 @@
 <script>
     document.addEventListener('DOMContentLoaded', (event) => {
         const playlistUrl = "@Model.Video" ;
-
         if (playlistUrl && video) {
             if (Hls.isSupported()) {
                 const hls = new Hls();
@@ -138,6 +137,7 @@
                     });
                 });
             }
+
         }
     });
 </script>

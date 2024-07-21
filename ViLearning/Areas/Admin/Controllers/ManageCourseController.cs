@@ -64,7 +64,7 @@ namespace ViLearning.Areas.Admin.Controllers
             _unitOfWork.Course.Update(course);
             _unitOfWork.Save();
 
-            return RedirectToAction("Index");
+            return RedirectToAction("WaitingCourse");
         }
 
         [HttpGet]

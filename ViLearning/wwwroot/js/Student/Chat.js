@@ -1,5 +1,7 @@
-﻿
-var currentUserId = document.getElementById("hiddenUserId").value;
+﻿var currentUserId = document.getElementById("hiddenUserId").value;
+var receiverUserId = document.getElementById("hiddenReceiverId").value;
+console.log(currentUserId);
+console.log(receiverUserId);
 var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
 // Disable the send button until connection is established
@@ -60,7 +62,7 @@ connection.on("ReceiveMessage", function (userId, message, sendAt) {
 
     // Tự động cuộn xuống cuối
     messageList.scrollTop = messageList.scrollHeight;
-});
+}); 
 
 
 connection.start().then(function () {
@@ -77,7 +79,14 @@ document.getElementById("msg_send_btn").addEventListener("click", function (even
         return;
     }
 
-    connection.invoke("SendMessage", currentUserId, message).then(function () {
+    /*connection.invoke("SendMessage", currentUserId, message).then(function () {
+        // Xóa nội dung của input sau khi gửi tin nhắn thành công
+        messageInput.value = "";
+    }).catch(function (err) {
+        console.error("Error sending message: ", err.toString());
+    });*/
+
+    connection.invoke("SendMessageTo",receiverUserId, currentUserId, message).then(function () {
         // Xóa nội dung của input sau khi gửi tin nhắn thành công
         messageInput.value = "";
     }).catch(function (err) {

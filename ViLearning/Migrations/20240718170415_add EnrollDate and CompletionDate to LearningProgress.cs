@@ -15,7 +15,7 @@ namespace ViLearning.Migrations
                 name: "CompletionDate",
                 table: "LearningProgresses",
                 type: "datetime2",
-                nullable: false,
+                nullable: true,
                 defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
 
             migrationBuilder.AddColumn<DateTime>(

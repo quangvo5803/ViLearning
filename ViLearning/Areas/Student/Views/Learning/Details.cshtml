@@ -66,7 +66,9 @@
                             <div class="lesson-item" style="text-emphasis-color:white; text-decoration:none">
                                 <a asp-controller="Learning" asp-action="Details" asp-route-courseId="@Model.Course.CourseId" asp-route-lessonNo="@lesson.LessonNo" style="color: #212529;display: block; height: inherit; width:inherit; line-height: 3.5rem; text-decoration:none">
 
+
                                     @if (lesson.Tests.Count > 0)
+
 
                                     {
                                         double max = -1;
@@ -231,9 +233,10 @@
             <a class="chat-icon" id="chat-icon" style="position: relative"><i class="fa-solid fa-headset"></i>
                 @*Test Chat feature*@
                 <input type="hidden" id="hiddenUserId" value="@ViewData["userId"]" />
+                <input type="hidden" id="hiddenReceiverId" value="@Model.Course.ApplicationUser.Id" />
                 <div id="chatbox" class="chatbox d-none">
                     <h3 class="text-center" style="background: #5fcf80; margin-bottom: 0; padding-block: 5px; font-size: 1rem">
-                        @Model.Course.ApplicationUser.UserName
+                        @Model.Course.ApplicationUser.FullName
                     </h3>
                     <div class="messaging">
                         <div class="inbox_msg">
@@ -277,6 +280,7 @@
         const lessonContainer = document.getElementById('lessson-container');
         const chatIcon = document.getElementById('chat-icon');
         const chatbox = document.getElementById('chatbox');
+
         if (playlistUrl && video) {
             if (Hls.isSupported()) {
                 const hls = new Hls();
@@ -295,6 +299,7 @@
                     });
                 });
             }
+
         }
         if (learnLink && commentLink && rankingLink && overlayComment && overlayRanking && sidebar) {
             commentLink.addEventListener('click', function (event) {

@@ -1,14 +1,14 @@
-﻿
+﻿@model List<Conversation>
 
 @section Styles {
     <link rel="stylesheet" href="~/css/Student/ChatIndex.css">
 }
 <div class="container">
-    <h3 class=" text-center p-2">Messaging</h3>
+    <h3 class="text-center p-2">Messaging</h3>
     <div class="messaging">
         <input type="hidden" id="hiddenUserId" value="@ViewData["userId"]" />
         <div class="inbox_msg">
-            @*Conversation List left bar*@
+            @* Conversation List left bar *@
             <div class="inbox_people">
                 <div class="headind_srch">
                     <div class="recent_heading">
@@ -24,35 +24,30 @@
                     </div>
                 </div>
                 <div class="inbox_chat">
-                    <div class="chat_list active_chat">
-                        <div class="chat_people">
-                            <div class="chat_img"></div>
-                            <div class="chat_ib">
-                                <h5>Sunil Rajput <span class="chat_date">Dec 25</span></h5>
-                                <p>
-                                    Test, which is a new approach to have all solutions
-                                    astrology under one roof.
-                                </p>
+                    @foreach (var conversation in Model)
+                    {
+                        <div class="chat_list @(conversation.ConversationId == Model.First().ConversationId ? "active_chat" : "")" data-conversation-id="@conversation.ConversationId">
+                            <input type="hidden" id="hiddenReceiverId" value="@(conversation.User1.Id == (string)@ViewData["userId"] ? conversation.User2.Id : conversation.User1.Id)" />
+                            <div class="chat_people">
+                                <div class="chat_img"></div>
+                                <div class="chat_ib">
+                                    <h5>
+                                        @(conversation.User1Id == (string)ViewData["userId"] ? conversation.User2.FullName : conversation.User1.FullName)
+                                        <span class="chat_date">
+                                            @(conversation.LastMessage != null ? conversation.LastMessage.Timestamp.ToString("MMM d") : "")
+                                        </span>
+                                    </h5>
+                                    <p>@(conversation.LastMessage != null ? conversation.LastMessage.MessageText : "No messages yet")</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="chat_list">
-                        <div class="chat_people">
-                            <div class="chat_img"></div>
-                            <div class="chat_ib">
-                                <h5>Sunil Rajput <span class="chat_date">Dec 25</span></h5>
-                                <p>
-                                    Test, which is a new approach to have all solutions
-                                    astrology under one roof.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                    }
                 </div>
             </div>
-            @*End conversation List left bar*@
+            @* End conversation List left bar *@
             <div class="mesgs">
                 <div id="messagesList">
+                    <!-- Messages will be loaded here -->
                 </div>
                 <div class="type_msg">
                     <div class="input_msg_write">
@@ -68,4 +63,110 @@
 @section Scripts {
     <script src="~/lib/signalr/dist/browser/signalr.js"></script>
     <script src="~/js/Student/Chat.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var chatListItems = document.querySelectorAll(".chat_list");
+            var currentUserId = document.getElementById("hiddenUserId").value;
+            var receiverUserIdElement = document.getElementById("hiddenReceiverId");
+            var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+
+            // Load messages for the first conversation when the page loads
+            if (chatListItems.length > 0) {
+                var firstConversation = chatListItems[0];
+                var firstConversationId = firstConversation.getAttribute("data-conversation-id");
+                var firstReceiverId = firstConversation.getAttribute("data-receiver-id");
+                receiverUserIdElement.value = firstReceiverId;
+                loadMessages(firstConversationId);
+            }
+
+            chatListItems.forEach(function (item) {
+                item.addEventListener("click", function () {
+                    var conversationId = this.getAttribute("data-conversation-id");
+                    var receiverId = this.getAttribute("data-receiver-id");
+                    receiverUserIdElement.value = receiverId;
+                    loadMessages(conversationId);
+
+                    // Update active chat styling
+                    chatListItems.forEach(function (el) {
+                        el.classList.remove("active_chat");
+                    });
+                    this.classList.add("active_chat");
+                });
+            });
+
+            function loadMessages(conversationId) {
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "/Chat/LoadMessages?conversationId=" + conversationId, true);
+
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        if (xhr.status === 200) {
+                            var messages = JSON.parse(xhr.responseText);
+                            updateMessagesList(messages);
+                        } else {
+                            console.error("Failed to load messages. Status: " + xhr.status);
+                        }
+                    }
+                };
+
+                xhr.send();
+            }
+
+            function updateMessagesList(messages) {
+                var messagesList = document.getElementById("messagesList");
+                messagesList.innerHTML = ""; // Clear existing messages
+
+                messages.forEach(function (message) {
+                    var msgDiv;
+
+                    if (message.userId === currentUserId) {
+                        msgDiv = document.createElement("div");
+                        msgDiv.classList.add("outgoing_msg");
+
+                        var sentMsgDiv = document.createElement("div");
+                        sentMsgDiv.classList.add("sent_msg");
+
+                        var pElement = document.createElement("p");
+                        pElement.textContent = message.messageText;
+
+                        var spanElement = document.createElement("span");
+                        spanElement.classList.add("time_date");
+                        spanElement.textContent = new Date(message.timestamp).toLocaleString();
+
+                        sentMsgDiv.appendChild(pElement);
+                        sentMsgDiv.appendChild(spanElement);
+
+                        msgDiv.appendChild(sentMsgDiv);
+                    } else {
+                        msgDiv = document.createElement("div");
+                        msgDiv.classList.add("incoming_msg");
+
+                        var receivedMsgDiv = document.createElement("div");
+                        receivedMsgDiv.classList.add("received_msg");
+
+                        var receivedWithdMsgDiv = document.createElement("div");
+                        receivedWithdMsgDiv.classList.add("received_withd_msg");
+
+                        var pElement = document.createElement("p");
+                        pElement.textContent = message.messageText;
+
+                        var spanElement = document.createElement("span");
+                        spanElement.classList.add("time_date");
+                        spanElement.textContent = new Date(message.timestamp).toLocaleString();
+
+                        receivedWithdMsgDiv.appendChild(pElement);
+                        receivedWithdMsgDiv.appendChild(spanElement);
+
+                        receivedMsgDiv.appendChild(receivedWithdMsgDiv);
+                        msgDiv.appendChild(receivedMsgDiv);
+                    }
+
+                    messagesList.appendChild(msgDiv);
+                });
+
+                // Tự động cuộn xuống cuối
+                messagesList.scrollTop = messagesList.scrollHeight;
+            }
+        });
+    </script>
 }

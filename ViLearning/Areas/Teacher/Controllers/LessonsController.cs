@@ -99,6 +99,7 @@ namespace ViLearning.Areas.Teacher.Controllers
                         var videoId = Guid.NewGuid().ToString();
 
 
+
                         //Save video to temp file
                         var uploadPath = Path.Combine(_hostingEnvironment.ContentRootPath, "wwwroot", "uploads");
                         if (!Directory.Exists(uploadPath))
@@ -124,9 +125,6 @@ namespace ViLearning.Areas.Teacher.Controllers
                         proc1.UseShellExecute = false;
 
 
-                        proc1.WorkingDirectory = outputDirectory;
-
-
                         proc1.FileName = @"C:\Windows\System32\cmd.exe";
                         proc1.Arguments = "/c " + ffmpegArgs;
                         proc1.RedirectStandardError = true;
@@ -134,24 +132,32 @@ namespace ViLearning.Areas.Teacher.Controllers
                         proc1.CreateNoWindow = true;
 
 
+                        proc1.WorkingDirectory = outputDirectory;
+
+
+
 
                         using (var proc = new Process { StartInfo = proc1 })
                         {
                             proc.Start();
+
                             var outputTask = Task.Run(() => proc.StandardOutput.ReadToEndAsync());
                             var errorTask = Task.Run(() => proc.StandardError.ReadToEndAsync());
                             var output = await outputTask;
                             var error = await errorTask;
+
                             bool exited = proc.WaitForExit(6000);
                             if (!exited)
                             {
                                 proc.Kill();
 
                             }
+
                             if (proc.ExitCode != 0)
                             {
                                 throw new Exception($"FFmpeg failed with error: {error}");
                             }
+
                         }
 
                         var files = Directory.GetFiles(outputDirectory);

@@ -109,8 +109,8 @@
                                                     <div class="form-group">
                                                         <label for="questionType">Question Type</label>
                                                         <select asp-for="@Model.Question.QuestionType" class="form-control questionType_update" name="Question.QuestionType" required>
-                                                            <option value="Essay" selected="@(Model.Questions[i].QuestionType.ToString() == "Essay")">Text answer</option>
                                                             <option value="MultipleChoice" selected="@(Model.Questions[i].QuestionType.ToString() == "MultipleChoice")">Multiple Choice</option>
+                                                            @* <option value="Essay" selected="@(Model.Questions[i].QuestionType.ToString() == "Essay")">Text answer</option> *@
                                                         </select>
                                                     </div>
                                                     <div class="form-group">
@@ -228,8 +228,8 @@
                     <div class="form-group">
                         <label for="questionType">Question Type</label>
                         <select asp-for="@Model.Question.QuestionType" class="form-control" id="questionType" name="Question.QuestionType" required>
-                            <option value="Essay">Text answer</option>
-                            <option value="MultipleChoice">Multiple Choice</option>
+                            <option value="MultipleChoice" selected>Multiple Choice</option>
+                            @* <option value="Essay">Text answer</option> *@
                         </select>
                     </div>
                     <div class="form-group">

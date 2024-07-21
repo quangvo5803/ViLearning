@@ -79,7 +79,8 @@ namespace ViLearning.Areas.Student.Controllers
                     Feedbacks = pageFeedbacks,
                     TotalPages = totalPages,
                     CurrentPage = page
-                }
+                },
+                LearningProgress = _unitOfWork.LearningProgress.Get(l => l.UserId == userId && l.CourseId == CourseId)
             };
             return View(detailViewModel);
         }
@@ -162,7 +163,7 @@ namespace ViLearning.Areas.Student.Controllers
         }
 
         [Authorize]
-        public async Task<JsonResult> GetAccomplishments(int page = 1, int pageSize = 4)
+        public async Task<JsonResult> GetAccomplishments(int page = 1, int pageSize = 5)
         {
             var user = await _userManager.GetUserAsync(User);
            
