@@ -55,7 +55,7 @@ namespace ViLearning.Services.Repository
 
         public int NumOfLessonLearned(LearningProgress learningProgress)
         {
-            if (string.IsNullOrEmpty(learningProgress.LearnedLessons))
+            if (learningProgress.LearnedLessons == "")
             {
                 return 0;
             }

@@ -79,6 +79,7 @@ namespace ViLearning.Areas.Student.Controllers
                 EnrollDate = DateTime.Now.Date,
                 LearnedLessons = ""
             };
+            _unitOfWork.LearningProgress.Add(lp);
             _unitOfWork.Save();
             TempData["success"] = "Thanh toán thành công";
             return RedirectToAction("Details", "Home", new { CourseId = courseId });

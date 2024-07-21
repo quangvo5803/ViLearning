@@ -71,7 +71,7 @@
                 </div>
 
             }
-            @if (Model.Feedback == null && Model.LearningProgress.Progress >= 50)
+            @if (Model.Feedback == null && Model.LearningProgress?.Progress >= 50)
             {
                 <div class="mt-4">
                     <a asp-controller="Home" asp-action="Feedback" asp-route-courseId="@Model.Course.CourseId" class="btn btn-warning d-flex justify-content-center">Đánh giá khóa học</a>
@@ -82,7 +82,7 @@
                     <div class="rating-overview">
                         <div>
                             @{
-                                double rating = Model.Course.Feedbacks.Any() ? Model.Course.Feedbacks.Average(f => f.FeedBackStar) : 5;
+                                double rating = Model.Course.Feedbacks.Any() ? Model.Course.Feedbacks.Average(f => f.FeedBackStar) : 0;
                                 <span style=" font-weight:bold; margin-right:5px">@rating</span>
                                 for (var i = 1; i <= 5; i++)
                                 {
@@ -148,6 +148,10 @@
         .bi-star-half:before{
             font-size:18px;
             color:orange;
+        }
+        .bi-star:before{
+            font-size: 18px;
+            color: orange;
         }
 
         .main-review {

@@ -5,7 +5,7 @@
     {
         <div class="review">
             <div class="user">@feedback.ApplicationUser.Email</div>
-            <div class="date">2 weeks ago</div>
+            <div class="date">@feedback.CreatedAt.ToString("dd/MM/yyyy")</div>
             <div class="stars">
                 @for (var i = 1; i <= feedback.FeedBackStar; i++)
                 {

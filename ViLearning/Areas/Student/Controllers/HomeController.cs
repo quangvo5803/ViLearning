@@ -163,7 +163,7 @@ namespace ViLearning.Areas.Student.Controllers
         }
 
         [Authorize]
-        public async Task<JsonResult> GetAccomplishments(int page = 1, int pageSize = 4)
+        public async Task<JsonResult> GetAccomplishments(int page = 1, int pageSize = 5)
         {
             var user = await _userManager.GetUserAsync(User);
            
