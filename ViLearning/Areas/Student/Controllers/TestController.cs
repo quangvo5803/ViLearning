@@ -126,12 +126,12 @@ namespace ViLearning.Areas.Student.Controllers
 
             if (score >= vm.Lesson.TotalQuestions * 0.8 && !_unitOfWork.LearningProgress.HasLearnedLesson(learningProgress, lesson.LessonNo))
             {
-                learningProgress.Progress += 100 / course.Lesson.Count;
+                learningProgress.Progress +=(double) 100 / course.Lesson.Count;
                 learningProgress.LearnedLessons += $"{lesson.LessonNo},";
             }
             if (score > highestMarkOfLesson )
             {
-                learningProgress.OverallScore = (learningProgress.OverallScore* numOfLessonLearned + score - highestMarkOfLesson) / numOfLessonLearned + 1;
+                learningProgress.OverallScore = (learningProgress.OverallScore* numOfLessonLearned + score - highestMarkOfLesson) / (numOfLessonLearned + 1);
             }
 
             if (learningProgress.Progress == 100) 
@@ -179,14 +179,16 @@ namespace ViLearning.Areas.Student.Controllers
             gfx.DrawString(learningProgress.CompletionDate.ToString(), font12, XBrushes.Black, datePosition);
 
             // Thêm tên học viên
-            gfx.DrawString(learningProgress.User.UserName, font32, XBrushes.Black, namePosition);
+            gfx.DrawString((learningProgress.User.FullName != null) ? learningProgress.User.FullName
+                : learningProgress.User.UserName, font32, XBrushes.Black, namePosition);
 
             // Thêm tên khóa học
             gfx.DrawString(learningProgress.Course.CourseName, font24, XBrushes.Black, coursePosition);
 
             // Thêm tên giáo viên
-            gfx.DrawString(learningProgress.Course.ApplicationUser.UserName, font12, XBrushes.Black, teacherPosition);
-
+            //gfx.DrawString(learningProgress.Course.ApplicationUser.UserName, font12, XBrushes.Black, teacherPosition);
+            gfx.DrawString((learningProgress.Course.ApplicationUser.FullName != null) ? learningProgress.Course.ApplicationUser.FullName 
+                : learningProgress.Course.ApplicationUser.UserName, font12, XBrushes.Black, teacherPosition);
             // Lưu tệp PDF mới lên Blob Storage
             // document.Save(outputPath);
             // Lưu tài liệu PDF vào MemoryStream

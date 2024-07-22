@@ -54,7 +54,8 @@ namespace ViLearning.Areas.Student.Controllers
             {
                 MessageId = m.MessageId,
                 MessageText = m.MessageText,
-                Timestamp = m.Timestamp
+                Timestamp = m.Timestamp,
+                SenderId = m.SenderId
             });
 
             return Json(messageDtos);

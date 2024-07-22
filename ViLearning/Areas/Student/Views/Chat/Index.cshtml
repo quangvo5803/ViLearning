@@ -65,6 +65,9 @@
     <script src="~/js/Student/Chat.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            var messagesList = document.getElementById("messagesList");
+            // Tự động cuộn xuống cuối
+            messagesList.scrollTop = messagesList.scrollHeight;
             var chatListItems = document.querySelectorAll(".chat_list");
             var currentUserId = document.getElementById("hiddenUserId").value;
             var receiverUserIdElement = document.getElementById("hiddenReceiverId");
@@ -96,7 +99,7 @@
 
             function loadMessages(conversationId) {
                 var xhr = new XMLHttpRequest();
-                xhr.open("GET", "/Chat/LoadMessages?conversationId=" + conversationId, true);
+                xhr.open("GET", "https://localhost:7283/Student/Chat/LoadMessages?conversationId=" + conversationId, true);
 
                 xhr.onreadystatechange = function () {
                     if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -119,7 +122,7 @@
                 messages.forEach(function (message) {
                     var msgDiv;
 
-                    if (message.userId === currentUserId) {
+                    if (message.senderId === currentUserId) {
                         msgDiv = document.createElement("div");
                         msgDiv.classList.add("outgoing_msg");
 

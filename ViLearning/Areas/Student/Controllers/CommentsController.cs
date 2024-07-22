@@ -14,7 +14,7 @@ namespace ViLearning.Areas.Student.Controllers
     public class CommentsController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly List<string> _bannedWords = new List<string> { "fake", "999", "888" };
+        private readonly List<string> _bannedWords = new List<string> { "fake", "vãi", "đéo" };
 
         public CommentsController(IUnitOfWork unitOfWork)
         {
