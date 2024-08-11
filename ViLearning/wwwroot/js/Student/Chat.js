@@ -1,7 +1,5 @@
 ﻿var currentUserId = document.getElementById("hiddenUserId").value;
-var receiverUserId = document.getElementById("hiddenReceiverId").value;
-console.log(currentUserId);
-console.log(receiverUserId);
+var receiverUserId;
 var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
 // Disable the send button until connection is established
@@ -9,7 +7,7 @@ var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
 connection.on("ReceiveMessage", function (userId, message, sendAt) {
     var msgDiv;
-
+    receiverUserId = document.getElementById("hiddenReceiverId").value;
     if (userId === currentUserId) {
         // Tạo các div cho tin nhắn của người gửi
         msgDiv = document.createElement("div");
@@ -30,7 +28,7 @@ connection.on("ReceiveMessage", function (userId, message, sendAt) {
         sentMsgDiv.appendChild(spanElement);
 
         msgDiv.appendChild(sentMsgDiv);
-    } else {
+    } else if (userId === receiverUserId) {
         // Tạo các div cho tin nhắn của người nhận
         msgDiv = document.createElement("div");
         msgDiv.classList.add("incoming_msg");
@@ -72,25 +70,34 @@ connection.start().then(function () {
 });
 
 document.getElementById("msg_send_btn").addEventListener("click", function (event) {
+    sendMessage();
+    event.preventDefault();
+});
+
+document.getElementById("messageInput").addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+        sendMessage();
+        event.preventDefault(); // Ngăn chặn hành động mặc định (ví dụ: ngắt dòng mới)
+    }
+});
+
+function sendMessage() {
+    receiverUserId = document.getElementById("hiddenReceiverId").value;
     var messageInput = document.getElementById("messageInput");
     var message = messageInput.value.trim(); // Loại bỏ khoảng trắng ở đầu và cuối chuỗi
+
     if (message === "") {
         // Nếu chuỗi rỗng, không gửi tin nhắn
         return;
     }
 
-    /*connection.invoke("SendMessage", currentUserId, message).then(function () {
-        // Xóa nội dung của input sau khi gửi tin nhắn thành công
-        messageInput.value = "";
-    }).catch(function (err) {
-        console.error("Error sending message: ", err.toString());
-    });*/
+    connection.invoke("SendMessageTo", receiverUserId, currentUserId, message)
+        .then(function () {
+            // Xóa nội dung của input sau khi gửi tin nhắn thành công
+            messageInput.value = "";
+        })
+        .catch(function (err) {
+            console.error("Error sending message: ", err.toString());
+        });
+}
 
-    connection.invoke("SendMessageTo",receiverUserId, currentUserId, message).then(function () {
-        // Xóa nội dung của input sau khi gửi tin nhắn thành công
-        messageInput.value = "";
-    }).catch(function (err) {
-        console.error("Error sending message: ", err.toString());
-    });
-    event.preventDefault();
-});

@@ -26,7 +26,7 @@
                 <div class="inbox_chat">
                     @foreach (var conversation in Model)
                     {
-                        <div class="chat_list @(conversation.ConversationId == Model.First().ConversationId ? "active_chat" : "")" data-conversation-id="@conversation.ConversationId">
+                        <div class="chat_list @(conversation.ConversationId == Model.First().ConversationId ? "active_chat" : "")" data-conversation-id="@conversation.ConversationId" data-receiver-id="@(conversation.User1.Id == (string)@ViewData["userId"] ? conversation.User2.Id : conversation.User1.Id)">
                             <input type="hidden" id="hiddenReceiverId" value="@(conversation.User1.Id == (string)@ViewData["userId"] ? conversation.User2.Id : conversation.User1.Id)" />
                             <div class="chat_people">
                                 <div class="chat_img"></div>
@@ -87,6 +87,7 @@
                     var conversationId = this.getAttribute("data-conversation-id");
                     var receiverId = this.getAttribute("data-receiver-id");
                     receiverUserIdElement.value = receiverId;
+                    console.log(receiverUserIdElement.value);
                     loadMessages(conversationId);
 
                     // Update active chat styling
