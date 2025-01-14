@@ -16,7 +16,7 @@ namespace ViLearning.Areas.Student.Controllers
     public class LearningController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-		private readonly List<string> _bannedWords = new List<string> { "fake", "999", "888" };
+        private readonly List<string> _bannedWords = new List<string> { "fake", "999", "888" };
 
         public LearningController(IUnitOfWork unitOfWork)
         {
@@ -30,7 +30,7 @@ namespace ViLearning.Areas.Student.Controllers
         public async Task<IActionResult> Details(int courseId, int lessonNo)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var course = _unitOfWork.Course.Get( c => c.CourseId == courseId, includeProperties: "ApplicationUser");
+            var course = _unitOfWork.Course.Get(c => c.CourseId == courseId, includeProperties: "ApplicationUser");
             List<Lesson>? lessons = await _unitOfWork.Lesson.GetLessonByCourseId(courseId);
             var lesson = lessons?.Where(l => l.LessonNo == lessonNo).FirstOrDefault();
             var lessonId = _unitOfWork.Lesson.Get(l => l.CourseId == courseId && l.LessonNo == lessonNo).LessonId;

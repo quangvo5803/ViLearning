@@ -34,7 +34,7 @@ namespace ViLearning.Areas.Student.Controllers
 
         public IActionResult ViewTestInfo(int lessonId)
         {
-            Lesson lesson = _unitOfWork.Lesson.Get(l => l.LessonId == lessonId, includeProperties:"Course");
+            Lesson lesson = _unitOfWork.Lesson.Get(l => l.LessonId == lessonId, includeProperties: "Course");
             return View("ViewTestInfo", lesson);
         }
 
@@ -72,26 +72,26 @@ namespace ViLearning.Areas.Student.Controllers
                                         .Concat(hardQuestions)
                                         .ToList();
 
-			return View("DoTest", vm);
+            return View("DoTest", vm);
         }
 
         [HttpPost]
-		public async Task<IActionResult> SubmitTest(DoTestVM vm)
+        public async Task<IActionResult> SubmitTest(DoTestVM vm)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var lesson = _unitOfWork.Lesson.Get(l => l.LessonId == vm.Lesson.LessonId);
             TestDetail testDetail = new TestDetail()
-			{
-				StartTime = vm.TestDetail.StartTime,
-				Duration = DateTime.Now - vm.TestDetail.StartTime,
-				UserId = userId,
-				LessonId = vm.Lesson.LessonId,
+            {
+                StartTime = vm.TestDetail.StartTime,
+                Duration = DateTime.Now - vm.TestDetail.StartTime,
+                UserId = userId,
+                LessonId = vm.Lesson.LessonId,
                 Questions = new List<Question>(),
                 QuestionsIsCorrect = new Dictionary<int, bool>(),
                 TestResult = new Dictionary<int, string>()
-			};
+            };
             // Get score of testDetail and store question result (True/False)
-			int score = 0;
+            int score = 0;
             if (vm.TestDetail.TestResult != null)
             {
                 foreach (KeyValuePair<int, string> kvp in vm.TestDetail.TestResult)
@@ -114,8 +114,8 @@ namespace ViLearning.Areas.Student.Controllers
             testDetail.Lesson = _unitOfWork.Lesson.Get(l => l.LessonId == vm.Lesson.LessonId, includeProperties: "Course");
             testDetail.TestResult = vm.TestDetail.TestResult;
             // Update Learning Progress
-            var learningProgress = _unitOfWork.LearningProgress.Get(q => q.UserId == testDetail.UserId && q.CourseId == testDetail.Lesson.CourseId, includeProperties:"User");
-            int numOfLessonLearned = _unitOfWork.LearningProgress.NumOfLessonLearned(learningProgress); 
+            var learningProgress = _unitOfWork.LearningProgress.Get(q => q.UserId == testDetail.UserId && q.CourseId == testDetail.Lesson.CourseId, includeProperties: "User");
+            int numOfLessonLearned = _unitOfWork.LearningProgress.NumOfLessonLearned(learningProgress);
             double highestMarkOfLesson = await _unitOfWork.TestDetail.GetHighestMarkByLessonIdAsync(vm.Lesson.LessonId, userId);
             Course course = _unitOfWork.Course.Get(c => c.CourseId == lesson.CourseId, includeProperties: "ApplicationUser");
             learningProgress.Course = course;
@@ -126,15 +126,15 @@ namespace ViLearning.Areas.Student.Controllers
 
             if (score >= vm.Lesson.TotalQuestions * 0.8 && !_unitOfWork.LearningProgress.HasLearnedLesson(learningProgress, lesson.LessonNo))
             {
-                learningProgress.Progress +=(double) 100 / course.Lesson.Count;
+                learningProgress.Progress += (double)100 / course.Lesson.Count;
                 learningProgress.LearnedLessons += $"{lesson.LessonNo},";
             }
-            if (score > highestMarkOfLesson )
+            if (score > highestMarkOfLesson)
             {
-                learningProgress.OverallScore = (learningProgress.OverallScore* numOfLessonLearned + score - highestMarkOfLesson) / (numOfLessonLearned + 1);
+                learningProgress.OverallScore = (learningProgress.OverallScore * numOfLessonLearned + score - highestMarkOfLesson) / (numOfLessonLearned + 1);
             }
 
-            if (learningProgress.Progress == 100) 
+            if (learningProgress.Progress == 100)
             {
                 learningProgress.CompletionDate = DateTime.Now.Date;
                 learningProgress.StudentCertificateUrl = await AssignCertificate(learningProgress);
@@ -143,10 +143,10 @@ namespace ViLearning.Areas.Student.Controllers
             _unitOfWork.LearningProgress.Update(learningProgress);
             // End Update Learning Progress
 
-			_unitOfWork.TestDetail.Add(testDetail);
+            _unitOfWork.TestDetail.Add(testDetail);
             _unitOfWork.Save();
 
-			return View("TestResult", testDetail);
+            return View("TestResult", testDetail);
         }
 
         public async Task<string> AssignCertificate(LearningProgress learningProgress)
@@ -179,7 +179,7 @@ namespace ViLearning.Areas.Student.Controllers
             gfx.DrawString(learningProgress.CompletionDate.ToString(), font12, XBrushes.Black, datePosition);
 
             // Thêm tên học viên
-            gfx.DrawString((learningProgress.User.FullName != null) ? learningProgress.User.FullName
+            gfx.DrawString(learningProgress.User.FullName != null ? learningProgress.User.FullName
                 : learningProgress.User.UserName, font32, XBrushes.Black, namePosition);
 
             // Thêm tên khóa học
@@ -187,7 +187,7 @@ namespace ViLearning.Areas.Student.Controllers
 
             // Thêm tên giáo viên
             //gfx.DrawString(learningProgress.Course.ApplicationUser.UserName, font12, XBrushes.Black, teacherPosition);
-            gfx.DrawString((learningProgress.Course.ApplicationUser.FullName != null) ? learningProgress.Course.ApplicationUser.FullName 
+            gfx.DrawString(learningProgress.Course.ApplicationUser.FullName != null ? learningProgress.Course.ApplicationUser.FullName
                 : learningProgress.Course.ApplicationUser.UserName, font12, XBrushes.Black, teacherPosition);
             // Lưu tệp PDF mới lên Blob Storage
             // document.Save(outputPath);

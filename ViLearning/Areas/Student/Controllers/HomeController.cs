@@ -28,7 +28,7 @@ namespace ViLearning.Areas.Student.Controllers
             List<ApplicationUser> userList = _unitOfWork.ApplicationUser.GetAll().ToList();
             List<ApplicationUser> teacherList = new List<ApplicationUser>();
             List<Course> courseList = _unitOfWork.Course.GetRange(c => c.CourseStatus == CourseStatus.Published, includeProperties: "Subject,ApplicationUser,Feedbacks").ToList();
-            foreach(Course c in courseList)
+            foreach (Course c in courseList)
             {
                 c.Feedbacks = _unitOfWork.Feedback.GetRange(f => f.CourseId == c.CourseId).ToList();
             }
@@ -49,13 +49,13 @@ namespace ViLearning.Areas.Student.Controllers
             return View(viewModel);
         }
 
-        public async Task<IActionResult> Details(int CourseId,int page =1)
+        public async Task<IActionResult> Details(int CourseId, int page = 1)
         {
             int pageSize = 5;
             var lessonOfCourse = _unitOfWork.Lesson.GetRange(c => c.Course.CourseId == CourseId, includeProperties: "Course");
             List<Lesson> lessons = _unitOfWork.Lesson.GetAll().ToList();
             Course course = _unitOfWork.Course.Get(c => c.CourseId == CourseId, includeProperties: "Subject,ApplicationUser,Feedbacks");
-            course.Feedbacks = _unitOfWork.Feedback.GetRange(f => f.CourseId == CourseId,includeProperties:"ApplicationUser").ToList();
+            course.Feedbacks = _unitOfWork.Feedback.GetRange(f => f.CourseId == CourseId, includeProperties: "ApplicationUser").ToList();
 
             int totalFeedbacks = course.Feedbacks.Count();
             int totalPages = (int)Math.Ceiling(totalFeedbacks / (double)pageSize);
@@ -99,7 +99,7 @@ namespace ViLearning.Areas.Student.Controllers
             }
             var viewModel = new LandingPageVM
             {
-                Courses = _unitOfWork.Course.GetRange(c => c.CourseStatus == CourseStatus.Published,includeProperties: "Subject,ApplicationUser,Feedbacks").ToList(),
+                Courses = _unitOfWork.Course.GetRange(c => c.CourseStatus == CourseStatus.Published, includeProperties: "Subject,ApplicationUser,Feedbacks").ToList(),
                 UserList = userList,
                 TeacherList = teacherList
             };
@@ -122,7 +122,7 @@ namespace ViLearning.Areas.Student.Controllers
                 Courses = _unitOfWork.Course.GetRange(c => c.CourseName.Contains(query)
                                                             || c.Subject.Name.Contains(query)
                                                             || c.Description.Contains(query)
-                                                            || c.ApplicationUser.FullName.Contains(query) 
+                                                            || c.ApplicationUser.FullName.Contains(query)
                                                             && c.CourseStatus == CourseStatus.Published, includeProperties: "Subject,ApplicationUser,Feedbacks"),
                 UserList = userList,
                 TeacherList = teacherList
@@ -155,7 +155,7 @@ namespace ViLearning.Areas.Student.Controllers
             return View(invoice);
         }
 
-        [Authorize] 
+        [Authorize]
         public async Task<IActionResult> Accomplishment()
         {
 
@@ -166,7 +166,7 @@ namespace ViLearning.Areas.Student.Controllers
         public async Task<JsonResult> GetAccomplishments(int page = 1, int pageSize = 5)
         {
             var user = await _userManager.GetUserAsync(User);
-           
+
             var learningProgresses = _unitOfWork.LearningProgress.GetRange(l => l.UserId == user.Id).ToList();
             foreach (var learning in learningProgresses)
             {
@@ -174,18 +174,18 @@ namespace ViLearning.Areas.Student.Controllers
                 _unitOfWork.Course.LoadTeacher(learning.Course);
             }
             int totalCourses = learningProgresses.Count;
-            int totalPages = (int)Math.Ceiling(totalCourses/(double) pageSize); 
-            var learningProgressesToDisplay = learningProgresses.Skip((page-1)*pageSize).Take(pageSize).ToList();
+            int totalPages = (int)Math.Ceiling(totalCourses / (double)pageSize);
+            var learningProgressesToDisplay = learningProgresses.Skip((page - 1) * pageSize).Take(pageSize).ToList();
             var accomplishment = new CertificateVM
             {
-                LearningProgresses = (List<LearningProgress>)learningProgressesToDisplay,
+                LearningProgresses = learningProgressesToDisplay,
                 CurrentPage = page,
                 TotalPages = totalPages,
                 PageSize = pageSize
             };
             return Json(accomplishment);
         }
-        
+
         [Authorize]
         public IActionResult Feedback(int courseId)
         {
@@ -193,9 +193,9 @@ namespace ViLearning.Areas.Student.Controllers
             return View(course);
         }
 
-        
+
         [HttpPost]
-        public async Task<IActionResult> Feedback(int Rating,string Description,int courseId)
+        public async Task<IActionResult> Feedback(int Rating, string Description, int courseId)
         {
             var user = await _userManager.GetUserAsync(User);
             Feedback f = new Feedback()

@@ -53,7 +53,7 @@ namespace ViLearning.Areas.Student.Controllers
             var response = _vpnPayServicecs.PaymentExecute(Request.Query);
             var code = response.VnPayResponseCode;
             var courseId = response.OrderDescription;
-            var course = _unitOfWork.Course.Get(c=> c.CourseId == int.Parse(courseId), includeProperties: "Subject,ApplicationUser");
+            var course = _unitOfWork.Course.Get(c => c.CourseId == int.Parse(courseId), includeProperties: "Subject,ApplicationUser");
             if (response == null || response.VnPayResponseCode != "00")
             {
                 TempData["error"] = "Lỗi thanh toán";

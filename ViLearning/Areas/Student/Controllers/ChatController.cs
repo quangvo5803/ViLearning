@@ -52,10 +52,10 @@ namespace ViLearning.Areas.Student.Controllers
 
             var messageDtos = messages.Select(m => new
             {
-                MessageId = m.MessageId,
-                MessageText = m.MessageText,
-                Timestamp = m.Timestamp,
-                SenderId = m.SenderId
+                m.MessageId,
+                m.MessageText,
+                m.Timestamp,
+                m.SenderId
             });
 
             return Json(messageDtos);

@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\js\Teacher\Lesson\**" />
+    <Content Remove="wwwroot\js\Teacher\Lesson\**" />
+    <EmbeddedResource Remove="wwwroot\js\Teacher\Lesson\**" />
+    <None Remove="wwwroot\js\Teacher\Lesson\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="wwwroot\css\Teacher\.editorconfig" />
   </ItemGroup>
 
@@ -42,7 +49,6 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\css\Teacher\Lessons\" />
-    <Folder Include="wwwroot\js\Teacher\Lesson\" />
   </ItemGroup>
 
 </Project>

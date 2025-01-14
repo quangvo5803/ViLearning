@@ -21,7 +21,7 @@ namespace ViLearning.Areas.Student.Controllers
             _unitOfWork = unitOfWork;
         }
 
-  
+
 
         [HttpGet]
         public async Task<IActionResult> LessonDetails(string CourseName, string LessonName, int? id)
