@@ -2,7 +2,7 @@
 using ViLearning.Services.Repository.IRepository;
 using ViLearning.Utility;
 
-namespace ViLearning.Services.Repository
+namespace ViLearning.Services.Services
 {
     public class VnPayService : IVnPayServicecs
     {

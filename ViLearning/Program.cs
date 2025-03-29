@@ -1,27 +1,20 @@
-
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using ViLearning.Data;
+using ViLearning.Hubs.ChatHub;
 using ViLearning.Models;
 using ViLearning.Services.Repository;
 using ViLearning.Services.Repository.IRepository;
+using ViLearning.Services.Services;
+using ViLearning.Services.Services.IServices;
 using ViLearning.Utility;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using ViLearning.Models;
-using System.Security.Policy;
-using Microsoft.Data.SqlClient;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
-using ViLearning.Hubs;
-using ViLearning.Hubs.ChatHub;
-using Newtonsoft.Json.Serialization;
-using Newtonsoft.Json;
-using Microsoft.AspNetCore.Http.Features;
-using System.Text.Json.Serialization;
+using ViLearning.Worker;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,8 +37,6 @@ builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
     options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
 });
 
-
-
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
@@ -66,10 +57,13 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.AddRazorPages();
+
+// DI
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
-// Register IChatService
 builder.Services.AddScoped<IChatService, ChatService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddSingleton<IVnPayServicecs, VnPayService>();
 
 // Add Azure Blob Storage Service
 var azureStorageConnectionString = builder.Configuration["AzureStorage:ConnectionString"];
@@ -80,6 +74,8 @@ builder.Services.Configure<KestrelServerOptions>(options =>
 {
     options.Limits.MaxRequestBodySize = 2028*1024*1024;
 });
+
+// CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
@@ -90,13 +86,19 @@ builder.Services.AddCors(options =>
                    .AllowAnyMethod();
         });
 });
+
+// Configure FormOptions
 builder.Services.Configure<FormOptions>(options =>
 {
     options.MultipartBodyLengthLimit = 2028 * 1024 * 1024;
 });
 
-builder.Services.AddSingleton<IVnPayServicecs, VnPayService>();
+// SignalR
 builder.Services.AddSignalR();
+
+// Worker
+builder.Services.AddHostedService<CertificateWorker>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

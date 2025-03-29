@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNetCore.SignalR;
-using System.Security.Claims;
-using ViLearning.Areas.Student.Controllers;
-using ViLearning.Models;
+﻿using Microsoft.AspNetCore.SignalR;
 using ViLearning.Services.Repository.IRepository;
 
 namespace ViLearning.Hubs.ChatHub

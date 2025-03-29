@@ -134,7 +134,7 @@ namespace ViLearning.Areas.Student.Controllers
                 learningProgress.OverallScore = (learningProgress.OverallScore * numOfLessonLearned + score - highestMarkOfLesson) / (numOfLessonLearned + 1);
             }
 
-            if (learningProgress.Progress == 100)
+            if (learningProgress.Progress == 100 && learningProgress.CompletionDate != null)
             {
                 learningProgress.CompletionDate = DateTime.Now.Date;
                 learningProgress.StudentCertificateUrl = await AssignCertificate(learningProgress);

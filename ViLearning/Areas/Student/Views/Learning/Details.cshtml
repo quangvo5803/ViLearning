@@ -260,130 +260,133 @@
     </div>
 </body>
 
-<script src="~/lib/signalr/dist/browser/signalr.js"></script>
-<script src="~/js/Student/Chat.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', (event) => {
-        const playlistUrl = "@Model.Lesson.Video";
-        const learnLink = document.getElementById('learn-icon');
-        const commentLink = document.getElementById('comment-icon');
-        const rankingLink = document.getElementById('ranking-icon');
-        const historyLink = document.getElementById('history-icon');
-        const overlayComment = document.getElementById('overlayComment');
-        const overlayRanking = document.getElementById('overlayRanking');
-        const overlayHistory = document.getElementById('overlayHistory');
-        const sidebar = document.getElementById('sidebar');
-        const mainContent = document.getElementById('main-content');
-        const lessonList = document.getElementById('lesson-list');
-        const resizer = document.getElementById('resizer');
-        const lessonContainer = document.getElementById('lessson-container');
-        const chatIcon = document.getElementById('chat-icon');
-        const chatbox = document.getElementById('chatbox');
+@section Scripts {
+    <script src="~/lib/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/Student/Chat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const playlistUrl = "@Model.Lesson.Video";
+            const learnLink = document.getElementById('learn-icon');
+            const commentLink = document.getElementById('comment-icon');
+            const rankingLink = document.getElementById('ranking-icon');
+            const historyLink = document.getElementById('history-icon');
+            const overlayComment = document.getElementById('overlayComment');
+            const overlayRanking = document.getElementById('overlayRanking');
+            const overlayHistory = document.getElementById('overlayHistory');
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            const lessonList = document.getElementById('lesson-list');
+            const resizer = document.getElementById('resizer');
+            const lessonContainer = document.getElementById('lessson-container');
+            const chatIcon = document.getElementById('chat-icon');
+            const chatbox = document.getElementById('chatbox');
 
-        if (playlistUrl && video) {
-            if (Hls.isSupported()) {
-                const hls = new Hls();
-                hls.loadSource(playlistUrl);
-                hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                    video.addEventListener('click', () => {
-                        video.play();
+            if (playlistUrl && video) {
+                if (Hls.isSupported()) {
+                    const hls = new Hls();
+                    hls.loadSource(playlistUrl);
+                    hls.attachMedia(video);
+                    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                        video.addEventListener('click', () => {
+                            video.play();
+                        });
                     });
-                });
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                video.src = playlistUrl;
-                video.addEventListener('loadedmetadata', () => {
-                    video.addEventListener('click', () => {
-                        video.play();
+                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                    video.src = playlistUrl;
+                    video.addEventListener('loadedmetadata', () => {
+                        video.addEventListener('click', () => {
+                            video.play();
+                        });
                     });
-                });
+                }
+
             }
+            if (learnLink && commentLink && rankingLink && overlayComment && overlayRanking && sidebar) {
+                commentLink.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    if (overlayComment.style.display === 'block') {
+                        overlayComment.style.display = 'none';
+                    } else {
+                        overlayComment.style.left = (sidebar.offsetWidth + sidebar.offsetLeft) + 'px';
+                        overlayComment.style.display = 'block';
+                        overlayRanking.style.display = 'none'; // Hide the other overlay
+                        overlayHistory.style.display = 'none';
+                    }
+                });
 
-        }
-        if (learnLink && commentLink && rankingLink && overlayComment && overlayRanking && sidebar) {
-            commentLink.addEventListener('click', function (event) {
-                event.preventDefault();
-                if (overlayComment.style.display === 'block') {
+                rankingLink.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    if (overlayRanking.style.display === 'block') {
+                        overlayRanking.style.display = 'none';
+                    } else {
+                        overlayRanking.style.left = (sidebar.offsetWidth + sidebar.offsetLeft) + 'px';
+                        overlayRanking.style.display = 'block';
+                        overlayComment.style.display = 'none'; // Hide the other overlay
+                        overlayHistory.style.display = 'none';
+                    }
+                });
+                historyLink.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    if (overlayHistory.style.display === 'block') {
+                        overlayHistory.style.display = 'none';
+                    } else {
+                        overlayHistory.style.left = (sidebar.offsetWidth + sidebar.offsetLeft) + 'px';
+                        overlayHistory.style.display = 'block';
+                        overlayRanking.style.display = 'none';
+                        overlayComment.style.display = 'none'; // Hide the other overlay
+                    }
+                });
+
+                learnLink.addEventListener('click', function (event) {
+                    event.preventDefault();
                     overlayComment.style.display = 'none';
-                } else {
-                    overlayComment.style.left = (sidebar.offsetWidth + sidebar.offsetLeft) + 'px';
-                    overlayComment.style.display = 'block';
-                    overlayRanking.style.display = 'none'; // Hide the other overlay
-                    overlayHistory.style.display = 'none';
-                }
-            });
-
-            rankingLink.addEventListener('click', function (event) {
-                event.preventDefault();
-                if (overlayRanking.style.display === 'block') {
                     overlayRanking.style.display = 'none';
-                } else {
-                    overlayRanking.style.left = (sidebar.offsetWidth + sidebar.offsetLeft) + 'px';
-                    overlayRanking.style.display = 'block';
-                    overlayComment.style.display = 'none'; // Hide the other overlay
-                    overlayHistory.style.display = 'none';
-                }
-            });
-            historyLink.addEventListener('click', function (event) {
-                event.preventDefault();
-                if (overlayHistory.style.display === 'block') {
-                    overlayHistory.style.display = 'none';
-                } else {
-                    overlayHistory.style.left = (sidebar.offsetWidth + sidebar.offsetLeft) + 'px';
-                    overlayHistory.style.display = 'block';
-                    overlayRanking.style.display = 'none';
-                    overlayComment.style.display = 'none'; // Hide the other overlay
-                }
-            });
-
-            learnLink.addEventListener('click', function (event) {
-                event.preventDefault();
-                overlayComment.style.display = 'none';
-                overlayRanking.style.display = 'none';
-            });
-        } else {
-            console.error('One or more elements not found.');
-        }
-
-
-        //resizer
-        var isResizing = false;
-
-        resizer.addEventListener('mousedown', function (e) {
-            isResizing = true;
-            document.addEventListener('mousemove', onMouseMove);
-            document.addEventListener('mouseup', onMouseUp);
-        });
-
-        function onMouseMove(e) {
-            if (!isResizing) return;
-
-            const offsetRight = document.body.offsetWidth - e.clientX;
-
-            mainContent.style.width = (document.body.offsetWidth - offsetRight) + 'px';
-            lessonContainer.style.width = '100%';
-            lessonList.style.flexBasis = (offsetRight) + 'px';
-        }
-
-        function onMouseUp(e) {
-            if (isResizing) {
-                isResizing = false;
-                document.removeEventListener('mousemove', onMouseMove);
-                document.removeEventListener('mouseup', onMouseUp);
+                });
+            } else {
+                console.error('One or more elements not found.');
             }
-        }
 
-        // Khi nhấp vào chatIcon, toggle class d-none của chatbox
-        chatIcon.addEventListener('click', function (event) {
-            chatbox.classList.toggle('d-none');
-            @* event.stopPropagation(); *@ // Ngăn chặn sự kiện lan truyền
+
+            //resizer
+            var isResizing = false;
+
+            resizer.addEventListener('mousedown', function (e) {
+                isResizing = true;
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
+            });
+
+            function onMouseMove(e) {
+                if (!isResizing) return;
+
+                const offsetRight = document.body.offsetWidth - e.clientX;
+
+                mainContent.style.width = (document.body.offsetWidth - offsetRight) + 'px';
+                lessonContainer.style.width = '100%';
+                lessonList.style.flexBasis = (offsetRight) + 'px';
+            }
+
+            function onMouseUp(e) {
+                if (isResizing) {
+                    isResizing = false;
+                    document.removeEventListener('mousemove', onMouseMove);
+                    document.removeEventListener('mouseup', onMouseUp);
+                }
+            }
+
+            // Khi nhấp vào chatIcon, toggle class d-none của chatbox
+            chatIcon.addEventListener('click', function (event) {
+                chatbox.classList.toggle('d-none');
+        @* event.stopPropagation(); *@ // Ngăn chặn sự kiện lan truyền
+            });
+
+            // Ngăn chặn sự kiện click bên trong chatbox làm ảnh hưởng đến chatIcon
+            chatbox.addEventListener('click', function (event) {
+                event.stopPropagation();
+            });
         });
 
-        // Ngăn chặn sự kiện click bên trong chatbox làm ảnh hưởng đến chatIcon
-        chatbox.addEventListener('click', function (event) {
-            event.stopPropagation();
-        });
-    });
+    </script>
+}
 
-</script>

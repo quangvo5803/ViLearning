@@ -22,6 +22,7 @@
     <PackageReference Include="Azure.Identity" Version="1.12.0" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.20.0" />
     <PackageReference Include="FFMpegCore" Version="5.1.0" />
+    <PackageReference Include="MailKit" Version="4.11.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.6" />
     <Content Remove="wwwroot\css\Teacher\.editorconfig" />
     <PackageReference Include="PdfSharp" Version="6.1.1" />

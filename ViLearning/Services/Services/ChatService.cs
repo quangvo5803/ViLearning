@@ -1,7 +1,7 @@
 ﻿using ViLearning.Models;
 using ViLearning.Services.Repository.IRepository;
 
-namespace ViLearning.Services.Repository
+namespace ViLearning.Services.Services
 {
     public class ChatService : IChatService
     {
@@ -15,8 +15,8 @@ namespace ViLearning.Services.Repository
         public async Task<Conversation> GetOrCreateConversation(string user1Id, string user2Id)
         {
             var conversation = _unitOfWork.Conversation
-                .Get(c => (c.User1Id == user1Id && c.User2Id == user2Id) ||
-                          (c.User1Id == user2Id && c.User2Id == user1Id));
+                .Get(c => c.User1Id == user1Id && c.User2Id == user2Id ||
+                          c.User1Id == user2Id && c.User2Id == user1Id);
 
             if (conversation == null)
             {

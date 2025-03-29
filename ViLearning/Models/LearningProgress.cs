@@ -17,6 +17,8 @@ namespace ViLearning.Models
         public string? StudentCertificateUrl { get; set; }
         public string LearnedLessons { get; set; }
 
+        public bool IsEmailCert { get; set; }
+
         [ForeignKey("CourseId")]
         [ValidateNever]
         public Course Course { get; set; }

@@ -8,105 +8,6 @@
 	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<style>
-	.comment-section {
-		max-width: 400px; /* Adjust this width as needed */
-		margin: auto;
-	}
-
-	.comment, .reply {
-		border: 1px solid #ddd;
-		padding: 15px;
-		margin-bottom: 10px;
-		border-radius: 10px;
-		background-color: #f9f9f9;
-		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-	}
-
-		.comment > p, .reply > p {
-			margin: 0;
-		}
-
-	.comment-user, .reply-user {
-		font-weight: bold;
-		color: #007bff;
-	}
-
-	.comment-date, .reply-date {
-		font-size: 0.85rem;
-		color: #888;
-	}
-
-	.comment-content, .reply-content {
-		margin: 10px 0;
-		max-width: 100%;
-	}
-
-	.reply {
-		margin-left: 2rem;
-	}
-
-	.reply-form {
-		display: none;
-		margin-top: 10px;
-	}
-
-	.btn-link {
-		text-decoration: none;
-		color: black;
-		cursor: pointer;
-		border: none;
-		background: none;
-		margin: 0;
-		padding: 0;
-		font-size: 0.8rem;
-		text-transform: none;
-	}
-
-		.btn-link:hover {
-			text-decoration: underline;
-		}
-
-	.btn-info, .btn-primary {
-		border-radius: 5px;
-		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-	}
-
-	.btn-danger {
-		border-radius: 5px;
-		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-		background-color: #dc3545;
-		border-color: #dc3545;
-		color: #fff;
-	}
-
-	.replies-container {
-		display: none;
-		margin-top: 10px;
-	}
-
-	.form-group {
-		margin-bottom: 1rem;
-	}
-
-	textarea.form-control {
-		border-radius: 5px;
-		box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-	}
-
-	.btn-group {
-		gap: 10px;
-		margin-top: 10px;
-	}
-
-	.edit-form {
-		display: none;
-		margin-top: 10px;
-	}
-</style>
-
-
-
 <div class="comment-content">
 	<hr />
 	<h3>Bình luận</h3>
@@ -299,7 +200,7 @@
 							$('#toggle-button-' + commentId).show();
 
 						}
-						
+
 						repliesContainer.append(newReply);
 						form.find('textarea[name="Comment.CommentContent"]').val(''); // Xóa nội dung textarea sau khi đã gửi
 						toggleReplies(commentId);
@@ -393,4 +294,103 @@
 			$('#replies-container-' + commentId).toggle();
 		}
 	</script>
+}
+
+@section Styles {
+	<style>
+		.comment-section {
+			max-width: 400px; /* Adjust this width as needed */
+			margin: auto;
+		}
+
+		.comment, .reply {
+			border: 1px solid #ddd;
+			padding: 15px;
+			margin-bottom: 10px;
+			border-radius: 10px;
+			background-color: #f9f9f9;
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+		}
+
+			.comment > p, .reply > p {
+				margin: 0;
+			}
+
+		.comment-user, .reply-user {
+			font-weight: bold;
+			color: #007bff;
+		}
+
+		.comment-date, .reply-date {
+			font-size: 0.85rem;
+			color: #888;
+		}
+
+		.comment-content, .reply-content {
+			margin: 10px 0;
+			max-width: 100%;
+		}
+
+		.reply {
+			margin-left: 2rem;
+		}
+
+		.reply-form {
+			display: none;
+			margin-top: 10px;
+		}
+
+		.btn-link {
+			text-decoration: none;
+			color: black;
+			cursor: pointer;
+			border: none;
+			background: none;
+			margin: 0;
+			padding: 0;
+			font-size: 0.8rem;
+			text-transform: none;
+		}
+
+			.btn-link:hover {
+				text-decoration: underline;
+			}
+
+		.btn-info, .btn-primary {
+			border-radius: 5px;
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+		}
+
+		.btn-danger {
+			border-radius: 5px;
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+			background-color: #dc3545;
+			border-color: #dc3545;
+			color: #fff;
+		}
+
+		.replies-container {
+			display: none;
+			margin-top: 10px;
+		}
+
+		.form-group {
+			margin-bottom: 1rem;
+		}
+
+		textarea.form-control {
+			border-radius: 5px;
+			box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+		}
+
+		.btn-group {
+			gap: 10px;
+			margin-top: 10px;
+		}
+
+		.edit-form {
+			display: none;
+			margin-top: 10px;
+		}
+	</style>
 }
